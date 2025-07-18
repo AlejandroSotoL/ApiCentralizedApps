@@ -4,12 +4,16 @@ using CentralizedApps.Infrastructure.Repositories;
 using CentralizedApps.Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using CentralizedApps.Domain.Entities;
+using CentralizedApps.Infrastructure.FluentValidation;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.WebHost.ConfigureKestrel(options =>
-{
+{                                                                                                               
     options.ListenAnyIP(5107); // HTTP
     options.ListenAnyIP(7081, listenOptions =>
     {
@@ -17,6 +21,12 @@ builder.WebHost.ConfigureKestrel(options =>
     });
 });
 
+//FLUET VALIDATION
+builder.Services
+    .AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 
 // Agregar servicios al contenedor
 builder.Services.AddControllers();

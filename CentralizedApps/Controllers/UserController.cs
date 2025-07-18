@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Application.DTOS;
 using CentralizedApps.Domain.Entities;
 using CentralizedApps.Domain.Interfaces;
-using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CentralizedApps.Presentation.Contollers
@@ -40,13 +35,11 @@ namespace CentralizedApps.Presentation.Contollers
             return Ok(user); // 200
         }
 
+
         // POST: api/User
-    [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var user = new User
             {
                 FirstName = dto.FirstName,

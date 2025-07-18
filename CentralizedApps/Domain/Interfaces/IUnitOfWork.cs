@@ -8,6 +8,7 @@ namespace CentralizedApps.Domain.Interfaces
     public interface IUnitOfWork: IDisposable
     {
         IGenericRepository<T> genericRepository<T>() where T : class;
+        IAuthRepository AuthRepositoryUnitOfWork { get;}
         Task<int> SaveChangesAsync();
     }
 }
