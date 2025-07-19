@@ -40,26 +40,44 @@ namespace CentralizedApps.Presentation.Contollers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
         {
-            var user = new User
+            try
             {
-                FirstName = dto.FirstName,
-                MiddleName = dto.MiddleName,
-                LastName = dto.LastName,
-                SecondLastName = dto.SecondLastName,
-                NationalId = dto.NationalId,
-                DocumentTypeId = dto.DocumentTypeId,
-                Email = dto.Email,
-                Password = dto.Password, 
-                BirthDate = dto.BirthDate,
-                PhoneNumber = dto.PhoneNumber,
-                Address = dto.Address,
-                LoginStatus = dto.LoginStatus
-            };
+                var user = new User
+                {
+                    FirstName = dto.FirstName,
+                    MiddleName = dto.MiddleName,
+                    LastName = dto.LastName,
+                    SecondLastName = dto.SecondLastName,
+                    NationalId = dto.NationalId,
+                    DocumentTypeId = dto.DocumentTypeId,
+                    Email = dto.Email,
+                    //Inception of this password is created
+                    Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                    BirthDate = dto.BirthDate,
+                    PhoneNumber = dto.PhoneNumber,
+                    Address = dto.Address,
+                    LoginStatus = false
+                };
 
-            var response = await _unitOfWork.genericRepository<User>().AddAsync(user);
-            await _unitOfWork.SaveChangesAsync();
+                var response = await _unitOfWork.genericRepository<User>().AddAsync(user);
+                await _unitOfWork.SaveChangesAsync();
 
-            return Ok(response);
+                return Ok(new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = ""
+                });
+            }
+            catch (Exception e)
+            {
+                return Ok(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error interno con " + e.Message
+                });
+            }
         }
 
         // PUT: api/User/5
@@ -69,26 +87,25 @@ namespace CentralizedApps.Presentation.Contollers
             var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(id);
             if (user == null)
             {
-                
                 return NotFound("User not fund");   // 404
             }
 
-                
-                user.FirstName = userUpdated.FirstName;
-                user.MiddleName = userUpdated.MiddleName;
-                user.LastName = userUpdated.LastName;
-                user.SecondLastName = userUpdated.SecondLastName;
-                user.NationalId = userUpdated.NationalId;
-                user.DocumentTypeId = userUpdated.DocumentTypeId;
-                user.Email = userUpdated.Email;
-                user.BirthDate = userUpdated.BirthDate;
-                user.Password = userUpdated.Password;
-                user.PhoneNumber = userUpdated.PhoneNumber;
-                user.Address = userUpdated.Address;
-                user.LoginStatus = userUpdated.LoginStatus;
+
+            user.FirstName = userUpdated.FirstName;
+            user.MiddleName = userUpdated.MiddleName;
+            user.LastName = userUpdated.LastName;
+            user.SecondLastName = userUpdated.SecondLastName;
+            user.NationalId = userUpdated.NationalId;
+            user.DocumentTypeId = userUpdated.DocumentTypeId;
+            user.Email = userUpdated.Email;
+            user.BirthDate = userUpdated.BirthDate;
+            user.Password = userUpdated.Password;
+            user.PhoneNumber = userUpdated.PhoneNumber;
+            user.Address = userUpdated.Address;
+            user.LoginStatus = userUpdated.LoginStatus;
 
 
-        var response = _unitOfWork.genericRepository<User>().Update(user);
+            var response = _unitOfWork.genericRepository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync();
 
             return Ok(response); // 200 
@@ -102,7 +119,7 @@ namespace CentralizedApps.Presentation.Contollers
             if (user == null)
                 return NotFound("User not fund"); //404
 
-        var response = _unitOfWork.genericRepository<User>().Delete(user);
+            var response = _unitOfWork.genericRepository<User>().Delete(user);
             await _unitOfWork.SaveChangesAsync();
 
             return Ok(response); // 200 

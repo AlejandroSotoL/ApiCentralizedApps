@@ -21,7 +21,7 @@ builder.WebHost.ConfigureKestrel(options =>
     });
 });
 
-//FLUET VALIDATION
+// FLUET VALIDATION
 builder.Services
     .AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();

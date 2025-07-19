@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CentralizedApps.Application.DTOS;
 
 namespace CentralizedApps.Domain.Interfaces
 {
     public interface IAuthRepository
     {
-        Task<bool> Login(string Email , string Password);
+        Task<ValidationResponseDto> Login(string Email , string Password);
     }
 }

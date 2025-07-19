@@ -13,11 +13,11 @@ namespace CentralizedApps.Infrastructure.FluentValidation
         public LoginValidator()
         {
             RuleFor(x => x.Email)
-                .NotEmpty()
-                .EmailAddress();
+                .NotEmpty().WithMessage("El campo es requerido")
+                .EmailAddress().WithMessage("No es una dirección de correo");
 
             RuleFor(x => x.Password)
-                .NotEmpty()
+                .NotEmpty().WithMessage("El campo es requerido")
                 .MaximumLength(8);
         }
     }

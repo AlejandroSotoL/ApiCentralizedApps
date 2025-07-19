@@ -25,7 +25,6 @@ namespace CentralizedApps.Infrastructure.Repositories
             try
             {
                 await _DBset.AddAsync(entity);
-                
                 return "User created successfully";
             }
             catch (System.Exception ex)
