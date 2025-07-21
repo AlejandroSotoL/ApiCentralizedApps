@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CentralizedApps.Domain.Entities;
 
 namespace CentralizedApps.Application.DTOS
 {
@@ -10,5 +11,6 @@ namespace CentralizedApps.Application.DTOS
         public int CodeStatus { get; set; }
         public bool BooleanStatus { get; set; } = false;
         public string SentencesError { get; set; } = null;
+
     }
 }

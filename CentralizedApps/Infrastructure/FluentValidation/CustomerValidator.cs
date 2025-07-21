@@ -14,9 +14,6 @@ namespace CentralizedApps.Infrastructure.FluentValidation
                 .NotEmpty().WithMessage("El primer nombre es obligatorio")
                 ;
 
-            RuleFor(x => x.MiddleName)
-                .NotEmpty().WithMessage("El segundo nombre es obligatorio");
-
             RuleFor(x => x.LastName)
                 .NotEmpty().WithMessage("El primer apellido es obligatorio");
 
@@ -40,7 +37,7 @@ namespace CentralizedApps.Infrastructure.FluentValidation
             RuleFor(x => x.PhoneNumber)
             .NotNull().WithMessage("El teléfono es obligatorio")
             .Must(p => p.ToString().Length <= 10)
-            .WithMessage("El teléfono debe tener máximo 8 dígitos");
+            .WithMessage("El teléfono debe tener máximo 6 dígitos");
 
             RuleFor(x => x.Address)
                 .NotEmpty();

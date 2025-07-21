@@ -1,0 +1,8 @@
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net6.0\CentralizedApps.csproj.AssemblyReference.cache
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net6.0\CentralizedApps.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net6.0\CentralizedApps.AssemblyInfoInputs.cache
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net6.0\CentralizedApps.AssemblyInfo.cs
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net6.0\CentralizedApps.csproj.CoreCompileInputs.cache
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net6.0\CentralizedApps.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net6.0\CentralizedApps.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net6.0\CentralizedApps.sourcelink.json

@@ -51,7 +51,8 @@ namespace CentralizedApps.Infrastructure.Repositories
                 {
                     BooleanStatus = true,
                     CodeStatus = 200,
-                    SentencesError = "Inicio de sesión exitoso"
+                    SentencesError = "Inicio de sesión exitoso",
+                    
                 };
             }
             catch (Exception ex)

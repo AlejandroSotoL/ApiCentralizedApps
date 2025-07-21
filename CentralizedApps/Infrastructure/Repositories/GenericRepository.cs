@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CentralizedApps.Domain.Interfaces;
 using CentralizedApps.Infrastructure.Data;
@@ -71,6 +72,11 @@ namespace CentralizedApps.Infrastructure.Repositories
                 Console.WriteLine($"Error getting data: {ex.Message}");
                 return null;
             }
+        }
+
+        public async Task<T?> GetByIdAsync(Expression<Func<T, bool>> filter)
+        {
+            return await _DBset.FindAsync(filter);
         }
 
         public string Update(T entity)

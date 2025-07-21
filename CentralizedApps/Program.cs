@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using CentralizedApps.Domain.Entities;
+
+
 using CentralizedApps.Infrastructure.FluentValidation;
 
 
@@ -22,6 +23,7 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 // FLUET VALIDATIONP
+
 builder.Services
     .AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();

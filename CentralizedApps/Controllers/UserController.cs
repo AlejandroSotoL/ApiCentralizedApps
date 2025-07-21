@@ -35,6 +35,16 @@ namespace CentralizedApps.Presentation.Contollers
             return Ok(user); // 200
         }
 
+        //  [HttpGet("{id}")]
+        // public async Task<IActionResult> GetUserById(int id)
+        // {
+        //     var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(id);
+        //     if (user == null)
+        //         NotFound("user not fund"); // 404
+
+        //     return Ok(user); // 200
+        // }
+
 
         // POST: api/User
         [HttpPost]
