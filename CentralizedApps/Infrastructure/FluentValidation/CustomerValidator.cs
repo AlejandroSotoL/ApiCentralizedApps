@@ -45,9 +45,6 @@ namespace CentralizedApps.Infrastructure.FluentValidation
             RuleFor(x => x.Address)
                 .NotEmpty();
 
-            RuleFor(x => x.LoginStatus)
-            .NotEmpty();
-
             RuleFor(x => x.BirthDate)
             .NotEmpty()
             .NotNull()
