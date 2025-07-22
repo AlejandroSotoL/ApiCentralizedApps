@@ -35,17 +35,6 @@ namespace CentralizedApps.Presentation.Contollers
             return Ok(user); // 200
         }
 
-        //  [HttpGet("{id}")]
-        // public async Task<IActionResult> GetUserById(int id)
-        // {
-        //     var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(id);
-        //     if (user == null)
-        //         NotFound("user not fund"); // 404
-
-        //     return Ok(user); // 200
-        // }
-
-
         // POST: api/User
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
@@ -97,9 +86,8 @@ namespace CentralizedApps.Presentation.Contollers
             var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(id);
             if (user == null)
             {
-                return NotFound("User not fund");   // 404
+                return NotFound("User not fund");
             }
-
 
             user.FirstName = userUpdated.FirstName;
             user.MiddleName = userUpdated.MiddleName;
@@ -114,10 +102,8 @@ namespace CentralizedApps.Presentation.Contollers
             user.Address = userUpdated.Address;
             user.LoginStatus = userUpdated.LoginStatus;
 
-
             var response = _unitOfWork.genericRepository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync();
-
             return Ok(response); // 200 
         }
 
@@ -127,15 +113,34 @@ namespace CentralizedApps.Presentation.Contollers
         {
             var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(id);
             if (user == null)
-                return NotFound("User not fund"); //404
+                return NotFound("User not fund");
 
             var response = _unitOfWork.genericRepository<User>().Delete(user);
             await _unitOfWork.SaveChangesAsync();
-
-            return Ok(response); // 200 
+            return Ok(response);
         }
+
+        //POST: Get user by email later Authenticated
+        [HttpGet("by-email/{email}")]
+        public async Task<IActionResult> GetByEmailUser(string email)
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<User>()
+                    .GetByEmailUserByAuthenticate(email);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = e.Message
+                });
+            }
+        }
+
+
     }
-
-
-
 }

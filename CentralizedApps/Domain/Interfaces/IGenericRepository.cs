@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using CentralizedApps.Domain.Entities;
 
 namespace CentralizedApps.Domain.Interfaces
 {
@@ -13,6 +14,6 @@ namespace CentralizedApps.Domain.Interfaces
         Task<string> AddAsync(T entity);
         string Update(T entity);
         string Delete(T entity);
-        Task<T?> GetByIdAsync(Expression<Func<T, bool>> filter);
+        Task<User?> GetByEmailUserByAuthenticate(string email);
     }
 }
