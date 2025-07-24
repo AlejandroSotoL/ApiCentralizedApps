@@ -22,7 +22,10 @@ namespace CentralizedApps.Infrastructure.Repositories
         {
             try
             {
-                var user = await _Context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                var user = await _Context.Users
+                .FirstOrDefaultAsync(u => u.Email == email);
+                user.LoginStatus = 1 ;
+                
                 if (user is null)
                 {
                     return new ValidationResponseDto
@@ -43,8 +46,6 @@ namespace CentralizedApps.Infrastructure.Repositories
                         SentencesError = "Contraseña incorrecta"
                     };
                 }
-
-                user.LoginStatus = true;
                 await _Context.SaveChangesAsync();
 
                 return new ValidationResponseDto

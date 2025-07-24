@@ -55,7 +55,7 @@ namespace CentralizedApps.Presentation.Contollers
                     BirthDate = dto.BirthDate,
                     PhoneNumber = dto.PhoneNumber,
                     Address = dto.Address,
-                    LoginStatus = false
+                    LoginStatus = 2
                 };
 
                 var response = await _unitOfWork.genericRepository<User>().AddAsync(user);
@@ -100,7 +100,7 @@ namespace CentralizedApps.Presentation.Contollers
             user.Password = userUpdated.Password;
             user.PhoneNumber = userUpdated.PhoneNumber;
             user.Address = userUpdated.Address;
-            user.LoginStatus = userUpdated.LoginStatus;
+            user.LoginStatus = 2;
 
             var response = _unitOfWork.genericRepository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync();
@@ -126,8 +126,8 @@ namespace CentralizedApps.Presentation.Contollers
         {
             try
             {
-                var response = await _unitOfWork.genericRepository<User>()
-                    .GetByEmailUserByAuthenticate(email);
+                var response = await _unitOfWork.genericRepository<CreateUserDto>()
+                    .GetByEmailUserByAuthenticate(email);   
                 return Ok(response);
             }
             catch (Exception e)
