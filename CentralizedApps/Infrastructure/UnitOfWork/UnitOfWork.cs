@@ -11,11 +11,15 @@ namespace CentralizedApps.Infrastructure.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly CentralizedAppsDbContext _context;
+        private IAuthRepository _AuthRepository;
 
         public UnitOfWork(CentralizedAppsDbContext context)
         {
             _context = context;
         }
+
+        //Auth from credentials and more things
+        public IAuthRepository AuthRepositoryUnitOfWork => _AuthRepository ??= new AuthRepository(_context);
 
         public IGenericRepository<T> genericRepository<T>() where T : class
         {
