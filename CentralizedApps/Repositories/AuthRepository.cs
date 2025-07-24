@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CentralizedApps.Application.DTOS;
-using CentralizedApps.Domain.Entities;
-using CentralizedApps.Domain.Interfaces;
-using CentralizedApps.Infrastructure.Data;
+
+using CentralizedApps.Data;
+using CentralizedApps.Models.Dtos;
+using CentralizedApps.Models.Entities;
+using CentralizedApps.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace CentralizedApps.Infrastructure.Repositories
+namespace CentralizedApps.Repositories
 {
     public class AuthRepository : IAuthRepository
     {

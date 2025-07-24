@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using CentralizedApps.Application.DTOS;
+
+using CentralizedApps.Models.Dtos;
 using FluentValidation;
 
-namespace CentralizedApps.Infrastructure.FluentValidation
+namespace CentralizedApps.FluentValidation
 {
     public class LoginValidator : AbstractValidator<LoginUserDTO>
     {

@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace CentralizedApps.Domain.Interfaces
+
+namespace CentralizedApps.Repositories.Interfaces
 {
     public interface IUnitOfWork: IDisposable
     {
+        IAuthRepository AuthRepositoryUnitOfWork { get; }
+        IUserRepository UserRepository { get; }
+
         IGenericRepository<T> genericRepository<T>() where T : class;
-        IAuthRepository AuthRepositoryUnitOfWork { get;}
+
         Task<int> SaveChangesAsync();
     }
 }

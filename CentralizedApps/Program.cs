@@ -1,14 +1,16 @@
-using CentralizedApps.Domain.Interfaces;
-using CentralizedApps.Infrastructure.Data;
-using CentralizedApps.Infrastructure.Repositories;
-using CentralizedApps.Infrastructure.UnitOfWork;
+
+using CentralizedApps.Repositories.Interfaces;
+using CentralizedApps.Repositories;
+
+using CentralizedApps.Services.Interfaces;
+using CentralizedApps.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using CentralizedApps.FluentValidation;
+using CentralizedApps.Data;
 
-
-using CentralizedApps.Infrastructure.FluentValidation;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +54,9 @@ builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
 // Repositorios y Unidad de Trabajo
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

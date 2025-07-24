@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CentralizedApps.Application.DTOS;
 
-namespace CentralizedApps.Domain.Interfaces
+
+using CentralizedApps.Models.Dtos;
+
+namespace CentralizedApps.Repositories.Interfaces
+
 {
     public interface IAuthRepository
     {

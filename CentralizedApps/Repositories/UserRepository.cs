@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CentralizedApps.Domain.Entities;
-using CentralizedApps.Domain.Interfaces;
-using CentralizedApps.Infrastructure.Data;
-using CentralizedApps.Infrastructure.Repositories;
+
+using CentralizedApps.Data;
+using CentralizedApps.Models.Entities;
+using CentralizedApps.Repositories.Interfaces;
 
 namespace CentralizedApps.Repositories
 {

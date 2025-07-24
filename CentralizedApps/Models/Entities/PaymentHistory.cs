@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CentralizedApps.Domain.Entities;
+namespace CentralizedApps.Models.Entities;
 
 public partial class PaymentHistory
 {

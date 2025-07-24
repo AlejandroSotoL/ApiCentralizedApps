@@ -1,10 +1,7 @@
-using System;
 using FluentValidation;
-using CentralizedApps.Domain.Entities;
-using CentralizedApps.Application.DTOS;
-using System.Data;
+using CentralizedApps.Models.Dtos;
 
-namespace CentralizedApps.Infrastructure.FluentValidation
+namespace CentralizedApps.FluentValidation
 {
     public class CustomerValidator : AbstractValidator<CreateUserDto>
     {

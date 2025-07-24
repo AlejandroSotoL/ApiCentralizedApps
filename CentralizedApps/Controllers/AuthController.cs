@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CentralizedApps.Application.DTOS;
-using CentralizedApps.Domain.Interfaces;
+
+using CentralizedApps.Models.Dtos;
+using CentralizedApps.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CentralizedApps.Controllers
