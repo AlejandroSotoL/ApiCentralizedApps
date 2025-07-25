@@ -5,6 +5,7 @@ using CentralizedApps.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
+using CentralizedApps.Models.Entities;
 
 
 
@@ -27,14 +28,14 @@ namespace CentralizedApps.Contollers
         [HttpGet]
         public async Task<IActionResult> GetUser()
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var users = await _unitOfWork.genericRepository<User>().GetAllAsync();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(id);
             if (user == null)
                 return NotFound("user not found");
 
@@ -58,11 +59,11 @@ namespace CentralizedApps.Contollers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(id);
             if (user == null)
                 return NotFound("User not found");
 
-            var response = _unitOfWork.UserRepository.Delete(user);
+            var response = _unitOfWork.genericRepository<User>().Remove(user);
             await _unitOfWork.SaveChangesAsync();
             return Ok(response);
         }
@@ -72,7 +73,7 @@ namespace CentralizedApps.Contollers
         {
             try
             {
-                var response = await _unitOfWork.UserRepository.GetByEmailUserByAuthenticate(email);
+                var response = await _unitOfWork.genericRepository<User>().GetByEmailUserByAuthenticate(email);
                 return Ok(response);
             }
             catch (Exception e)

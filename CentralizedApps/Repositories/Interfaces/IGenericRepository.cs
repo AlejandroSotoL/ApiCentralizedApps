@@ -14,7 +14,7 @@ namespace CentralizedApps.Repositories.Interfaces
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate);
         Task AddAsync(T entity);
         void Update(T entity);
-        void Remove(T entity);
+        Task<bool>  Remove(T entity);
         Task<User?> GetByEmailUserByAuthenticate(string email);
     }
 }

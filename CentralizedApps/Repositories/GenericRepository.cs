@@ -33,11 +33,16 @@ namespace CentralizedApps.Repositories
 
         public void Update(T entity) => _dbSet.Update(entity);
 
-        public void Remove(T entity) => _dbSet.Remove(entity);
 
         public Task<User?> GetByEmailUserByAuthenticate(string email)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> Remove(T entity)
+        {
+            _dbSet.Remove(entity);
+            return true;
         }
     }
 }
