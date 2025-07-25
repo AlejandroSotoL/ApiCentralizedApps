@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj": {}
+    "C:\\Users\\Soto\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj": {}
   },
   "projects": {
-    "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj": {
+    "C:\\Users\\Soto\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj",
+        "projectUniqueName": "C:\\Users\\Soto\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj",
         "projectName": "CentralizedApps",
-        "projectPath": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj",
-        "packagesPath": "C:\\Users\\PERSONAL\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\obj\\",
+        "projectPath": "C:\\Users\\Soto\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj",
+        "packagesPath": "C:\\Users\\Soto\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Soto\\Desktop\\ApiCentralizedApps\\CentralizedApps\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\PERSONAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Soto\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -64,17 +64,23 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.7, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[9.0.7, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[9.0.7, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

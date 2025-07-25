@@ -21,7 +21,7 @@ namespace CentralizedApps.Repositories
             {
                 var user = await _Context.Users
                 .FirstOrDefaultAsync(u => u.Email == email);
-                user.LoginStatus = true;
+                user.LoginStatus = true ;
                 
                 if (user is null)
                 {
