@@ -33,7 +33,7 @@ public class UserService : IUserService
                 BirthDate = dto.BirthDate,
                 PhoneNumber = dto.PhoneNumber,
                 Address = dto.Address,
-                LoginStatus = 2
+                LoginStatus = false
             };
 
             await _userRepository.AddAsync(user);
@@ -81,7 +81,7 @@ public class UserService : IUserService
     user.Password = dto.Password;
     user.PhoneNumber = dto.PhoneNumber;
     user.Address = dto.Address;
-    user.LoginStatus = 2;
+    user.LoginStatus = false;
 
     _userRepository.Update(user);
     await _unitOfWork.SaveChangesAsync();
