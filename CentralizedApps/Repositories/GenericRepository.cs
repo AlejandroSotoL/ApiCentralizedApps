@@ -10,98 +10,34 @@ namespace CentralizedApps.Repositories
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
 
-        private readonly CentralizedAppsDbContext _Context;
-        private readonly DbSet<T> _DBset;
+        protected readonly CentralizedAppsDbContext _context;
+        protected readonly DbSet<T> _dbSet;
 
-        public GenericRepository(CentralizedAppsDbContext Context)
+        public GenericRepository(CentralizedAppsDbContext context)
         {
-            _Context = Context;
-            _DBset = _Context.Set<T>();
+            _context = context;
+            _dbSet = context.Set<T>();
         }
 
-        public async Task<string> AddAsync(T entity)
+        public async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
+
+        public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
+
+        public async Task<T?> FindAsync(Expression<Func<T, bool>> predicate)
+            => await _dbSet.FirstOrDefaultAsync(predicate);
+
+        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate)
+            => await _dbSet.Where(predicate).ToListAsync();
+
+        public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);
+
+        public void Update(T entity) => _dbSet.Update(entity);
+
+        public void Remove(T entity) => _dbSet.Remove(entity);
+
+        public Task<User?> GetByEmailUserByAuthenticate(string email)
         {
-            try
-            {
-                await _DBset.AddAsync(entity);
-                return "User created successfully";
-            }
-            catch (System.Exception ex)
-            {
-                return $"invalid data {ex.Message}";
-            }
-        }
-
-        public string Delete(T entity)
-        {
-            try
-            {
-                _DBset.Remove(entity);
-
-                return " User delete sucessfully";
-            }
-            catch (System.Exception ex)
-            {
-                return $"invalid data {ex.Message}";
-            }
-        }
-
-        public async Task<IEnumerable<T>> GetAllAsync()
-        {
-            try
-            {
-                return await _DBset.ToListAsync();
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine($"Error getting data: {ex.Message}");
-                return new List<T>();
-            }
-        }
-
-        public async Task<User?> GetByEmailUserByAuthenticate(string email)
-        {
-            try
-            {
-                return await _Context.Users
-                    .FirstOrDefaultAsync(x => x.Email == email);
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
-
-        public async Task<T?> GetByIdAsync(int id)
-        {
-            try
-            {
-                return await _DBset.FindAsync(id);
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine($"Error getting data: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<T?> GetByIdAsync(Expression<Func<T, bool>> filter)
-        {
-            return await _DBset.FindAsync(filter);
-        }
-
-        public string Update(T entity)
-        {
-            try
-            {
-                _DBset.Update(entity);
-
-                return "Uodate sucessfullly";
-            }
-            catch (System.Exception ex)
-            {
-                return $"error updating data: {ex.Message}";
-            }
+            throw new NotImplementedException();
         }
     }
 }
