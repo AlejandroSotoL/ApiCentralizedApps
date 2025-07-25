@@ -19,9 +19,13 @@ public partial class PaymentHistory
 
     public int? MunicipalityProceduresId { get; set; }
 
+    public int? StatusType { get; set; }
+
     public virtual Municipality? Municipality { get; set; }
 
     public virtual MunicipalityProcedure? MunicipalityProcedures { get; set; }
+
+    public virtual Availibity? StatusTypeNavigation { get; set; }
 
     public virtual User? User { get; set; }
 }
