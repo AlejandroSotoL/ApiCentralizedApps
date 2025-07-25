@@ -7,19 +7,18 @@ namespace CentralizedApps.Services;
 
 public class UserService : IUserService
 {
-    private readonly IUserRepository _userRepository;
+
     private readonly IUnitOfWork _unitOfWork;
 
-    public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork)
+    public UserService( IUnitOfWork unitOfWork)
     {
-        _userRepository = userRepository;
+        
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ValidationResponseDto> CreateUserAsync(CreateUserDto dto)
+    public async Task<User> CreateUserAsync(CreateUserDto dto)
     {
-        try
-        {
+        
             var user = new User
             {
                 FirstName = dto.FirstName,
@@ -35,41 +34,16 @@ public class UserService : IUserService
                 Address = dto.Address,
                 LoginStatus = false
             };
+        _unitOfWork.UserRepository.AddAsync(user);
 
-            await _userRepository.AddAsync(user);
-            await _unitOfWork.SaveChangesAsync();
+        return user;
 
-            return new ValidationResponseDto
-            {
-                BooleanStatus = true,
-                CodeStatus = 200,
-                SentencesError = ""
-            };
-        }
-        catch (Exception e)
-        {
-            return new ValidationResponseDto
-            {
-                BooleanStatus = false,
-                CodeStatus = 500,
-                SentencesError = $"Error interno: {e.Message}"
-            };
-        }
+                
     }
 
-    public async Task<ValidationResponseDto> UpdateUserAsync(int id, CreateUserDto dto)
+    public void UpdateUserAsync(User user, CreateUserDto dto)
 {
-    var user = await _userRepository.GetByIdAsync(id);
-    if (user == null)
-    {
-        return new ValidationResponseDto
-        {
-            BooleanStatus = false,
-            CodeStatus = 404,
-            SentencesError = "User not found"
-        };
-    }
-
+    
     user.FirstName = dto.FirstName;
     user.MiddleName = dto.MiddleName;
     user.LastName = dto.LastName;
@@ -83,15 +57,8 @@ public class UserService : IUserService
     user.Address = dto.Address;
     user.LoginStatus = false;
 
-    _userRepository.Update(user);
-    await _unitOfWork.SaveChangesAsync();
-
-    return new ValidationResponseDto
-    {
-        BooleanStatus = true,
-        CodeStatus = 200,
-        SentencesError = ""
-    };
+_unitOfWork.UserRepository.Update(user);
+    
 }
 
 }

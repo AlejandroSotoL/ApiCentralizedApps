@@ -6,6 +6,10 @@ namespace CentralizedApps.Repositories.Interfaces
     {
         IAuthRepository AuthRepositoryUnitOfWork { get; }
         IUserRepository UserRepository { get; }
+        IDepartmentRepository DepartmentRepository { get; }
+
+
+
 
         IGenericRepository<T> genericRepository<T>() where T : class;
 

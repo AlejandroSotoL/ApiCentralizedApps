@@ -10,32 +10,29 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using CentralizedApps.FluentValidation;
 using CentralizedApps.Data;
-
+using CentralizedApps.Middelware;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Puerto y HTTPS
 builder.WebHost.ConfigureKestrel(options =>
-{                                                                                                               
+{
     options.ListenAnyIP(5107); // HTTP
     options.ListenAnyIP(7081, listenOptions =>
     {
-        listenOptions.UseHttps(); // HTTPS (necesitas certificado)
+        listenOptions.UseHttps(); // HTTPS (certificado necesario)
     });
 });
 
-// FLUET VALIDATIONP
-
+// Fluent Validation
 builder.Services
     .AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 
-// Agregar servicios al contenedor
 builder.Services.AddControllers();
-
-// Configuración de Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -47,32 +44,39 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Configuración de la base de datos
+// Base de datos
 builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConectionDefault")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConectionDefault"),sql => sql.EnableRetryOnFailure() ));
 
-// Repositorios y Unidad de Trabajo
+
+// Repositorios y servicios
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
 var app = builder.Build();
 
-// Activar Swagger
+// Middleware personalizado de errores
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+// HTTPS redirection si usas certificado
+// app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+// Swagger
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "CentralizedApps API v1");
-    c.RoutePrefix = "swagger";// Esto es clave
+    c.RoutePrefix = "swagger";
 });
 
-app.UseStaticFiles();
-// Redirección HTTPS
-//app.UseHttpsRedirection();
+app.UseAuthorization();
 
-// Mapear controladores
 app.MapControllers();
 
 app.Run();
+
