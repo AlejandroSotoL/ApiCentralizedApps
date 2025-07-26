@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
 using CentralizedApps.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ public partial class CentralizedAppsDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Availability> Availabilities { get; set; }
+    public virtual DbSet<Availibity> Availibities { get; set; }
 
     public virtual DbSet<Course> Courses { get; set; }
 
@@ -48,13 +49,15 @@ public partial class CentralizedAppsDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Availability>(entity =>
+        modelBuilder.Entity<Availibity>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Availabi__3214EC07BA732AA4");
+            entity.HasKey(e => e.Id).HasName("PK__Availibi__3214EC07F8724295");
 
-            entity.ToTable("Availability");
+            entity.ToTable("Availibity");
 
-            entity.Property(e => e.StatusType).HasDefaultValue(false);
+            entity.Property(e => e.TypeStatus)
+                .HasMaxLength(100)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Course>(entity =>
@@ -128,14 +131,16 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.PasswordFintech)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.UserFintech)
+                .HasMaxLength(100)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Department).WithMany(p => p.Municipalities)
                 .HasForeignKey(d => d.DepartmentId)
                 .HasConstraintName("FK_Municipality_ToDepartment");
-
-            entity.HasOne(d => d.IsActiveNavigation).WithMany(p => p.Municipalities)
-                .HasForeignKey(d => d.IsActive)
-                .HasConstraintName("FK_Municipality_ToAvailability");
 
             entity.HasOne(d => d.Theme).WithMany(p => p.Municipalities)
                 .HasForeignKey(d => d.ThemeId)
@@ -149,10 +154,6 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.ToTable("Municipality_Procedures");
 
             entity.Property(e => e.IntegrationType).IsUnicode(false);
-
-            entity.HasOne(d => d.IsActiveNavigation).WithMany(p => p.MunicipalityProcedures)
-                .HasForeignKey(d => d.IsActive)
-                .HasConstraintName("FK_MunicipalityProcedures_ToAvailability");
 
             entity.HasOne(d => d.Municipality).WithMany(p => p.MunicipalityProcedures)
                 .HasForeignKey(d => d.MunicipalityId)
@@ -174,10 +175,6 @@ public partial class CentralizedAppsDbContext : DbContext
                 .HasMaxLength(300)
                 .IsUnicode(false)
                 .HasColumnName("URL");
-
-            entity.HasOne(d => d.IsActiveNavigation).WithMany(p => p.MunicipalitySocialMedia)
-                .HasForeignKey(d => d.IsActive)
-                .HasConstraintName("FK_Municipality_SocialMedia_ToAvailability");
 
             entity.HasOne(d => d.Municipality).WithMany(p => p.MunicipalitySocialMedia)
                 .HasForeignKey(d => d.MunicipalityId)
@@ -204,6 +201,10 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.HasOne(d => d.MunicipalityProcedures).WithMany(p => p.PaymentHistories)
                 .HasForeignKey(d => d.MunicipalityProceduresId)
                 .HasConstraintName("FK_PaymentHistory_ToMunicipalityProcedures");
+
+            entity.HasOne(d => d.StatusTypeNavigation).WithMany(p => p.PaymentHistories)
+                .HasForeignKey(d => d.StatusType)
+                .HasConstraintName("FK_PaymentHistoryToAvailibity");
 
             entity.HasOne(d => d.User).WithMany(p => p.PaymentHistories)
                 .HasForeignKey(d => d.UserId)
@@ -325,10 +326,6 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.HasOne(d => d.DocumentType).WithMany(p => p.Users)
                 .HasForeignKey(d => d.DocumentTypeId)
                 .HasConstraintName("FK_User_ToDocumentType");
-
-            entity.HasOne(d => d.LoginStatusNavigation).WithMany(p => p.Users)
-                .HasForeignKey(d => d.LoginStatus)
-                .HasConstraintName("FK_User_ToAvailability");
         });
 
         OnModelCreatingPartial(modelBuilder);

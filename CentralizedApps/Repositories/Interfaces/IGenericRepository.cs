@@ -9,9 +9,9 @@ namespace CentralizedApps.Repositories.Interfaces
     {
         Task<T?> GetByIdAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();
-        Task<string> AddAsync(T entity);
-        string Update(T entity);
-        string Delete(T entity);
+        void AddAsync(T entity);
+        void Update(T entity);
+        void Delete(T entity);
         Task<User?> GetByEmailUserByAuthenticate(string email);
     }
 }
