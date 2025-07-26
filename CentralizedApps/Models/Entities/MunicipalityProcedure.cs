@@ -13,9 +13,7 @@ public partial class MunicipalityProcedure
 
     public string? IntegrationType { get; set; }
 
-    public int? IsActive { get; set; }
-
-    public virtual Availability? IsActiveNavigation { get; set; }
+    public bool? IsActive { get; set; }
 
     public virtual Municipality? Municipality { get; set; }
 

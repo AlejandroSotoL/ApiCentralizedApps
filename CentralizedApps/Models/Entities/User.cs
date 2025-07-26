@@ -19,7 +19,6 @@ public partial class User
 
     public int? DocumentTypeId { get; set; }
 
-
     public string? Email { get; set; }
 
     public string? Password { get; set; }
@@ -30,11 +29,9 @@ public partial class User
 
     public DateOnly? BirthDate { get; set; }
 
-    public int? LoginStatus { get; set; }
+    public bool? LoginStatus { get; set; }
 
     public virtual DocumentType? DocumentType { get; set; }
-
-    public virtual Availability? LoginStatusNavigation { get; set; }
 
     public virtual ICollection<PaymentHistory> PaymentHistories { get; set; } = new List<PaymentHistory>();
 }

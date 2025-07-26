@@ -15,15 +15,17 @@ public partial class Municipality
 
     public int? ThemeId { get; set; }
 
-    public int? IsActive { get; set; }
+    public bool? IsActive { get; set; }
 
     public string? Domain { get; set; }
+
+    public string? UserFintech { get; set; }
+
+    public string? PasswordFintech { get; set; }
 
     public virtual ICollection<CourseSportsFacility> CourseSportsFacilities { get; set; } = new List<CourseSportsFacility>();
 
     public virtual Department? Department { get; set; }
-
-    public virtual Availability? IsActiveNavigation { get; set; }
 
     public virtual ICollection<MunicipalityProcedure> MunicipalityProcedures { get; set; } = new List<MunicipalityProcedure>();
 
