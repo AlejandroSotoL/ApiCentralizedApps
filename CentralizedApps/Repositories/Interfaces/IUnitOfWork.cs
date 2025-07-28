@@ -8,7 +8,7 @@ namespace CentralizedApps.Repositories.Interfaces
         IUserRepository UserRepository { get; }
         IDepartmentRepository DepartmentRepository { get; }
 
-
+        IPaymentHistoryRepository paymentHistoryRepository{ get; }
 
 
         IGenericRepository<T> genericRepository<T>() where T : class;

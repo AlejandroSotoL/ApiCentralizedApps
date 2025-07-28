@@ -19,7 +19,7 @@ namespace CentralizedApps.Repositories
             _DBset = _Context.Set<T>();
         }
 
-        public async void AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
                 await _DBset.AddAsync(entity);
 

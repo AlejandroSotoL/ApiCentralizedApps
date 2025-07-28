@@ -2,7 +2,7 @@
 
 namespace CentralizedApps.Models.Dtos
 {
-    public class CreateUserDto
+    public class UserDto
     {
         public string FirstName { get; set; } = null!;
         public string? MiddleName { get; set; }
