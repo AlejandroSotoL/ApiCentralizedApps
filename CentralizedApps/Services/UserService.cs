@@ -16,7 +16,7 @@ public class UserService : IUserService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<User> CreateUserAsync(CreateUserDto dto)
+    public async Task<User> CreateUserAsync(UserDto dto)
     {
         
             var user = new User
@@ -34,14 +34,14 @@ public class UserService : IUserService
                 Address = dto.Address,
                 LoginStatus = false
             };
-        _unitOfWork.UserRepository.AddAsync(user);
+        await _unitOfWork.UserRepository.AddAsync(user);
 
         return user;
 
                 
     }
 
-    public void UpdateUserAsync(User user, CreateUserDto dto)
+    public void UpdateUserAsync(User user, UserDto dto)
 {
     
     user.FirstName = dto.FirstName;

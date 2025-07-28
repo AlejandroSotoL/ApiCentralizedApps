@@ -6,7 +6,7 @@ namespace CentralizedApps.Models.Dtos
     {
         public int CodeStatus { get; set; }
         public bool BooleanStatus { get; set; } = false;
-        public string SentencesError { get; set; } = null;
+        public string? SentencesError { get; set; } = null;
 
     }
 }
