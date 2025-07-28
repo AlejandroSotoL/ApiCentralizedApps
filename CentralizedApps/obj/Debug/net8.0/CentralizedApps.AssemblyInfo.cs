@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CentralizedApps")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+344fd6cb86a205bbf96bc66d9f38ba65ae1db2da")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e8cc663508ebf3bd14ee2812382dcff34d341509")]
 [assembly: System.Reflection.AssemblyProductAttribute("CentralizedApps")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CentralizedApps")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
