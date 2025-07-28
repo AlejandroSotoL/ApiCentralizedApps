@@ -12,13 +12,10 @@ namespace CentralizedApps.Services
 {
     public class DepartmentService : IDepartmentService
     {
-
-
         private readonly IUnitOfWork _unitOfWork;
 
         public DepartmentService( IUnitOfWork unitOfWork)
         {
-            
             _unitOfWork = unitOfWork;
         }
 
