@@ -332,7 +332,6 @@ C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\Ce
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.AssemblyInfoInputs.cache
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.AssemblyInfo.cs
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.csproj.CoreCompileInputs.cache
-C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.sourcelink.json
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\scopedcss\bundle\CentralizedApps.styles.css
@@ -351,3 +350,4 @@ C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\re
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.pdb
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.genruntimeconfig.cache
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\ref\CentralizedApps.dll
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\appsettings.json
