@@ -1,0 +1,14 @@
+# Compilación .NET
+/bin/
+/obj/
+
+# Configuración IDE
+.vscode/
+.idea/
+
+# Archivos temporales
+*.user
+*.suo
+*.log
+*.tmp
+*.cache
