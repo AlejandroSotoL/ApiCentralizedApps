@@ -10,5 +10,7 @@ namespace CentralizedApps.Services.Interfaces
     public interface IDepartmentService
     {
         Task<IEnumerable<DepartmentResponseDto>> GetAllDepartments();
+        Task<Department> createDepartment(DepartmentDto departmentDto);
+        Department updateDepartment(Department department, DepartmentDto departmentDto);
     }
 }

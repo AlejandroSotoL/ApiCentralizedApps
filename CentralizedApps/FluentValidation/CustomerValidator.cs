@@ -3,7 +3,7 @@ using CentralizedApps.Models.Dtos;
 
 namespace CentralizedApps.FluentValidation
 {
-    public class CustomerValidator : AbstractValidator<CreateUserDto>
+    public class CustomerValidator : AbstractValidator<UserDto>
     {
         public CustomerValidator()
         {
@@ -33,7 +33,7 @@ namespace CentralizedApps.FluentValidation
 
             RuleFor(x => x.PhoneNumber)
             .NotNull().WithMessage("El teléfono es obligatorio")
-            .Must(p => p.ToString().Length <= 10)
+            .Must(p => p?.ToString().Length <= 10)
             .WithMessage("El teléfono debe tener máximo 6 dígitos");
 
             RuleFor(x => x.Address)

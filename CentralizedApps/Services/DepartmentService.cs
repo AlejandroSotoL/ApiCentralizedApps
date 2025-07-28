@@ -14,26 +14,52 @@ namespace CentralizedApps.Services
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public DepartmentService( IUnitOfWork unitOfWork)
+        public DepartmentService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
         public async Task<IEnumerable<DepartmentResponseDto>> GetAllDepartments()
         {
+
+            var listDepartaments = await _unitOfWork.DepartmentRepository.GetAllAsync();
+
+            var listDepartamentsDto = listDepartaments
+                .Select(deparment => new DepartmentResponseDto
+                {
+                    Name = deparment.Name,
+                    Id = deparment.Id,
+                })
+                .ToList();
+
+            return listDepartamentsDto;
+
+
+        }
+
+
+        public async Task<Department> createDepartment(DepartmentDto departmentDto)
+        {
+            Department department = new Department
+            {
+                Id = departmentDto.Id,
+                Name = departmentDto.Name
+            };
+
+
+        await _unitOfWork.DepartmentRepository.AddAsync(department);
+            return department;
+        }
         
-                var listDepartaments = await _unitOfWork.DepartmentRepository.GetAllAsync();
 
-                var listDepartamentsDto = listDepartaments
-                    .Select(deparment => new DepartmentResponseDto
-                    {
-                        Name = deparment.Name,
-                        Id = deparment.Id,
-                    })
-                    .ToList();
+        public Department updateDepartment(Department department, DepartmentDto departmentDto)
+        {
+        
+            department.Name = departmentDto.Name;
+            
+            _unitOfWork.DepartmentRepository.Update(department);
 
-                return listDepartamentsDto;          
-
+            return department;
         }
     }
 }

@@ -7,11 +7,13 @@ namespace CentralizedApps.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly CentralizedAppsDbContext _context;
-        private IAuthRepository _AuthRepository;
-        private IUserRepository _UserRepository;
-        private IDepartmentRepository _DepartmentRepository;
+    private readonly CentralizedAppsDbContext _context;
+    private IAuthRepository _AuthRepository;
+    private IUserRepository _UserRepository;
+    private IDepartmentRepository _DepartmentRepository;
 
+    private IPaymentHistoryRepository _paymentHistoryRepository;
+    
 
         public UnitOfWork(CentralizedAppsDbContext context)
         {
@@ -23,6 +25,7 @@ namespace CentralizedApps.Repositories
 
         public IDepartmentRepository DepartmentRepository => _DepartmentRepository ??= new DepartmentRepository(_context);
 
+        public IPaymentHistoryRepository paymentHistoryRepository => _paymentHistoryRepository ??= new PaymentHistoryRepository(_context);
 
         public IGenericRepository<T> genericRepository<T>() where T : class
         {

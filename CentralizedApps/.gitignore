@@ -1,3 +1,17 @@
+# Compilación .NET
+/bin/
+/obj/
+
+# Configuración IDE
+.vscode/
+.idea/
+
+# Archivos temporales
+*.user
+*.suo
+*.log
+*.tmp
+*.cache
 # Compilados
 bin/
 obj/
@@ -20,7 +34,6 @@ obj/
 # Archivos generados
 *.apphost.exe
 *.sourceinfo
-*.json
 *.swagger.json
 *.swagger.yaml
 

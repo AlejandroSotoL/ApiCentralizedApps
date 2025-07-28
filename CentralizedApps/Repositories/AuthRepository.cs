@@ -9,7 +9,6 @@ namespace CentralizedApps.Repositories
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly GenericRepository<User> _GenericRepository;
         private readonly CentralizedAppsDbContext _Context;
         public AuthRepository(CentralizedAppsDbContext context)
         {
@@ -21,7 +20,11 @@ namespace CentralizedApps.Repositories
             {
                 var user = await _Context.Users
                 .FirstOrDefaultAsync(u => u.Email == email);
+                if (user != null)
+                {
                 user.LoginStatus = true ;
+                    
+                }
                 
                 if (user is null)
                 {
