@@ -34,7 +34,6 @@ obj/
 # Archivos generados
 *.apphost.exe
 *.sourceinfo
-*.json
 *.swagger.json
 *.swagger.yaml
 
