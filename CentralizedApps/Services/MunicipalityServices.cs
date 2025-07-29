@@ -133,6 +133,7 @@ namespace CentralizedApps.Services
                         .Include(r => r.MunicipalitySocialMedia)
                             .ThenInclude(r => r.SocialMediaType)
                         .Include(r => r.PaymentHistories)
+                            .ThenInclude(r => r.User)
                         .Include(r => r.Theme)
                 );
 
@@ -143,7 +144,6 @@ namespace CentralizedApps.Services
                 }
 
                 _logger.LogInformation("Se encontraron {Count} municipios con relaciones.", entities.Count);
-
                 return _mapper.Map<List<GetMunicipalitysDto>>(entities);
             }
             catch (Exception ex)
