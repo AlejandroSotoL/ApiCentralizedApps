@@ -133,6 +133,7 @@ namespace CentralizedApps.Services
                         .Include(r => r.MunicipalitySocialMedia)
                             .ThenInclude(r => r.SocialMediaType)
                         .Include(r => r.PaymentHistories)
+                            .ThenInclude(r => r.User)
                         .Include(r => r.Theme)
                 );
 

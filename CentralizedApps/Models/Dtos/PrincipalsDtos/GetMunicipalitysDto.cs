@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CentralizedApps.Models.Entities;
 
 namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 {
@@ -28,6 +29,12 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+    }
+
+    public class UserDto
+    {
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
     }
 
     public class ThemeDto
@@ -70,7 +77,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     {
         public int Id { get; set; }
         public string? Url { get; set; }
-
         public SocialMediaTypeDto? SocialMediaType { get; set; }
     }
 
