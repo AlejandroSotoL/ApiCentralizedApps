@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
+using CentralizedApps.Models.Dtos.PrincipalsDtos;
+using CentralizedApps.Models.Entities;
 using CentralizedApps.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,8 +13,10 @@ namespace CentralizedApps.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+
     public class ProceduresController : ControllerBase
     {
+
         private readonly IProcedureServices _ProcedureServices;
         public ProceduresController(IProcedureServices ProcedureServices)
         {
@@ -20,11 +24,10 @@ namespace CentralizedApps.Controllers
         }
 
 
+
         [HttpGet]
         public async Task<IActionResult> GetAllCurseSportsMunicipality()
         {
-
-            
             return Ok("");
         }
 
@@ -34,8 +37,6 @@ namespace CentralizedApps.Controllers
         {
             try
             {
-
-
                 await _ProcedureServices.createCurseSports(courseSportsFacilityDto);
                 return Ok(new ValidationResponseDto
                 {
@@ -55,18 +56,18 @@ namespace CentralizedApps.Controllers
             }
 
         }
-        
+
+        [HttpPost("/Add/TypeSocialMedia")]
+        public async Task<IActionResult> PostSocialMediaType(SocialMediaTypeDto socialMediaTypeDto)
+        {
+            return Ok();
+        }
 
 
-
-
-
-
-
-
-
-
-
-
+        [HttpPost("/Add/TypeSocialMedia_ToMunicipality")]
+        public async Task<IActionResult> AsignSocialMediaToMunicipality()
+        {
+            return Ok();
+        }
     }
 }
