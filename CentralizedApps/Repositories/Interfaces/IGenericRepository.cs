@@ -17,12 +17,14 @@ namespace CentralizedApps.Repositories.Interfaces
 
         //Predication
         Task<T?> FindAsync_Predicate(Expression<Func<T, bool>> predicate);
-
         //Predication
         Task<List<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes);
-
         Task<List<T>> GetAllWithNestedIncludesAsync(
             Func<IQueryable<T>, IQueryable<T>> includeFunc
         );
+        Task<T?> GetOneWithNestedIncludesAsync(
+            Func<IQueryable<T>, IQueryable<T>> includeFunc,
+            Expression<Func<T, bool>> predicate);
+
     }
 }

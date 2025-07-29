@@ -49,10 +49,17 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public int Id { get; set; }
         public string? Name { get; set; }
 
-        public List<SportFacilityDto>? SportFacilities { get; set; }
+        public SportFacilityDto? SportFacilities { get; set; }
+        public CourseDto? Courses { get; set; }
     }
 
     public class SportFacilityDto
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+    }
+
+    public class CourseDto
     {
         public int Id { get; set; }
         public string? Name { get; set; }
@@ -94,8 +101,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public JustMunicipalitysDto? Municipality { get; set; }
         public MunicipalityProcedureDto? MunicipalityProcedures { get; set; }
         public AvailibityDto? Availability { get; set; }
-
-
     }
 
     public class AvailibityDto

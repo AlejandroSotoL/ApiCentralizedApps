@@ -10,7 +10,7 @@ namespace CentralizedApps.Services.Interfaces
 {
     public interface IProcedureServices
     {
-        Task<bool> createCurseSports(CourseSportsFacilityDto courseSportsFacilityDto);
-    {        Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType);
+        Task<bool> createCurseSports(AddCourseSportsFacilityDto courseSportsFacilityDto);
+        Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType);
     }
 }

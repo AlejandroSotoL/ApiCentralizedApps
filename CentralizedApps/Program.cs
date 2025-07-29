@@ -49,7 +49,11 @@ builder.Services.AddSwaggerGen(c =>
 
 // Base de datos
 builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConectionDefault")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("ConectionDefault"),
+        sqlOptions => sqlOptions.CommandTimeout(180) 
+    )
+);
 
 //AutoMapper
 

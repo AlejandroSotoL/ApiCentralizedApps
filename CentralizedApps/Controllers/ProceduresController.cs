@@ -23,17 +23,8 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllCurseSportsMunicipality()
-        {
-            return Ok("");
-        }
-
-
         [HttpPost]
-        public async Task<IActionResult> createCurseSports([FromBody] CourseSportsFacilityDto courseSportsFacilityDto)
+        public async Task<IActionResult> createCurseSports([FromBody] AddCourseSportsFacilityDto courseSportsFacilityDto)
         {
             try
             {

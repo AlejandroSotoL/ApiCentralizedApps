@@ -85,7 +85,7 @@ namespace CentralizedApps.Services
                             };
 
                             var municipioRepo = _unitOfWork.genericRepository<Municipality>();
-                            municipioRepo.AddAsync(municipality);
+                            await municipioRepo.AddAsync(municipality);
                             await _unitOfWork.CompleteAsync();
                         }
                         catch (Exception ex)
@@ -125,8 +125,10 @@ namespace CentralizedApps.Services
                 var response = _unitOfWork.genericRepository<Municipality>();
                 var entities = await response.GetAllWithNestedIncludesAsync(query =>
                     query
-                        .Include(r => r.CourseSportsFacilities)
-                            .ThenInclude(r => r.SportFacilities)
+                        .Include(m => m.CourseSportsFacilities)!
+                            .ThenInclude(csf => csf.SportFacilities)
+                        .Include(m => m.CourseSportsFacilities)!
+                            .ThenInclude(csf => csf.Courses)
                         .Include(r => r.Department)
                         .Include(r => r.MunicipalityProcedures)
                             .ThenInclude(r => r.Procedures)
@@ -142,15 +144,53 @@ namespace CentralizedApps.Services
                     _logger.LogWarning("No se encontraron municipios con relaciones.");
                     return new List<GetMunicipalitysDto>();
                 }
-
                 _logger.LogInformation("Se encontraron {Count} municipios con relaciones.", entities.Count);
-
                 return _mapper.Map<List<GetMunicipalitysDto>>(entities);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al procesar la información de los Municipios: {Message}", ex.Message);
                 throw new ApplicationException($"Ocurrió un error inesperado al obtener los municipios: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<GetMunicipalitysDto?> JustGetMunicipalityWithRelations(int municipalityId)
+        {
+            try
+            {
+                _logger.LogInformation("Iniciando búsqueda del municipio con ID: {Id}", municipalityId);
+
+                var response = _unitOfWork.genericRepository<Municipality>();
+
+                var entity = await response.GetOneWithNestedIncludesAsync(
+                    query => query
+                        .Include(m => m.CourseSportsFacilities)!
+                            .ThenInclude(csf => csf.SportFacilities)
+                        .Include(m => m.CourseSportsFacilities)!
+                            .ThenInclude(csf => csf.Courses)
+                        .Include(r => r.Department)
+                        .Include(r => r.MunicipalityProcedures)
+                            .ThenInclude(r => r.Procedures)
+                        .Include(r => r.MunicipalitySocialMedia)
+                            .ThenInclude(r => r.SocialMediaType)
+                        .Include(r => r.PaymentHistories)
+                            .ThenInclude(r => r.StatusTypeNavigation)
+                        .Include(r => r.Theme),
+                    m => m.Id == municipalityId
+                );
+
+                if (entity == null)
+                {
+                    _logger.LogWarning("No se encontró municipio con ID: {Id}", municipalityId);
+                    return null;
+                }
+
+                return _mapper.Map<GetMunicipalitysDto>(entity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener municipio con ID: {Id}", municipalityId);
+                throw new ApplicationException($"Error al obtener municipio con ID {municipalityId}: {ex.Message}", ex);
             }
         }
 

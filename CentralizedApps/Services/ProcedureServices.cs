@@ -19,9 +19,9 @@ namespace CentralizedApps.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> createCurseSports(CourseSportsFacilityDto courseSportsFacilityDto)
+        public async Task<bool> createCurseSports(AddCourseSportsFacilityDto courseSportsFacilityDto)
         {
-            using var transaction = await _unitOfWork.BeginTransactionAsync(); 
+            using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
 
@@ -39,25 +39,20 @@ namespace CentralizedApps.Services
                     ReservationPost = courseSportsFacilityDto?.sportsFacilityDto?.ReservationPost,
                     CalendaryPost = courseSportsFacilityDto?.sportsFacilityDto?.CalendaryPost
                 };
-
-
-
-                await  _unitOfWork.genericRepository<Course>().AddAsync(course);
+                await _unitOfWork.genericRepository<Course>().AddAsync(course);
                 await _unitOfWork.genericRepository<SportsFacility>().AddAsync(sportsFacility);
 
                 await _unitOfWork.SaveChangesAsync();
 
-                    CourseSportsFacility courseSportsFacility = new CourseSportsFacility
-                    {
-                        SportFacilitiesId = sportsFacility.Id,
-                        CoursesId = course.Id,
-                        MunicipalityId = courseSportsFacilityDto?.MunicipalityId
-                    };
+                CourseSportsFacility courseSportsFacility = new CourseSportsFacility
+                {
+                    SportFacilitiesId = sportsFacility.Id,
+                    CoursesId = course.Id,
+                    MunicipalityId = courseSportsFacilityDto?.MunicipalityId
+                };
 
                 await _unitOfWork.genericRepository<CourseSportsFacility>().AddAsync(courseSportsFacility);
-
                 await _unitOfWork.SaveChangesAsync();
-
                 await transaction.CommitAsync();
                 return true;
             }
@@ -66,7 +61,7 @@ namespace CentralizedApps.Services
                 await transaction.RollbackAsync();
                 return false;
             }
-
+        }
         public Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType)
         {
             throw new NotImplementedException();

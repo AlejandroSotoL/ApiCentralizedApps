@@ -87,5 +87,14 @@ namespace CentralizedApps.Controllers
             }
         }
 
+        [HttpGet("/GetJustGetMunicipalityWithRelations_{IdMunicipality}")]
+        public async Task<IActionResult> GetJust(int IdMunicipality)
+        {
+            var response = await _MunicipalityServices.JustGetMunicipalityWithRelations(IdMunicipality);
+
+            if (response == null)
+                return NotFound($"No se encontró el municipio con ID {IdMunicipality}");
+            return Ok(response);
+        }
     }
 }

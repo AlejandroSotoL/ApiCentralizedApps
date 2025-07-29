@@ -6,7 +6,7 @@ using CentralizedApps.Models.Entities;
 
 namespace CentralizedApps.Models.Dtos
 {
-    public class CourseSportsFacilityDto
+    public class AddCourseSportsFacilityDto
     {
         public int? MunicipalityId { get; set; }
 

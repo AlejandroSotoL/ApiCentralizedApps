@@ -10,6 +10,7 @@ namespace CentralizedApps.Services.Interfaces
     {
         Task<bool> AddMunicipalityAsync(CompleteMunicipalityDto dto);
         Task<List<GetMunicipalitysDto>> GetAllMunicipalityWithRelations();
+        Task<GetMunicipalitysDto?> JustGetMunicipalityWithRelations(int MunicipalityId);
         Task<List<JustMunicipalitysDto>> justMunicipalitysDtos(int DepartamentId);
     }
 }
