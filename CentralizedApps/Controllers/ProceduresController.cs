@@ -19,17 +19,7 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllCurseSportsMunicipality()
-        {
-
-            
-            return Ok("");
-        }
-
-
-        [HttpPost]
+        [HttpPost("CurseSports")]
         public async Task<IActionResult> createCurseSports([FromBody] CourseSportsFacilityDto courseSportsFacilityDto)
         {
             try
@@ -55,7 +45,118 @@ namespace CentralizedApps.Controllers
             }
 
         }
+
+
+        [HttpPost("Procedures")]
+
+        public async Task<IActionResult> createProcedures([FromBody] ProcedureDto procedureDto)
+        {
+            try
+            {
+                await _ProcedureServices.createProcedures(procedureDto);
+
+                return Ok(new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = ""
+                });
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("DocumentType")]
+
+        public async Task<IActionResult> createDocumentType([FromBody] DocumentTypeDto documentTypeDto)
+        {
+            try
+            {
+                await _ProcedureServices.createDocumentType(documentTypeDto);
+
+                return Ok(new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = ""
+                });
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                });
+            }
+        }
         
+        [HttpPost("QueryField")]
+
+        public async Task<IActionResult> createQueryField([FromBody] QueryFieldDto queryFieldDto)
+        {
+            try
+            {
+                await _ProcedureServices.createQueryField(queryFieldDto);
+
+                return Ok(new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = ""
+                });
+                
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                });
+            }
+        }
+        [HttpPost("Availibity")]
+        
+        public async Task<IActionResult> createAvailibity([FromBody] AvailibityDto availibityDto)
+        {
+            try
+            {
+                await _ProcedureServices.createAvailibity(availibityDto);
+
+                return Ok(new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = ""
+                });
+                
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                });
+            }
+        }
 
 
 

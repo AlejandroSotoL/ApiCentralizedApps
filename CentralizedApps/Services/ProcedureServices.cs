@@ -21,7 +21,7 @@ namespace CentralizedApps.Services
 
         public async Task<bool> createCurseSports(CourseSportsFacilityDto courseSportsFacilityDto)
         {
-            using var transaction = await _unitOfWork.BeginTransactionAsync(); 
+            using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
 
@@ -42,17 +42,17 @@ namespace CentralizedApps.Services
 
 
 
-                await  _unitOfWork.genericRepository<Course>().AddAsync(course);
+                await _unitOfWork.genericRepository<Course>().AddAsync(course);
                 await _unitOfWork.genericRepository<SportsFacility>().AddAsync(sportsFacility);
 
                 await _unitOfWork.SaveChangesAsync();
 
-                    CourseSportsFacility courseSportsFacility = new CourseSportsFacility
-                    {
-                        SportFacilitiesId = sportsFacility.Id,
-                        CoursesId = course.Id,
-                        MunicipalityId = courseSportsFacilityDto?.MunicipalityId
-                    };
+                CourseSportsFacility courseSportsFacility = new CourseSportsFacility
+                {
+                    SportFacilitiesId = sportsFacility.Id,
+                    CoursesId = course.Id,
+                    MunicipalityId = courseSportsFacilityDto?.MunicipalityId
+                };
 
                 await _unitOfWork.genericRepository<CourseSportsFacility>().AddAsync(courseSportsFacility);
 
@@ -67,6 +67,49 @@ namespace CentralizedApps.Services
                 return false;
             }
 
+        }
+
+
+        public async Task<Procedure> createProcedures(ProcedureDto procedureDto)
+        {
+            Procedure procedure = new Procedure
+            {
+                Name = procedureDto.Name
+            };
+            await _unitOfWork.genericRepository<Procedure>().AddAsync(procedure);
+            await _unitOfWork.SaveChangesAsync();
+            return procedure;
+        }
+
+        public async Task<DocumentType> createDocumentType(DocumentTypeDto documentTypeDto)
+        {
+            DocumentType documentType = new DocumentType
+            {
+                NameDocument = documentTypeDto.NameDocument
+            };
+            await _unitOfWork.genericRepository<DocumentType>().AddAsync(documentType);
+            await _unitOfWork.SaveChangesAsync();
+            return documentType;
+        }
+        public async Task<QueryField> createQueryField(QueryFieldDto queryFieldDto)
+        {
+            QueryField queryField = new QueryField
+            {
+                FieldName = queryFieldDto.FieldName
+            };
+            await _unitOfWork.genericRepository<QueryField>().AddAsync(queryField);
+            await _unitOfWork.SaveChangesAsync();
+            return queryField;
+        }
+        public async Task<Availibity> createAvailibity(AvailibityDto availibityDto)
+        {
+            Availibity availibity = new Availibity
+            {
+                TypeStatus = availibityDto.TypeStatus
+            };
+            await _unitOfWork.genericRepository<Availibity>().AddAsync(availibity);
+            await _unitOfWork.SaveChangesAsync();
+            return availibity;
         }
     }
 }
