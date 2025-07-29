@@ -22,7 +22,6 @@ namespace CentralizedApps.Repositories
 
         public async Task<IEnumerable<PaymentHistoryUserListDto>> GetAllPaymentHistoryByIdAsync(Expression<Func<PaymentHistory, bool>> filtro)
         {
-
             var listpaymentHistoryUser = await _context.PaymentHistories
                                     .Where(filtro)
                                     .Include(pa => pa.User)

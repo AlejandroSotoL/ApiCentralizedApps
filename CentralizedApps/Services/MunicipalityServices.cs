@@ -144,6 +144,7 @@ namespace CentralizedApps.Services
                 }
 
                 _logger.LogInformation("Se encontraron {Count} municipios con relaciones.", entities.Count);
+
                 return _mapper.Map<List<GetMunicipalitysDto>>(entities);
             }
             catch (Exception ex)

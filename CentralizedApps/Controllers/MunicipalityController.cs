@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 namespace CentralizedApps.Controllers
 {
     [Route("[controller]")]
-    public class MunicipalityController : Controller
+    public class MunicipalityController : ControllerBase
     {
         private readonly IMunicipalityServices _MunicipalityServices;
         private readonly ILogger<MunicipalityServices> _logger;
