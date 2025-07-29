@@ -33,6 +33,7 @@ builder.Services
     .AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<SportsFacilityvalidator>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -48,7 +49,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // Base de datos
 builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConectionDefault"), sql => sql.EnableRetryOnFailure()));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConectionDefault")));
 
 //AutoMapper
 
@@ -61,6 +62,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMunicipalityServices, MunicipalityServices>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
+builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
+
 
 var app = builder.Build();
 
