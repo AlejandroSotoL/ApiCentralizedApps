@@ -21,8 +21,11 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Procedure, ProcedureDto>();
             CreateMap<MunicipalitySocialMedium, MunicipalitySocialMediaDto>();
             CreateMap<SocialMediaType, SocialMediaTypeDto>();
-            CreateMap<PaymentHistory, PaymentHistoryDto>();
+            CreateMap<PaymentHistory, PaymentHistoryDto>()
+                .ForMember(dest => dest.Availability, opt => opt.MapFrom(src => src.StatusTypeNavigation));
             CreateMap<Municipality, JustMunicipalitysDto>();
+            CreateMap<Availibity, AvailibityDto>();
+
         }
     }
 }

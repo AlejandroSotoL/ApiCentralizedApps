@@ -44,7 +44,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? BackGroundColor { get; set; }
     }
 
-
     public class CourseSportsFacilityDto
     {
         public int Id { get; set; }
@@ -52,7 +51,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 
         public List<SportFacilityDto>? SportFacilities { get; set; }
     }
-
 
     public class SportFacilityDto
     {
@@ -77,7 +75,9 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     {
         public int Id { get; set; }
         public string? Url { get; set; }
+        public bool? IsActive { get; set; }
         public SocialMediaTypeDto? SocialMediaType { get; set; }
+        public JustMunicipalitysDto? Municipality { get; set; }
     }
 
     public class SocialMediaTypeDto
@@ -85,11 +85,22 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public int Id { get; set; }
         public string? Name { get; set; }
     }
+
     public class PaymentHistoryDto
     {
         public int Id { get; set; }
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
+        public JustMunicipalitysDto? Municipality { get; set; }
+        public MunicipalityProcedureDto? MunicipalityProcedures { get; set; }
+        public AvailibityDto? Availability { get; set; }
+
+
     }
 
+    public class AvailibityDto
+    {
+        public int Id { get; set; }
+        public string? TypeStatus { get; set; }
+    }
 }
