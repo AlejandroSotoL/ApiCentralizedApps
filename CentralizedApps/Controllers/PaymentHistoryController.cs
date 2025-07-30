@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
@@ -28,7 +24,15 @@ namespace CentralizedApps.Controllers
         [HttpGet("User/{id}")]
         public async Task<IActionResult> getAllPaymentHistory(int id)
         {
-
+            if (id <= 0)
+            {
+                return  BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = "el id no debe ser null y debe se mayor a cero"
+                });
+            }
             var response = await _paymentHistoryService.getAllPaymentHistoryByIdAsync(id);
             if (response == null || !response.Any())
             {
@@ -53,17 +57,24 @@ namespace CentralizedApps.Controllers
         {
             try
             {
-                
 
+                if (createPaymentHistoryDto == null)
+                {
+                    return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = "el objeto no puede ser null"
+                });
+                }
 
-            await _paymentHistoryService.createPaymentHistory(createPaymentHistoryDto);
-            await _unitOfWork.SaveChangesAsync();
-            return Ok(new ValidationResponseDto
-            {
-                CodeStatus = 200,
-                BooleanStatus = true,
-                SentencesError = ""
-            });
+                await _paymentHistoryService.createPaymentHistory(createPaymentHistoryDto);
+                return Ok(new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = ""
+                });
             }
             catch (Exception ex)
             {
@@ -80,31 +91,41 @@ namespace CentralizedApps.Controllers
 
         [HttpPut("{id}")]
 
-        public async Task<IActionResult> updatePaymentHistory(int id, [FromBody] PaymentHistoryDto PaymentHistoryDto)
+        public async Task<IActionResult> updatePaymentHistory(int id, [FromBody] PaymentHistoryDto updatePaymentHistoryDto)
         {
             try
             {
-                var responsepaymentHistory = await _unitOfWork.paymentHistoryRepository.GetPaymentHistoryByIdAsync(paymentHistory => paymentHistory.Id == id);
-
-                if (responsepaymentHistory == null)
+                
+                if (updatePaymentHistoryDto == null)
                 {
-                    return NotFound(new ValidationResponseDto
+                    return BadRequest(
+                    new ValidationResponseDto
                     {
                         BooleanStatus = false,
-                        CodeStatus = 404,
-                        SentencesError = $"Notfound"
+                        CodeStatus = 400,
+                        SentencesError = "el objeto no puede ser null"
                     });
                 }
 
-                _paymentHistoryService.UpdatePaymentHistory(responsepaymentHistory, PaymentHistoryDto);
-                await _unitOfWork.SaveChangesAsync();
-
-                return Ok(new ValidationResponseDto
-                {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = ""
-                });
+                var result = await _paymentHistoryService.UpdatePaymentHistory(id, updatePaymentHistoryDto);
+                if (!result.BooleanStatus)
+                    {
+                        return BadRequest(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = "Error: " + result.SentencesError
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = result.SentencesError
+                        });
+                    }
 
 
             }

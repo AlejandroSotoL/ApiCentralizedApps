@@ -1,6 +1,3 @@
-
-
-
 using CentralizedApps.Models.Entities;
 
 namespace CentralizedApps.Repositories.Interfaces

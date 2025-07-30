@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Entities;
 
@@ -11,6 +7,6 @@ namespace CentralizedApps.Services.Interfaces
     {
         Task<IEnumerable<DepartmentResponseDto>> GetAllDepartments();
         Task<Department> createDepartment(DepartmentDto departmentDto);
-        Department updateDepartment(Department department, DepartmentDto departmentDto);
+        Task<ValidationResponseDto> updateDepartment(int id, DepartmentDto departmentDto);
     }
 }
