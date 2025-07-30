@@ -190,18 +190,20 @@ namespace CentralizedApps.Services
                     CodeStatus = 200,
                     SentencesError = "Editado"
                 };
-              catch (Exception ex)
+
+            }
+            catch (Exception ex)
             {
-                return Ok(new ValidationResponseDto
+                return new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = "Error al actualizar el tema: " + ex.Message
-                });
+                } ;
             }
         }
-        
-        
+
+
         public async Task<Course> createCourse(CreateCourseDto createCourseDto)
         {
             Course course = new Course
@@ -214,8 +216,8 @@ namespace CentralizedApps.Services
             await _unitOfWork.SaveChangesAsync();
             return course;
         }
-        
-        
+
+
         public async Task<SportsFacility> createSportsFacility(CreateSportsFacilityDto createSportsFacilityDto)
         {
             SportsFacility sportsFacility = new SportsFacility
@@ -272,14 +274,14 @@ namespace CentralizedApps.Services
             _unitOfWork.genericRepository<QueryFieldDto>().Update(queryField);
 
             return new ValidationResponseDto
-                {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = "succesfully"
-                };
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
         }
-        
-        
+
+
         public async Task<ValidationResponseDto> updateAvailibity(int id, CreateAvailibityDto updateAvailibityDto)
         {
             var availibity = await _unitOfWork.genericRepository<Availibity>().GetByIdAsync(id);
@@ -296,14 +298,14 @@ namespace CentralizedApps.Services
             availibity.TypeStatus = updateAvailibityDto.TypeStatus;
             _unitOfWork.genericRepository<Availibity>().Update(availibity);
             return new ValidationResponseDto
-                {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = "succesfully"
-                };
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
         }
-        
-        
+
+
         public async Task<ValidationResponseDto> updateCourse(int id, CreateCourseDto updateCourseDto)
         {
             var Course = await _unitOfWork.genericRepository<Course>().GetByIdAsync(id);
@@ -322,14 +324,14 @@ namespace CentralizedApps.Services
             Course.Get = updateCourseDto.Get;
             _unitOfWork.genericRepository<Course>().Update(Course);
             return new ValidationResponseDto
-                {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = "succesfully"
-                };
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
         }
-        
-        
+
+
         public async Task<ValidationResponseDto> updateSportsFacility(int id, CreateSportsFacilityDto updateSportsFacilityDto)
         {
             var SportsFacility = await _unitOfWork.genericRepository<SportsFacility>().GetByIdAsync(id);
@@ -339,7 +341,7 @@ namespace CentralizedApps.Services
                 {
                     BooleanStatus = false,
                     CodeStatus = 404,
-                    SentencesError = "Error al actualizar el tema: " + ex.Message
+                    SentencesError = "Error al actualizar el tema: "
                 };
             }
 
@@ -350,11 +352,11 @@ namespace CentralizedApps.Services
             _unitOfWork.genericRepository<SportsFacility>().Update(SportsFacility);
 
             return new ValidationResponseDto
-                {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = "succesfully"
-                };
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
         }
     }
 }

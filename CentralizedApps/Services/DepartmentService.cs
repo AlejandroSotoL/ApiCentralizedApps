@@ -38,11 +38,11 @@ namespace CentralizedApps.Services
                 Id = departmentDto.Id,
                 Name = departmentDto.Name
             };
-          await _unitOfWork.genericRepository<Department>().AddAsync(department);
-          await _unitOfWork.SaveChangesAsync();
-          return department;
+            await _unitOfWork.genericRepository<Department>().AddAsync(department);
+            await _unitOfWork.SaveChangesAsync();
+            return department;
         }
-        
+
 
         public async Task<ValidationResponseDto> updateDepartment(int id, DepartmentDto departmentDto)
         {
@@ -60,11 +60,11 @@ namespace CentralizedApps.Services
             _unitOfWork.genericRepository<Department>().Update(department);
             await _unitOfWork.SaveChangesAsync();
             return new ValidationResponseDto
-                {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = "succesfully"
-                };
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
         }
     }
 }

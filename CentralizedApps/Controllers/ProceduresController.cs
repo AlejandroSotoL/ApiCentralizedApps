@@ -20,7 +20,7 @@ namespace CentralizedApps.Controllers
         private readonly IProcedureServices _ProcedureServices;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<MunicipalityServices> _logger;
-        public ProceduresController(ILogger<MunicipalityServices> logger,IProcedureServices ProcedureServices, IUnitOfWork unitOfWork)
+        public ProceduresController(ILogger<MunicipalityServices> logger, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
@@ -51,8 +51,6 @@ namespace CentralizedApps.Controllers
                     SentencesError = ex.Message
                 });
             }
-
-
         }
 
         [HttpPost("QueryField")]
@@ -173,10 +171,10 @@ namespace CentralizedApps.Controllers
                 });
             }
         }
-                
-                
+
+
         [HttpPut("DocumentType/{id}")]
-        public async Task<IActionResult> updateDocumentType(int id,[FromBody] DocumentTypeDto updateDocumentTypeDto)
+        public async Task<IActionResult> updateDocumentType(int id, [FromBody] DocumentTypeDto updateDocumentTypeDto)
         {
 
             try
@@ -226,30 +224,6 @@ namespace CentralizedApps.Controllers
         }
 
 
-        [HttpPost("Availibity")]
-        public async Task<IActionResult> createAvailibity([FromBody] CreateAvailibityDto availibityDto)
-        {
-            try
-            {
-                await _ProcedureServices.createAvailibity(availibityDto);
-
-                return Ok(new ValidationResponseDto
-                {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = ""
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ValidationResponseDto
-                {
-                    CodeStatus = 400,
-                    BooleanStatus = false,
-                    SentencesError = ex.Message
-                });
-            }
-        }
 
         [HttpPost("NewTheme")]
         public async Task<IActionResult> createNewTheme([FromBody] ThemeDto themeDto)
@@ -292,211 +266,220 @@ namespace CentralizedApps.Controllers
                     CodeStatus = result.CodeStatus,
                     SentencesError = "Error al actualizar el tema: " + result.SentencesError
                 });
-        }
-
-        
-        [HttpPut("QueryField/{id}")]
-        public async Task<IActionResult> updateQueryField(int id,[FromBody] QueryFieldDto updatequeryFieldDto)
-        {
-
-            try
+            }catch (Exception ex)
             {
-                if (updatequeryFieldDto == null)
-                {
-                    return BadRequest(
-                    new ValidationResponseDto
-                    {
-                        BooleanStatus = false,
-                        CodeStatus = 404,
-                        SentencesError = "el objeto no puede ser null"
-                    });
-                }
-
-                var result = await _ProcedureServices.updateQueryField(id, updatequeryFieldDto);
-
-                if (!result.BooleanStatus)
-                {
-                    return BadRequest(new ValidationResponseDto
-                    {
-                        BooleanStatus = result.BooleanStatus,
-                        CodeStatus = result.CodeStatus,
-                        SentencesError = "Error: " + result.SentencesError
-                    });
-                }
-                else
-                {
-                    return Ok(new ValidationResponseDto
-                    {
-                        BooleanStatus = result.BooleanStatus,
-                        CodeStatus = result.CodeStatus,
-                        SentencesError = result.SentencesError
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Ok(new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 400,
-                    SentencesError = "Error: " + ex.Message
-                });
-            }
-
-            
-        }   
-        [HttpPut("Availibity/{id}")]
-        public async Task<IActionResult> updateAvailibity(int id,[FromBody] CreateAvailibityDto updateAvailibityDto)
-        {
-
-            try
-            {
-                if (updateAvailibityDto == null)
-                {
-                    return BadRequest(
-                    new ValidationResponseDto
-                    {
-                        BooleanStatus = false,
-                        CodeStatus = 404,
-                        SentencesError = "el objeto no puede ser null"
-                    });
-                }
-
-                var result = await _ProcedureServices.updateAvailibity(id, updateAvailibityDto);
-
-                if (!result.BooleanStatus)
-                {
-                    return BadRequest(new ValidationResponseDto
-                    {
-                        BooleanStatus = result.BooleanStatus,
-                        CodeStatus = result.CodeStatus,
-                        SentencesError = "Error: " + result.SentencesError
-                    });
-                }
-                else
-                {
-                    return Ok(new ValidationResponseDto
-                    {
-                        BooleanStatus = result.BooleanStatus,
-                        CodeStatus = result.CodeStatus,
-                        SentencesError = result.SentencesError
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Ok(new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 400,
-                    SentencesError = "Error: " + ex.Message
-                });
-            }
-
-            
-        } 
-        
-        [HttpPut("Course/{id}")]
-        public async Task<IActionResult> updateCourse(int id,[FromBody] CreateCourseDto updateCourseDto)
-        {
-
-            try
-            {
-                if (updateCourseDto == null)
-                {
-                    return BadRequest(
-                    new ValidationResponseDto
-                    {
-                        BooleanStatus = false,
-                        CodeStatus = 404,
-                        SentencesError = "el objeto no puede ser null"
-                    });
-                }
-
-                var result = await _ProcedureServices.updateCourse(id, updateCourseDto);
-
-                if (!result.BooleanStatus)
-                {
-                    return BadRequest(new ValidationResponseDto
-                    {
-                        BooleanStatus = result.BooleanStatus,
-                        CodeStatus = result.CodeStatus,
-                        SentencesError = "Error: " + result.SentencesError
-                    });
-                }
-                else
-                {
-                    return Ok(new ValidationResponseDto
-                    {
-                        BooleanStatus = result.BooleanStatus,
-                        CodeStatus = result.CodeStatus,
-                        SentencesError = result.SentencesError
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Ok(new ValidationResponseDto
+                _logger.LogError(ex, "Error updating theme with ID {Id}", id);
+                return BadRequest(new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = "Error al actualizar el tema: " + ex.Message
                 });
             }
-        }
+            }
 
 
-
-            
-        [HttpPut("SportsFacility/{id}")]
-        public async Task<IActionResult> updateSportsFacility(int id,[FromBody] CreateSportsFacilityDto updateSportsFacilityDto)
-        {
-
-            try
+        [HttpPut("QueryField/{id}")]
+            public async Task<IActionResult> updateQueryField(int id, [FromBody] QueryFieldDto updatequeryFieldDto)
             {
-                if (updateSportsFacilityDto == null)
-                {
-                    return BadRequest(
-                    new ValidationResponseDto
-                    {
-                        BooleanStatus = false,
-                        CodeStatus = 400,
-                        SentencesError = "el objeto no puede ser null"
-                    });
-                }
 
-                var result = await _ProcedureServices.updateSportsFacility(id, updateSportsFacilityDto);
-
-                if (!result.BooleanStatus)
+                try
                 {
-                    return BadRequest(new ValidationResponseDto
+                    if (updatequeryFieldDto == null)
                     {
-                        BooleanStatus = result.BooleanStatus,
-                        CodeStatus = result.CodeStatus,
-                        SentencesError = "Error: " + result.SentencesError
-                    });
+                        return BadRequest(
+                        new ValidationResponseDto
+                        {
+                            BooleanStatus = false,
+                            CodeStatus = 404,
+                            SentencesError = "el objeto no puede ser null"
+                        });
+                    }
+
+                    var result = await _ProcedureServices.updateQueryField(id, updatequeryFieldDto);
+
+                    if (!result.BooleanStatus)
+                    {
+                        return BadRequest(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = "Error: " + result.SentencesError
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = result.SentencesError
+                        });
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
                     return Ok(new ValidationResponseDto
                     {
-                        BooleanStatus = result.BooleanStatus,
-                        CodeStatus = result.CodeStatus,
-                        SentencesError = result.SentencesError
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Error: " + ex.Message
                     });
                 }
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 400,
-                    SentencesError = "Error: " + ex.Message
-                });
-            }
-            
-        }   
 
+
+            [HttpPut("Availibity/{id}")]
+            public async Task<IActionResult> updateAvailibity(int id, [FromBody] CreateAvailibityDto updateAvailibityDto)
+            {
+
+                try
+                {
+                    if (updateAvailibityDto == null)
+                    {
+                        return BadRequest(
+                        new ValidationResponseDto
+                        {
+                            BooleanStatus = false,
+                            CodeStatus = 404,
+                            SentencesError = "el objeto no puede ser null"
+                        });
+                    }
+
+                    var result = await _ProcedureServices.updateAvailibity(id, updateAvailibityDto);
+
+                    if (!result.BooleanStatus)
+                    {
+                        return BadRequest(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = "Error: " + result.SentencesError
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = result.SentencesError
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Ok(new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Error: " + ex.Message
+                    });
+                }
+            }
+
+            [HttpPut("Course/{id}")]
+            public async Task<IActionResult> updateCourse(int id, [FromBody] CreateCourseDto updateCourseDto)
+            {
+
+                try
+                {
+                    if (updateCourseDto == null)
+                    {
+                        return BadRequest(
+                        new ValidationResponseDto
+                        {
+                            BooleanStatus = false,
+                            CodeStatus = 404,
+                            SentencesError = "el objeto no puede ser null"
+                        });
+                    }
+
+                    var result = await _ProcedureServices.updateCourse(id, updateCourseDto);
+
+                    if (!result.BooleanStatus)
+                    {
+                        return BadRequest(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = "Error: " + result.SentencesError
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = result.SentencesError
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Ok(new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al actualizar el tema: " + ex.Message
+                    });
+                }
+            }
+
+
+
+
+            [HttpPut("SportsFacility/{id}")]
+            public async Task<IActionResult> updateSportsFacility(int id, [FromBody] CreateSportsFacilityDto updateSportsFacilityDto)
+            {
+
+                try
+                {
+                    if (updateSportsFacilityDto == null)
+                    {
+                        return BadRequest(
+                        new ValidationResponseDto
+                        {
+                            BooleanStatus = false,
+                            CodeStatus = 400,
+                            SentencesError = "el objeto no puede ser null"
+                        });
+                    }
+
+                    var result = await _ProcedureServices.updateSportsFacility(id, updateSportsFacilityDto);
+
+                    if (!result.BooleanStatus)
+                    {
+                        return BadRequest(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = "Error: " + result.SentencesError
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = result.SentencesError
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Error: " + ex.Message
+                    });
+                }
+
+            }
+
+        }
     }
-}
+
