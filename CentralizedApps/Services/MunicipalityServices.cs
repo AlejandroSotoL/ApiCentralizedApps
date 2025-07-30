@@ -124,10 +124,8 @@ namespace CentralizedApps.Services
                 var response = _unitOfWork.genericRepository<Municipality>();
                 var entities = await response.GetAllWithNestedIncludesAsync(query =>
                     query
-                        .Include(m => m.CourseSportsFacilities)!
-                            .ThenInclude(csf => csf.SportFacilities)
-                        .Include(m => m.CourseSportsFacilities)!
-                            .ThenInclude(csf => csf.Courses)
+                        .Include(r => r.Courses)!
+                        .Include(r => r.SportsFacilities)!
                         .Include(r => r.Department)
                         .Include(r => r.MunicipalityProcedures)
                             .ThenInclude(r => r.Procedures)
@@ -163,10 +161,8 @@ namespace CentralizedApps.Services
 
                 var entity = await response.GetOneWithNestedIncludesAsync(
                     query => query
-                        .Include(m => m.CourseSportsFacilities)!
-                            .ThenInclude(csf => csf.SportFacilities)
-                        .Include(m => m.CourseSportsFacilities)!
-                            .ThenInclude(csf => csf.Courses)
+                        .Include(m => m.Courses)!
+                        .Include(m => m.SportsFacilities)!
                         .Include(r => r.Department)
                         .Include(r => r.MunicipalityProcedures)
                             .ThenInclude(r => r.Procedures)

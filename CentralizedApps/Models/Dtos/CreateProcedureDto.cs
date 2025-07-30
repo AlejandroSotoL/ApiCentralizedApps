@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CentralizedApps.Models.Dtos
 {
-    public class ProcedureDto
+    public class CreateProcedureDto
     {
         public int Id { get; set; }
 

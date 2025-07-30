@@ -15,10 +15,7 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Municipality, GetMunicipalitysDto>();
             CreateMap<Department, DepartmentDto>();
             CreateMap<Theme, ThemeDto>();
-            CreateMap<CourseSportsFacility, CourseSportsFacilityDto>()
-                .ForMember(dest => dest.SportFacilities, opt => opt.MapFrom(src => src.SportFacilities))
-                .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses));
-            CreateMap<SportsFacility, SportFacilityDto>();
+            CreateMap<SportsFacility, SportsFacilitiesDto>();
             CreateMap<Course, CourseDto>();
             CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>();
             CreateMap<Procedure, ProcedureDto>();

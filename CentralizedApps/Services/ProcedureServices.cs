@@ -4,6 +4,7 @@ using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Services.Interfaces;
 using AutoMapper;
+using CentralizedApps.Models.Dtos.PrincipalsDtos;
 
 namespace CentralizedApps.Services
 {
@@ -19,54 +20,7 @@ namespace CentralizedApps.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> (AddCourseSportsFacilityDto courseSportsFacilityDto)
-        {
-            using var transaction = await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-
-                Course course = new Course
-                {
-                    Name = courseSportsFacilityDto?.courseDto?.Name,
-                    Get = courseSportsFacilityDto?.courseDto?.Get,
-                    Post = courseSportsFacilityDto?.courseDto?.Post
-                };
-
-                SportsFacility sportsFacility = new SportsFacility
-                {
-                    Name = courseSportsFacilityDto?.sportsFacilityDto?.Name,
-                    Get = courseSportsFacilityDto?.sportsFacilityDto?.Get,
-                    ReservationPost = courseSportsFacilityDto?.sportsFacilityDto?.ReservationPost,
-                    CalendaryPost = courseSportsFacilityDto?.sportsFacilityDto?.CalendaryPost
-                };
-
-                await _unitOfWork.genericRepository<Course>().AddAsync(course);
-                await _unitOfWork.genericRepository<SportsFacility>().AddAsync(sportsFacility);
-
-                await _unitOfWork.SaveChangesAsync();
-
-                CourseSportsFacility courseSportsFacility = new CourseSportsFacility
-                {
-                    SportFacilitiesId = sportsFacility.Id,
-                    CoursesId = course.Id,
-                    MunicipalityId = courseSportsFacilityDto?.MunicipalityId
-                };
-
-                await _unitOfWork.genericRepository<CourseSportsFacility>().AddAsync(courseSportsFacility);
-                await _unitOfWork.SaveChangesAsync();
-                await transaction.CommitAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                await transaction.RollbackAsync();
-                return false;
-            }
-        }
-
-        
-
-        public async Task<Procedure> createProcedures(ProcedureDto procedureDto)
+        public async Task<Procedure> createProcedures(CreateProcedureDto procedureDto)
         {
             Procedure procedure = new Procedure
             {
@@ -97,7 +51,9 @@ namespace CentralizedApps.Services
             await _unitOfWork.SaveChangesAsync();
             return queryField;
         }
-        public async Task<Availibity> createAvailibity(AvailibityDto availibityDto)
+
+        
+        public async Task<Availibity> createAvailibity(CreateAvailibityDto availibityDto)
         {
             Availibity availibity = new Availibity
             {
@@ -108,7 +64,7 @@ namespace CentralizedApps.Services
             return availibity;
         }
 
-        
+
         public async Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType)
         {
             try
@@ -171,7 +127,6 @@ namespace CentralizedApps.Services
                 return false;
             }
         }
-
     }
 }
 

@@ -24,36 +24,6 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
-        
-
-        [HttpPost("CursesSports")]
-        public async Task<IActionResult> createCurseSports([FromBody] CourseSportsFacilityDto courseSportsFacilityDto)
-        {
-            try
-            {
-
-
-                await _ProcedureServices.createCurseSports(courseSportsFacilityDto);
-                return Ok(new ValidationResponseDto
-                {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = ""
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ValidationResponseDto
-                {
-                    CodeStatus = 400,
-                    BooleanStatus = false,
-                    SentencesError = ex.Message
-                });
-            }
-
-        }
-
-
         [HttpPost("DocumentType")]
         public async Task<IActionResult> createDocumentType([FromBody] DocumentTypeDto documentTypeDto)
         {
@@ -78,8 +48,8 @@ namespace CentralizedApps.Controllers
                     SentencesError = ex.Message
                 });
             }
-            
-            
+
+
         }
 
         [HttpPost("QueryField")]
@@ -108,54 +78,50 @@ namespace CentralizedApps.Controllers
                     SentencesError = ex.Message
                 });
             }
-            
-            
-        [HttpPost("/Add/TypeSocialMedia_ToMunicipality")]
-        public async Task<IActionResult> AsignSocialMediaToMunicipality([FromBody] MunicipalitySocialMeditaDto_Response dto)
-        {
-            if (dto == null)
-            {
-                _logger.LogWarning("Petición sin cuerpo en AsignSocialMediaToMunicipality.");
-                return BadRequest("Datos inválidos.");
             }
 
-            var result = await _ProcedureServices.AddMuncipalitySocialMediaToMunicipality(dto);
-            if (!result)
-            {
-                return BadRequest("No se pudo asignar la red social al municipio.");
-            }
-            return Ok("Red social asignada correctamente.");
-        }
-        
-        
-        [HttpPost("Availibity")]
-
-        public async Task<IActionResult> createAvailibity([FromBody] AvailibityDto availibityDto)
-        {
-            try
-            {
-                await _ProcedureServices.createAvailibity(availibityDto);
-
-                return Ok(new ValidationResponseDto
+                [HttpPost("/Add/TypeSocialMedia_ToMunicipality")]
+                public async Task<IActionResult> AsignSocialMediaToMunicipality([FromBody] MunicipalitySocialMeditaDto_Response dto)
                 {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = ""
-                });
+                    if (dto == null)
+                    {
+                        _logger.LogWarning("Petición sin cuerpo en AsignSocialMediaToMunicipality.");
+                        return BadRequest("Datos inválidos.");
+                    }
+
+                    var result = await _ProcedureServices.AddMuncipalitySocialMediaToMunicipality(dto);
+                    if (!result)
+                    {
+                        return BadRequest("No se pudo asignar la red social al municipio.");
+                    }
+                    return Ok("Red social asignada correctamente.");
+                }
 
 
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ValidationResponseDto
+                [HttpPost("Availibity")]
+                public async Task<IActionResult> createAvailibity([FromBody] CreateAvailibityDto availibityDto)
                 {
-                    CodeStatus = 400,
-                    BooleanStatus = false,
-                    SentencesError = ex.Message
-                });
+                    try
+                    {
+                        await _ProcedureServices.createAvailibity(availibityDto);
+
+                        return Ok(new ValidationResponseDto
+                        {
+                            CodeStatus = 200,
+                            BooleanStatus = true,
+                            SentencesError = ""
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(new ValidationResponseDto
+                        {
+                            CodeStatus = 400,
+                            BooleanStatus = false,
+                            SentencesError = ex.Message
+                        });
+                    }
+                }
+
             }
         }
-
-
-    }
-}
