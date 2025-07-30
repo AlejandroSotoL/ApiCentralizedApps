@@ -1,0 +1,63 @@
+# Compilación .NET
+/bin/
+/obj/
+
+# Configuración IDE
+.vscode/
+.idea/
+
+# Archivos temporales
+*.user
+*.suo
+*.log
+*.tmp
+*.cache
+# Compilados
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Configuración de usuario de Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de depuración y cache
+*.log
+*.cache
+*.csproj.FileListAbsolute.txt
+*.dbmdl
+
+# Archivos generados
+*.apphost.exe
+*.sourceinfo
+*.swagger.json
+*.swagger.yaml
+
+# DotCover, ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# Archivos de publicación
+.publish/
+
+# Paquetes NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# Config de Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Otros temporales
+*.tmp
+*.temp

@@ -60,12 +60,12 @@ namespace CentralizedApps.Contollers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
+        public async Task<IActionResult> CreateUser([FromBody] UserDto userdto)
         {
 
             try
             {
-                await _userService.CreateUserAsync(dto);
+                await _userService.CreateUserAsync(userdto);
                 await _unitOfWork.SaveChangesAsync();
 
                 return Ok(new ValidationResponseDto
@@ -77,7 +77,7 @@ namespace CentralizedApps.Contollers
             }
             catch (Exception ex)
             {
-                return Ok(new ValidationResponseDto
+                return BadRequest(new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 400,
@@ -88,7 +88,7 @@ namespace CentralizedApps.Contollers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] CreateUserDto userUpdated)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userUpdated)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
                 if (user == null)

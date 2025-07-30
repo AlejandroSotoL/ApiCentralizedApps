@@ -1,7 +1,7 @@
 
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Repositories;
-
+using AutoMapper;
 using CentralizedApps.Services.Interfaces;
 using CentralizedApps.Services;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +11,7 @@ using FluentValidation.AspNetCore;
 using CentralizedApps.FluentValidation;
 using CentralizedApps.Data;
 using CentralizedApps.Middelware;
+using CentralizedApps.Profile_AutoMapper;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,7 @@ builder.WebHost.ConfigureKestrel(options =>
         listenOptions.UseHttps(); // HTTPS (certificado necesario)
     });
 });
+builder.Services.AddAutoMapper(typeof(MunicipalityProfile));
 
 // Fluent Validation
 builder.Services
@@ -31,6 +33,10 @@ builder.Services
     .AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ProcedureValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<DocumentTypeValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<QueryFielValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<AvailibityValidator>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -46,7 +52,13 @@ builder.Services.AddSwaggerGen(c =>
 
 // Base de datos
 builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConectionDefault"),sql => sql.EnableRetryOnFailure() ));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("ConectionDefault"),
+        sqlOptions => sqlOptions.CommandTimeout(180) 
+    )
+);
+
+//AutoMapper
 
 
 // Repositorios y servicios
@@ -54,7 +66,11 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMunicipalityServices, MunicipalityServices>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
+builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
+
 
 var app = builder.Build();
 

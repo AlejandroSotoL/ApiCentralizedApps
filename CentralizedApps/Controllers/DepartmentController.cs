@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -24,56 +25,76 @@ namespace CentralizedApps.Controllers
             _departmentService = departmentService;
         }
 
-        
+
 
         [HttpGet]
         public async Task<IActionResult> GetAllDepartments()
         {
+
+            var listDepartaments = await _departmentService.GetAllDepartments();
+            return Ok(listDepartaments);
+
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> createDepartment([FromBody] DepartmentDto departmentDto)
+        {
+
             try
             {
+                await _departmentService.createDepartment(departmentDto);
+                await _unitOfWork.SaveChangesAsync();
+                return Ok(
+                    new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = ""
+                    }
+                );
                 
-                var listDepartaments = await _departmentService.GetAllDepartments();
-                return Ok(listDepartaments);
             }
-            catch (SqlException ex) when (ex.Message.Contains("network-related"))
+            catch (Exception ex)
             {
-                return StatusCode(500, new ValidationResponseDto
+                return BadRequest(new ValidationResponseDto
                 {
                     BooleanStatus = false,
-                    CodeStatus = 500,
-                    SentencesError = "Conexión fallida: No se puede establecer conexión con el servidor SQL, inténtalo más tarde."
+                    CodeStatus = 400,
+                    SentencesError = $"Error: {ex.Message}"
                 });
             }
-            catch (InvalidOperationException ex) when (ex.InnerException is SqlException sqlEx && sqlEx.Number == 4060)
-            {
-                return StatusCode(500, new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 500,
-                    SentencesError = "Error: No se puede abrir la base de datos. Verifique permisos o existencia."
-                });
-            
-            }
-            catch (InvalidOperationException ex) when (ex.InnerException is SqlException sql && sql.Number == 18456)
-            {
-                return StatusCode(500, new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 500,
-                    SentencesError = "Error: Fallo en inicio de sesión a la base de datos. Verifique usuario o contraseña."
-                });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 500,
-                    SentencesError = "Internal server error: Error de conexión a la base de datos. Contacte al administrador."
-                });
-            }
-                    
-                }
 
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> updateDepartment(int id, [FromBody] DepartmentDto departmentDto)
+        {
+
+
+            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(id);
+            if (department == null)
+            {
+                return NotFound(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound"
+                });
             }
+
+            _departmentService.updateDepartment(department, departmentDto);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Ok(
+                new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = ""
+                }
+            );
+
+        }
+
+    }
 }

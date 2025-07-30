@@ -20,8 +20,6 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<Course> Courses { get; set; }
 
-    public virtual DbSet<CourseSportsFacility> CourseSportsFacilities { get; set; }
-
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<DocumentType> DocumentTypes { get; set; }
@@ -46,6 +44,9 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-CJE8DS1\\SQLEXPRESS;Database=CentralizedApps;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,28 +74,10 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.Property(e => e.Post)
                 .HasMaxLength(200)
                 .IsUnicode(false);
-        });
 
-        modelBuilder.Entity<CourseSportsFacility>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Course_S__3214EC07236CCBC0");
-
-            entity.ToTable("Course_SportsFacility");
-
-            entity.HasOne(d => d.Courses).WithMany(p => p.CourseSportsFacilities)
-                .HasForeignKey(d => d.CoursesId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_Course_SportsFacility_ToCourses");
-
-            entity.HasOne(d => d.Municipality).WithMany(p => p.CourseSportsFacilities)
+            entity.HasOne(d => d.Municipality).WithMany(p => p.Courses)
                 .HasForeignKey(d => d.MunicipalityId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_Course_SportsFacility_ToMunicipality");
-
-            entity.HasOne(d => d.SportFacilities).WithMany(p => p.CourseSportsFacilities)
-                .HasForeignKey(d => d.SportFacilitiesId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_Course_SportsFacility_ToSportsFacility");
+                .HasConstraintName("FK_CoursesToMunicipality");
         });
 
         modelBuilder.Entity<Department>(entity =>
@@ -264,6 +247,10 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.Property(e => e.ReservationPost)
                 .HasMaxLength(200)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.Municipality).WithMany(p => p.SportsFacilities)
+                .HasForeignKey(d => d.MunicipalityId)
+                .HasConstraintName("FK_SportsFacilityToMunicipality");
         });
 
         modelBuilder.Entity<Theme>(entity =>

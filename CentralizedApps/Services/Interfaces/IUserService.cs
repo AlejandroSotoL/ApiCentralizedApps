@@ -6,7 +6,7 @@ namespace CentralizedApps.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<User> CreateUserAsync(CreateUserDto dto);
-        void UpdateUserAsync(User user, CreateUserDto dto);
+        Task<User> CreateUserAsync(UserDto dto);
+        void UpdateUserAsync(User user, UserDto dto);
     }
 }
