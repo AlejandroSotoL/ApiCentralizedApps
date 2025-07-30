@@ -43,7 +43,7 @@ namespace CentralizedApps.Services
                 Name = departmentDto.Name
             };
 
-        await _unitOfWork.DepartmentRepository.AddAsync(department);
+            await _unitOfWork.DepartmentRepository.AddAsync(department);
             return department;
         }
         
