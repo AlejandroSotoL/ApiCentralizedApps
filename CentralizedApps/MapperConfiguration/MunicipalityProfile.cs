@@ -22,6 +22,7 @@ namespace CentralizedApps.Profile_AutoMapper
                 .ForMember(dest => dest.Availability, opt => opt.MapFrom(src => src.StatusTypeNavigation));
             CreateMap<Municipality, JustMunicipalitysDto>();
             CreateMap<Availibity, AvailibityDto>();
+            CreateMap<QueryField, QueryFieldDto_Relation>();
         }
     }
 }

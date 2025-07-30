@@ -24,7 +24,7 @@ namespace CentralizedApps.FluentValidation
             // Dominio
             RuleFor(x => x.DomainDto)
                 .NotEmpty().WithMessage("El dominio es obligatorio.")
-                .Matches(@"^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$").WithMessage("El dominio no tiene un formato válido.");
+                .Must(url => url.StartsWith("http")).WithMessage("El dominio no tiene un formato válido.");
 
             // Usuario Fintech
             RuleFor(x => x.UserFintechDto)

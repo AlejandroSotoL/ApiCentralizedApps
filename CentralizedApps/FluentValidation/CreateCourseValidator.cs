@@ -13,8 +13,8 @@ namespace CentralizedApps.FluentValidation
             RuleFor(createCourse => createCourse.Get)
                 .NotEmpty()
                 .WithMessage("El campo es obligatorio")
-                .Must(url => url.StartsWith("https://"))
-                .WithMessage("debe iniciar con https://");
+                .Must(url => url.StartsWith("http"))
+                .WithMessage("debe iniciar con http");
             RuleFor(createCourse => createCourse.Post)
                 .NotEmpty()
                 .WithMessage("El campo es obligatorio")
