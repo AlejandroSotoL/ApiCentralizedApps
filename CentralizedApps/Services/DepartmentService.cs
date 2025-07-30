@@ -33,10 +33,7 @@ namespace CentralizedApps.Services
                 .ToList();
 
             return listDepartamentsDto;
-
-
         }
-
 
         public async Task<Department> createDepartment(DepartmentDto departmentDto)
         {
@@ -45,7 +42,6 @@ namespace CentralizedApps.Services
                 Id = departmentDto.Id,
                 Name = departmentDto.Name
             };
-
 
         await _unitOfWork.DepartmentRepository.AddAsync(department);
             return department;
@@ -56,9 +52,7 @@ namespace CentralizedApps.Services
         {
         
             department.Name = departmentDto.Name;
-            
             _unitOfWork.DepartmentRepository.Update(department);
-
             return department;
         }
     }

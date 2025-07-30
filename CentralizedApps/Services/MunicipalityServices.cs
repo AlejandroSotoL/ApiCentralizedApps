@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
@@ -24,15 +25,16 @@ namespace CentralizedApps.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> AddMunicipalityAsync(CompleteMunicipalityDto dto)
+        public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipalityDto dto)
         {
             var strategy = _unitOfWork.GetExecutionStrategy();
 
-            return await strategy.ExecuteAsync<object, bool>(
+            return await strategy.ExecuteAsync<object, ValidationResponseDto>(
                 null,
                 async (context, _, cancellationToken) =>
                 {
                     await using var transaction = await _unitOfWork.BeginTransactionAsync();
+
                     try
                     {
                         // 1. Registrar Departamento
@@ -51,10 +53,14 @@ namespace CentralizedApps.Services
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception($"Error al registrar el departamento '{dto.DepartmentDto}': {ex.Message}", ex);
+                            await transaction.RollbackAsync();
+                            return new ValidationResponseDto
+                            {
+                                BooleanStatus = false,
+                                CodeStatus = 400,
+                                SentencesError = "Error al registrar el departamento: " + ex.Message
+                            };
                         }
-
-                        // 2. Validar Tema existente
                         Theme tema;
                         try
                         {
@@ -62,11 +68,25 @@ namespace CentralizedApps.Services
                             tema = await temaRepo.FindAsync_Predicate(t => t.BackGroundColor == dto.ThemeDto);
 
                             if (tema == null)
-                                throw new Exception("El tema ingresado no existe. Debe crearlo en el endpoint /api/newTheme.");
+                            {
+                                await transaction.RollbackAsync();
+                                return new ValidationResponseDto
+                                {
+                                    BooleanStatus = false,
+                                    CodeStatus = 404,
+                                    SentencesError = $"El tema '{dto.ThemeDto}' no existe. Debe crearlo en post/api/newTheme."
+                                };
+                            }
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception($"Error al obtener el tema '{dto.ThemeDto}': {ex.Message}", ex);
+                            await transaction.RollbackAsync();
+                            return new ValidationResponseDto
+                            {
+                                BooleanStatus = false,
+                                CodeStatus = 400,
+                                SentencesError = $"Error al obtener el tema '{dto.ThemeDto}': {ex.Message}"
+                            };
                         }
 
                         // 3. Registrar Municipio
@@ -89,25 +109,52 @@ namespace CentralizedApps.Services
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception($"Error al registrar el municipio '{dto.NameDto}': {ex.Message}", ex);
+                            await transaction.RollbackAsync();
+                            return new ValidationResponseDto
+                            {
+                                BooleanStatus = false,
+                                CodeStatus = 400,
+                                SentencesError = "Error al registrar el municipio: " + ex.Message
+                            };
                         }
-
                         await transaction.CommitAsync();
-                        return true;
+                        return new ValidationResponseDto
+                        {
+                            BooleanStatus = true,
+                            CodeStatus = 200,
+                            SentencesError = "Municipio registrado exitosamente."
+                        };
                     }
                     catch (SqlException sqlEx)
                     {
                         await transaction.RollbackAsync();
                         _logger.LogError(sqlEx, "SQL Error Code {ErrorCode}: {Message}", sqlEx.Number, sqlEx.Message);
-                        if (sqlEx.Number == 2627 || sqlEx.Number == 2601)
-                            throw new ApplicationException("Ya existe un registro con los datos ingresados.");
-                        throw;
+
+                        if (sqlEx.Number == 2627 || sqlEx.Number == 2601) 
+                        {
+                            return new ValidationResponseDto
+                            {
+                                BooleanStatus = false,
+                                CodeStatus = 409,
+                                SentencesError = "Ya existe un registro con los datos ingresados."
+                            };
+                        }
+                        return new ValidationResponseDto
+                        {
+                            BooleanStatus = false,
+                            CodeStatus = 500,
+                            SentencesError = "Error de base de datos: " + sqlEx.Message
+                        };
                     }
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        _logger.LogError(ex, "Error al procesar AddMunicipalityAsync: {Message}", ex.Message);
-                        throw new ApplicationException($"Ocurrió un error inesperado al registrar el municipio: {ex.Message}", ex);
+                        return new ValidationResponseDto
+                        {
+                            BooleanStatus = false,
+                            CodeStatus = 500,
+                            SentencesError = $"Ocurrió un error inesperado: {ex.Message}"
+                        };
                     }
                 },
                 null,
@@ -119,8 +166,6 @@ namespace CentralizedApps.Services
         {
             try
             {
-                _logger.LogInformation("Iniciando obtención de todos los municipios con relaciones.");
-
                 var response = _unitOfWork.genericRepository<Municipality>();
                 var entities = await response.GetAllWithNestedIncludesAsync(query =>
                     query
@@ -138,15 +183,12 @@ namespace CentralizedApps.Services
 
                 if (entities == null || !entities.Any())
                 {
-                    _logger.LogWarning("No se encontraron municipios con relaciones.");
-                    return new List<GetMunicipalitysDto>();
+                    return null;
                 }
-                _logger.LogInformation("Se encontraron {Count} municipios con relaciones.", entities.Count);
                 return _mapper.Map<List<GetMunicipalitysDto>>(entities);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al procesar la información de los Municipios: {Message}", ex.Message);
                 throw new ApplicationException($"Ocurrió un error inesperado al obtener los municipios: {ex.Message}", ex);
             }
         }
@@ -155,10 +197,7 @@ namespace CentralizedApps.Services
         {
             try
             {
-                _logger.LogInformation("Iniciando búsqueda del municipio con ID: {Id}", municipalityId);
-
                 var response = _unitOfWork.genericRepository<Municipality>();
-
                 var entity = await response.GetOneWithNestedIncludesAsync(
                     query => query
                         .Include(m => m.Courses)!
@@ -176,16 +215,13 @@ namespace CentralizedApps.Services
 
                 if (entity == null)
                 {
-                    _logger.LogWarning("No se encontró municipio con ID: {Id}", municipalityId);
                     return null;
                 }
-
                 return _mapper.Map<GetMunicipalitysDto>(entity);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener municipio con ID: {Id}", municipalityId);
-                throw new ApplicationException($"Error al obtener municipio con ID {municipalityId}: {ex.Message}", ex);
+                throw new ApplicationException($"Error al obtener municipio con identificador {municipalityId}: {ex.Message}", ex);
             }
         }
 
@@ -194,12 +230,9 @@ namespace CentralizedApps.Services
         {
             try
             {
-                _logger.LogInformation("Iniciando filtrado de municipios por DepartamentoId = {DepartamentId}", DepartamentId);
                 var municipios = await _unitOfWork.genericRepository<Municipality>().GetAllAsync();
-
                 if (municipios == null || !municipios.Any())
                 {
-                    _logger.LogWarning("No se encontraron municipios en la base de datos.");
                     return new List<JustMunicipalitysDto>();
                 }
 
@@ -215,18 +248,12 @@ namespace CentralizedApps.Services
 
                 if (!filtrados.Any())
                 {
-                    _logger.LogWarning("No se encontraron municipios con DepartamentoId = {DepartamentId}", DepartamentId);
+                    return new List<JustMunicipalitysDto>();
                 }
-                else
-                {
-                    _logger.LogInformation("Se encontraron {Count} municipios con DepartamentoId = {DepartamentId}", filtrados.Count, DepartamentId);
-                }
-
                 return filtrados;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al procesar la información de los Municipios filtrados por DepartamentoId = {DepartamentId}: {Message}", DepartamentId, ex.Message);
                 throw new ApplicationException($"Ocurrió un error inesperado al obtener los municipios: {ex.Message}", ex);
             }
         }
