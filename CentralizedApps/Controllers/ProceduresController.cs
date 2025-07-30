@@ -19,17 +19,9 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
-        [HttpPost("CurseSports")]
+        
 
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllCurseSportsMunicipality()
-        {
-            return Ok("");
-        }
-
-
-        [HttpPost]
+        [HttpPost("CursesSports")]
         public async Task<IActionResult> createCurseSports([FromBody] CourseSportsFacilityDto courseSportsFacilityDto)
         {
             try
@@ -169,11 +161,5 @@ namespace CentralizedApps.Controllers
         }
 
 
-        [HttpPost("/Add/TypeSocialMedia_ToMunicipality")]
-        public async Task<IActionResult> AsignSocialMediaToMunicipality()
-        {
-            return Ok();
-
-        }
     }
 }
