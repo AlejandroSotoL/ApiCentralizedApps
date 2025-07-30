@@ -7,7 +7,7 @@ using FluentValidation;
 
 namespace CentralizedApps.FluentValidation
 {
-    public class SportsFacilityvalidator : AbstractValidator<CourseSportsFacilityDto>
+    public class SportsFacilityvalidator : AbstractValidator<AddCourseSportsFacilityDto>
     {
         public SportsFacilityvalidator()
         {

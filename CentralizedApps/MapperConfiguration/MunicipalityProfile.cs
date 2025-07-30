@@ -15,17 +15,20 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Municipality, GetMunicipalitysDto>();
             CreateMap<Department, DepartmentDto>();
             CreateMap<Theme, ThemeDto>();
-            CreateMap<CourseSportsFacility, CourseSportsFacilityDto>();
+            CreateMap<CourseSportsFacility, CourseSportsFacilityDto>()
+                .ForMember(dest => dest.SportFacilities, opt => opt.MapFrom(src => src.SportFacilities))
+                .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses));
             CreateMap<SportsFacility, SportFacilityDto>();
+            CreateMap<Course, CourseDto>();
             CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>();
             CreateMap<Procedure, ProcedureDto>();
             CreateMap<MunicipalitySocialMedium, MunicipalitySocialMediaDto>();
+            CreateMap<MunicipalitySocialMedium, MunicipalitySocialMeditaDto_Response>().ReverseMap();
             CreateMap<SocialMediaType, SocialMediaTypeDto>();
             CreateMap<PaymentHistory, PaymentHistoryDto>()
                 .ForMember(dest => dest.Availability, opt => opt.MapFrom(src => src.StatusTypeNavigation));
             CreateMap<Municipality, JustMunicipalitysDto>();
             CreateMap<Availibity, AvailibityDto>();
-
         }
     }
 }

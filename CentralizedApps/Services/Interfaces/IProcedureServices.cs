@@ -10,10 +10,11 @@ namespace CentralizedApps.Services.Interfaces
     public interface IProcedureServices
     {
         Task<bool> createCurseSports(CourseSportsFacilityDto courseSportsFacilityDto);
-        
         Task<Procedure> createProcedures(ProcedureDto procedureDto);
         Task<DocumentType> createDocumentType(DocumentTypeDto documentTypeDto);
         Task<QueryField> createQueryField(QueryFieldDto queryFieldDto);
         Task<Availibity> createAvailibity(AvailibityDto availibityDto);
+        Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType);
+        Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
     }
 }

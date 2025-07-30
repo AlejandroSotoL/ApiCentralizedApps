@@ -61,6 +61,15 @@ namespace CentralizedApps.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<T?> GetOneWithNestedIncludesAsync(
+            Func<IQueryable<T>, IQueryable<T>> includeFunc,
+            Expression<Func<T, bool>> predicate)
+        {
+            IQueryable<T> query = _Context.Set<T>();
+            query = includeFunc(query);
+            return await query.FirstOrDefaultAsync(predicate);
+        }
+
         public async Task<User?> GetByEmailUserByAuthenticate(string email)
         {
             return await _Context.Users
