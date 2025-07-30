@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
-using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Services.Interfaces;
 
@@ -66,12 +62,9 @@ namespace CentralizedApps.Services
                 await transaction.RollbackAsync();
                 return false;
             }
-
-        public Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType)
-        {
-            throw new NotImplementedException();
         }
 
+        
 
         public async Task<Procedure> createProcedures(ProcedureDto procedureDto)
         {
@@ -114,5 +107,7 @@ namespace CentralizedApps.Services
             await _unitOfWork.SaveChangesAsync();
             return availibity;
         }
+
+        
     }
 }
