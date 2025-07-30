@@ -158,16 +158,5 @@ namespace CentralizedApps.Controllers
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
     }
 }
