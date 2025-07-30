@@ -133,7 +133,7 @@ namespace CentralizedApps.Services
                         .Include(r => r.MunicipalitySocialMedia)
                             .ThenInclude(r => r.SocialMediaType)
                         .Include(r => r.PaymentHistories)
-                            .ThenInclude(r => r.User)
+                            .ThenInclude(r => r.StatusTypeNavigation)
                         .Include(r => r.Theme)
                 );
 
@@ -160,7 +160,6 @@ namespace CentralizedApps.Services
             try
             {
                 _logger.LogInformation("Iniciando filtrado de municipios por DepartamentoId = {DepartamentId}", DepartamentId);
-
                 var municipios = await _unitOfWork.genericRepository<Municipality>().GetAllAsync();
 
                 if (municipios == null || !municipios.Any())

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
-using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
+using CentralizedApps.Models.Dtos.PrincipalsDtos;
+using CentralizedApps.Models.Entities;
 using CentralizedApps.Services.Interfaces;
 
 namespace CentralizedApps.Services
 {
     public class ProcedureServices : IProcedureServices
     {
-
         private readonly IUnitOfWork _unitOfWork;
 
         public ProcedureServices(IUnitOfWork unitOfWork)
@@ -67,6 +67,9 @@ namespace CentralizedApps.Services
                 return false;
             }
 
+        public Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType)
+        {
+            throw new NotImplementedException();
         }
 
 

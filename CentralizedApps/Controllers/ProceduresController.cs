@@ -20,6 +20,16 @@ namespace CentralizedApps.Controllers
         }
 
         [HttpPost("CurseSports")]
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllCurseSportsMunicipality()
+        {
+            return Ok("");
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> createCurseSports([FromBody] CourseSportsFacilityDto courseSportsFacilityDto)
         {
             try
@@ -102,7 +112,7 @@ namespace CentralizedApps.Controllers
                 });
             }
         }
-        
+
         [HttpPost("QueryField")]
 
         public async Task<IActionResult> createQueryField([FromBody] QueryFieldDto queryFieldDto)
@@ -117,8 +127,8 @@ namespace CentralizedApps.Controllers
                     BooleanStatus = true,
                     SentencesError = ""
                 });
-                
-                
+
+
             }
             catch (Exception ex)
             {
@@ -131,7 +141,7 @@ namespace CentralizedApps.Controllers
             }
         }
         [HttpPost("Availibity")]
-        
+
         public async Task<IActionResult> createAvailibity([FromBody] AvailibityDto availibityDto)
         {
             try
@@ -144,8 +154,8 @@ namespace CentralizedApps.Controllers
                     BooleanStatus = true,
                     SentencesError = ""
                 });
-                
-                
+
+
             }
             catch (Exception ex)
             {
@@ -158,5 +168,12 @@ namespace CentralizedApps.Controllers
             }
         }
 
+
+        [HttpPost("/Add/TypeSocialMedia_ToMunicipality")]
+        public async Task<IActionResult> AsignSocialMediaToMunicipality()
+        {
+            return Ok();
+
+        }
     }
 }
