@@ -33,7 +33,6 @@ namespace CentralizedApps.Services
                 async (context, _, cancellationToken) =>
                 {
                     await using var transaction = await _unitOfWork.BeginTransactionAsync();
-
                     try
                     {
                         // 1. Registrar Departamento
@@ -46,7 +45,7 @@ namespace CentralizedApps.Services
                             if (departament == null)
                             {
                                 departament = new Department { Name = dto.DepartmentDto };
-                                departamentRepo.AddAsync(departament);
+                                await departamentRepo.AddAsync(departament);
                                 await _unitOfWork.CompleteAsync();
                             }
                         }

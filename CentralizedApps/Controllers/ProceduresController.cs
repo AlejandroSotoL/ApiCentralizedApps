@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
+using CentralizedApps.Services;
 using CentralizedApps.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,8 +19,10 @@ namespace CentralizedApps.Controllers
     {
 
         private readonly IProcedureServices _ProcedureServices;
-        public ProceduresController(IProcedureServices ProcedureServices)
+        private readonly ILogger<MunicipalityServices> _logger;
+        public ProceduresController(ILogger<MunicipalityServices> logger, IProcedureServices ProcedureServices)
         {
+            _logger = logger;
             _ProcedureServices = ProcedureServices;
         }
 
@@ -51,14 +54,26 @@ namespace CentralizedApps.Controllers
         [HttpPost("/Add/TypeSocialMedia")]
         public async Task<IActionResult> PostSocialMediaType(SocialMediaTypeDto socialMediaTypeDto)
         {
-            return Ok();
+            var response = await _ProcedureServices.AddSocialMediaType(socialMediaTypeDto);
+            return Ok(response);
         }
 
 
         [HttpPost("/Add/TypeSocialMedia_ToMunicipality")]
-        public async Task<IActionResult> AsignSocialMediaToMunicipality()
+        public async Task<IActionResult> AsignSocialMediaToMunicipality([FromBody] MunicipalitySocialMeditaDto_Response dto)
         {
-            return Ok();
+            if (dto == null)
+            {
+                _logger.LogWarning("Petición sin cuerpo en AsignSocialMediaToMunicipality.");
+                return BadRequest("Datos inválidos.");
+            }
+
+            var result = await _ProcedureServices.AddMuncipalitySocialMediaToMunicipality(dto);
+            if (!result)
+            {
+                return BadRequest("No se pudo asignar la red social al municipio.");
+            }
+            return Ok("Red social asignada correctamente.");
         }
     }
 }

@@ -20,10 +20,10 @@ namespace CentralizedApps.Profile_AutoMapper
                 .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses));
             CreateMap<SportsFacility, SportFacilityDto>();
             CreateMap<Course, CourseDto>();
-
             CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>();
             CreateMap<Procedure, ProcedureDto>();
             CreateMap<MunicipalitySocialMedium, MunicipalitySocialMediaDto>();
+            CreateMap<MunicipalitySocialMedium, MunicipalitySocialMeditaDto_Response>().ReverseMap();
             CreateMap<SocialMediaType, SocialMediaTypeDto>();
             CreateMap<PaymentHistory, PaymentHistoryDto>()
                 .ForMember(dest => dest.Availability, opt => opt.MapFrom(src => src.StatusTypeNavigation));

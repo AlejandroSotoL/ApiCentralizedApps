@@ -7,16 +7,20 @@ using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Services.Interfaces;
+using AutoMapper;
 
 namespace CentralizedApps.Services
 {
     public class ProcedureServices : IProcedureServices
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public ProcedureServices(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        private readonly ILogger<MunicipalityServices> _logger;
+        public ProcedureServices(ILogger<MunicipalityServices> logger, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<bool> createCurseSports(AddCourseSportsFacilityDto courseSportsFacilityDto)
@@ -62,9 +66,69 @@ namespace CentralizedApps.Services
                 return false;
             }
         }
-        public Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType)
+        public async Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (socialMediaType == null || string.IsNullOrWhiteSpace(socialMediaType.Name))
+                {
+                    return false;
+                }
+
+                var format = new SocialMediaType
+                {
+                    Name = socialMediaType.Name,
+                };
+                var repository = _unitOfWork.genericRepository<SocialMediaType>();
+                await repository.AddAsync(format);
+                await _unitOfWork.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al agregar SocialMediaType: {ex.Message}");
+                return false;
+            }
         }
+
+        public async Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response dto)
+        {
+            try
+            {
+                if (dto == null)
+                {
+                    _logger.LogWarning("DTO recibido es null.");
+                    return false;
+                }
+
+                if (dto.MunicipalityId <= 0 || dto.SocialMediaTypeId <= 0)
+                {
+                    _logger.LogWarning("MunicipalityId o SocialMediaTypeId no válidos.");
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(dto.Url))
+                {
+                    _logger.LogWarning("URL de red social está vacía.");
+                    return false;
+                }
+
+                var entity = _mapper.Map<MunicipalitySocialMedium>(dto);
+                var repository = _unitOfWork.genericRepository<MunicipalitySocialMedium>();
+                await repository.AddAsync(entity);
+                await _unitOfWork.SaveChangesAsync();
+
+                _logger.LogInformation("Se agregó correctamente la red social al municipio. ID Municipio: {MunicipalityId}, Tipo: {SocialMediaTypeId}", dto.MunicipalityId, dto.SocialMediaTypeId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al agregar red social al municipio.");
+                return false;
+            }
+        }
+
     }
 }
+

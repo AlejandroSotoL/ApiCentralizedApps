@@ -7,7 +7,6 @@ namespace CentralizedApps.Models.Dtos
 {
     public class SportsFacilityDto
     {
-
         public string? Name { get; set; }
 
         public string? Get { get; set; }

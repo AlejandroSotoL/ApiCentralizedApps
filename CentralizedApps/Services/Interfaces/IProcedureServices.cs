@@ -12,5 +12,6 @@ namespace CentralizedApps.Services.Interfaces
     {
         Task<bool> createCurseSports(AddCourseSportsFacilityDto courseSportsFacilityDto);
         Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType);
+        Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
     }
 }
