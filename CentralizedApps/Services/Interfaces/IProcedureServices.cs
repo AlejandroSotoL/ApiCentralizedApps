@@ -15,6 +15,7 @@ namespace CentralizedApps.Services.Interfaces
         Task<DocumentType> createDocumentType(DocumentTypeDto documentTypeDto);
         Task<QueryField> createQueryField(QueryFieldDto queryFieldDto);
         Task<Availibity> createAvailibity(CreateAvailibityDto availibityDto);
+        Task<bool> createNewTheme(ThemeDto createThemeDto);
         Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
     }
 }

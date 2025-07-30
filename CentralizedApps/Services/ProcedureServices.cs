@@ -5,6 +5,7 @@ using CentralizedApps.Models.Entities;
 using CentralizedApps.Services.Interfaces;
 using AutoMapper;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CentralizedApps.Services
 {
@@ -52,7 +53,7 @@ namespace CentralizedApps.Services
             return queryField;
         }
 
-        
+
         public async Task<Availibity> createAvailibity(CreateAvailibityDto availibityDto)
         {
             Availibity availibity = new Availibity
@@ -125,6 +126,29 @@ namespace CentralizedApps.Services
             {
                 _logger.LogError(ex, "Error al agregar red social al municipio.");
                 return false;
+            }
+        }
+
+        public Task<bool> createNewTheme(ThemeDto createThemeDto)
+        {
+            try
+            {
+                if (createThemeDto == null || string.IsNullOrWhiteSpace(createThemeDto.BackGroundColor))
+                {
+                    _logger.LogWarning("Datos inválidos para crear un nuevo tema.");
+                    return Task.FromResult(false);
+                }
+                var theme = _mapper.Map<Theme>(createThemeDto);
+                _unitOfWork.genericRepository<Theme>().AddAsync(theme);
+                _unitOfWork.SaveChangesAsync();
+
+                _logger.LogInformation("Nuevo tema creado con éxito: {@Theme}", theme);
+                return Task.FromResult(true);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error al crear un nuevo tema: {Message}", e.Message);
+                throw new BadHttpRequestException("Ocurrió un error al crear el tema.");
             }
         }
     }
