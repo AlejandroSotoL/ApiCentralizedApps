@@ -6,9 +6,7 @@ C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\Centra
 C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.sourcelink.json
-C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\appsettings.json
-C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\package-lock.json
 C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\CentralizedApps.staticwebassets.endpoints.json
 C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\CentralizedApps.exe
 C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\CentralizedApps.deps.json
@@ -352,3 +350,8 @@ C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\Ce
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\CentralizedApps.pdb
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.genruntimeconfig.cache
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\ref\CentralizedApps.dll
+
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\appsettings.json
+C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\Soto\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+

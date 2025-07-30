@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CentralizedApps.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class MunicipalityController : ControllerBase
     {
         private readonly IMunicipalityServices _MunicipalityServices;
@@ -24,7 +24,7 @@ namespace CentralizedApps.Controllers
             _logger = logger;
         }
 
-        [HttpPost("/CompleteRegiser_Add")]
+        [HttpPost("CompleteRegiser_Add")]
         public async Task<IActionResult> AddMunicipalityAsync(CompleteMunicipalityDto dto)
         {
             try
@@ -49,7 +49,7 @@ namespace CentralizedApps.Controllers
             }
         }
 
-        [HttpGet("/GetAllMunicipalityWithRelations")]
+        [HttpGet("GetAllMunicipalityWithRelations")]
         public async Task<IActionResult> GetAllMunicipalityWithRelations()
         {
             try
@@ -65,7 +65,7 @@ namespace CentralizedApps.Controllers
         }
 
 
-        [HttpGet("/GetJustMunicipalitysByIdDepartaments_{DepartamentId}")]
+        [HttpGet("GetJustMunicipalitysByIdDepartaments_{DepartamentId}")]
         public async Task<IActionResult> JustMunicipalitys(int DepartamentId)
         {
             try
