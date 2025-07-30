@@ -91,23 +91,23 @@ namespace CentralizedApps.Controllers
 
         [HttpPut("{id}")]
 
-        public async Task<IActionResult> updatePaymentHistory(int id, [FromBody] PaymentHistoryDto updatePaymentHistoryDto)
+        public async Task<IActionResult> updatePaymentHistory(int id, int idStatusType)
         {
             try
             {
                 
-                if (updatePaymentHistoryDto == null)
+                if (idStatusType <= 0)
                 {
                     return BadRequest(
                     new ValidationResponseDto
                     {
                         BooleanStatus = false,
                         CodeStatus = 400,
-                        SentencesError = "el objeto no puede ser null"
+                        SentencesError = "el id no puede ser null y debe ser mayor a cero"
                     });
                 }
 
-                var result = await _paymentHistoryService.UpdatePaymentHistory(id, updatePaymentHistoryDto);
+                var result = await _paymentHistoryService.UpdatePaymentHistory(id, idStatusType);
                 if (!result.BooleanStatus)
                     {
                         return BadRequest(new ValidationResponseDto
