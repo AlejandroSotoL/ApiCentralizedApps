@@ -151,6 +151,60 @@ namespace CentralizedApps.Services
                 throw new BadHttpRequestException("Ocurrió un error al crear el tema.");
             }
         }
+
+        public async Task<ValidationResponseDto> UpdateTheme(int id, ThemeDto procedureDto)
+        {
+            try
+            {
+                if (procedureDto == null || string.IsNullOrWhiteSpace(procedureDto.BackGroundColor))
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = $"It's required: {id}"
+                    };
+                }
+
+                var theme = await _unitOfWork.genericRepository<Theme>()
+                    .FindAsync_Predicate(x => x.Id == id);
+                if (theme == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = $"Esta id no existe: {id}"
+                    };
+                }
+
+                theme.BackGroundColor = procedureDto.BackGroundColor;
+                theme.Shield = procedureDto.Shield;
+                theme.PrimaryColor = procedureDto.PrimaryColor;
+                theme.SecondaryColor = procedureDto.SecondaryColor;
+                theme.SecondaryColorBlack = procedureDto.SecondaryColorBlack;
+                theme.OnPrimaryColorLight = procedureDto.OnPrimaryColorLight;
+                theme.OnPrimaryColorDark = procedureDto.OnPrimaryColorDark;
+
+                _unitOfWork.genericRepository<Theme>().Update(theme);
+                await _unitOfWork.SaveChangesAsync();
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = "Editado"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "Error al actualizar el tema: " + ex.Message
+                };
+            }
+        }
     }
 }
 

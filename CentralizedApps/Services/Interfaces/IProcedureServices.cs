@@ -17,5 +17,9 @@ namespace CentralizedApps.Services.Interfaces
         Task<Availibity> createAvailibity(CreateAvailibityDto availibityDto);
         Task<bool> createNewTheme(ThemeDto createThemeDto);
         Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
+
+        //PUT
+        Task<ValidationResponseDto> UpdateTheme(int Id, ThemeDto procedureDto);
     }
 }
+

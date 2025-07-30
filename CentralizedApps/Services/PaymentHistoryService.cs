@@ -20,7 +20,6 @@ namespace CentralizedApps.Services
 
         public async Task<IEnumerable<PaymentHistoryUserListDto>> getAllPaymentHistoryByIdAsync(int id)
         {
-
             return await _unitOfWork.paymentHistoryRepository.GetAllPaymentHistoryByIdAsync(paymentHistory => paymentHistory.UserId == id);
         }
 
@@ -40,7 +39,6 @@ namespace CentralizedApps.Services
             
 
             };
-
             await _unitOfWork.paymentHistoryRepository.AddAsync(paymentHistory);
             return paymentHistory;
         }
@@ -58,7 +56,6 @@ namespace CentralizedApps.Services
             paymentHistory.MunicipalityProceduresId = paymentHistoryDto.MunicipalityProceduresId;
 
             _unitOfWork.paymentHistoryRepository.Update(paymentHistory);
-
         }
     }
 }

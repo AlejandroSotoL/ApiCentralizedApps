@@ -139,7 +139,43 @@ namespace CentralizedApps.Controllers
                 _logger.LogError("Failed to create new theme.");
                 return BadRequest("Failed to create new theme.");
             }
-            return Ok(response);    
+            return Ok(response);
+        }
+
+        // PUT
+        [HttpPut("Update/NewTheme{id}")]
+        public async Task<IActionResult> UpdateTheme(int id, ThemeDto procedureDto)
+        {
+            try
+            {
+                var result = await _ProcedureServices.UpdateTheme(id, procedureDto);
+                if (!result.BooleanStatus)
+                {
+                    return BadRequest(new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = "Error al actualizar el tema: " + result.SentencesError
+                    });
+                }
+                return Ok(new ValidationResponseDto
+                {
+                    BooleanStatus = result.BooleanStatus,
+                    CodeStatus = result.CodeStatus,
+                    SentencesError = "Error al actualizar el tema: " + result.SentencesError
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = "Error al actualizar el tema: " + ex.Message
+                });
+            }
         }
     }
-        }
+}
+
+

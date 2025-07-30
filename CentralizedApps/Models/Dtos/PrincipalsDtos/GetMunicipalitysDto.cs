@@ -40,7 +40,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     public class ThemeDto
     {
 
-    public int Id { get; set; }
+    // public int Id { get; set; }
 
     public string? BackGroundColor { get; set; }
 
