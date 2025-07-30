@@ -46,6 +46,7 @@ namespace CentralizedApps.Services
         {
             QueryField queryField = new QueryField
             {
+                MunicipalityId = queryFieldDto.MunicipalityId,
                 FieldName = queryFieldDto.FieldName
             };
             await _unitOfWork.genericRepository<QueryField>().AddAsync(queryField);
@@ -208,6 +209,7 @@ namespace CentralizedApps.Services
         {
             Course course = new Course
             {
+                MunicipalityId = createCourseDto.MunicipalityId,
                 Name = createCourseDto.Name,
                 Post = createCourseDto.Post,
                 Get = createCourseDto.Get,
@@ -222,6 +224,7 @@ namespace CentralizedApps.Services
         {
             SportsFacility sportsFacility = new SportsFacility
             {
+                MunicipalityId = createSportsFacilityDto.MunicipalityId,
                 Name = createSportsFacilityDto.Name,
                 Get = createSportsFacilityDto.Get,
                 CalendaryPost = createSportsFacilityDto.CalendaryPost,
@@ -269,7 +272,7 @@ namespace CentralizedApps.Services
                 };
             }
 
-            queryField.MunicipalityId = updatequeryFieldDto.MunicipalityId;
+            queryField.MunicipalityId = queryField.MunicipalityId;
             queryField.FieldName = updatequeryFieldDto.FieldName;
             _unitOfWork.genericRepository<QueryFieldDto>().Update(queryField);
 

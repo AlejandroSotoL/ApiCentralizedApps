@@ -35,7 +35,7 @@ namespace CentralizedApps.Services
         {
             Department department = new Department
             {
-                Id = departmentDto.Id,
+                
                 Name = departmentDto.Name
             };
             await _unitOfWork.genericRepository<Department>().AddAsync(department);

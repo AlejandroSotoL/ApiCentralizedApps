@@ -9,7 +9,7 @@ namespace CentralizedApps.Services.Interfaces
 
         Task<IEnumerable<PaymentHistoryUserListDto>> getAllPaymentHistoryByIdAsync(int id);
         Task<PaymentHistory> createPaymentHistory(PaymentHistoryDto paymentHistoryDto);
-        Task<ValidationResponseDto> UpdatePaymentHistory(int id, PaymentHistoryDto paymentHistoryDto);
+        Task<ValidationResponseDto> UpdatePaymentHistory(int id, int idStatusType);
 
 
 
