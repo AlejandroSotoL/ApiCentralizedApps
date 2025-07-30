@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
-using Microsoft.Data.SqlClient;
+
 
 namespace CentralizedApps.Services
 {
@@ -22,7 +18,7 @@ namespace CentralizedApps.Services
         public async Task<IEnumerable<DepartmentResponseDto>> GetAllDepartments()
         {
 
-            var listDepartaments = await _unitOfWork.DepartmentRepository.GetAllAsync();
+            var listDepartaments = await _unitOfWork.genericRepository<Department>().GetAllAsync();
 
             var listDepartamentsDto = listDepartaments
                 .Select(deparment => new DepartmentResponseDto
@@ -33,10 +29,7 @@ namespace CentralizedApps.Services
                 .ToList();
 
             return listDepartamentsDto;
-
-
         }
-
 
         public async Task<Department> createDepartment(DepartmentDto departmentDto)
         {
@@ -45,21 +38,33 @@ namespace CentralizedApps.Services
                 Id = departmentDto.Id,
                 Name = departmentDto.Name
             };
-
-
-        await _unitOfWork.DepartmentRepository.AddAsync(department);
+            await _unitOfWork.genericRepository<Department>().AddAsync(department);
+            await _unitOfWork.SaveChangesAsync();
             return department;
         }
-        
 
-        public Department updateDepartment(Department department, DepartmentDto departmentDto)
+
+        public async Task<ValidationResponseDto> updateDepartment(int id, DepartmentDto departmentDto)
         {
-        
+            var department = await _unitOfWork.genericRepository<Department>().GetByIdAsync(id);
+            if (department == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "notfund"
+                };
+            }
             department.Name = departmentDto.Name;
-            
-            _unitOfWork.DepartmentRepository.Update(department);
-
-            return department;
+            _unitOfWork.genericRepository<Department>().Update(department);
+            await _unitOfWork.SaveChangesAsync();
+            return new ValidationResponseDto
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
         }
     }
 }

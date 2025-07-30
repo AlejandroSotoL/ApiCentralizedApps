@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CentralizedApps.Models.Entities;
 
 namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 {
@@ -40,7 +35,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     public class ThemeDto
     {
 
-    public int Id { get; set; }
+    // public int Id { get; set; }
 
     public string? BackGroundColor { get; set; }
 

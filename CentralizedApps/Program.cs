@@ -12,6 +12,7 @@ using CentralizedApps.FluentValidation;
 using CentralizedApps.Data;
 using CentralizedApps.Middelware;
 using CentralizedApps.Profile_AutoMapper;
+using CentralizedApps.Models.Dtos;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +38,10 @@ builder.Services.AddValidatorsFromAssemblyContaining<ProcedureValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<DocumentTypeValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<QueryFielValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<AvailibityValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ThemeValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<MunicipalityValidation>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateCourseDto>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateSportsFacilityDto>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

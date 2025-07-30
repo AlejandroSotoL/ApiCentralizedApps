@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
@@ -14,7 +10,7 @@ namespace CentralizedApps.Profile_AutoMapper
         {
             CreateMap<Municipality, GetMunicipalitysDto>();
             CreateMap<Department, DepartmentDto>();
-            CreateMap<Theme, ThemeDto>();
+            CreateMap<Theme, ThemeDto>().ReverseMap();
             CreateMap<SportsFacility, SportsFacilitiesDto>();
             CreateMap<Course, CourseDto>();
             CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>();

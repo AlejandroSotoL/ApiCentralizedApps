@@ -1,5 +1,3 @@
-
-
 using CentralizedApps.Models.Dtos;
 
 namespace CentralizedApps.Repositories.Interfaces

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace CentralizedApps.Models.Entities;
 
 public partial class Theme

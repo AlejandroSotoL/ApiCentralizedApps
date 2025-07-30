@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
@@ -20,7 +16,6 @@ namespace CentralizedApps.Services
 
         public async Task<IEnumerable<PaymentHistoryUserListDto>> getAllPaymentHistoryByIdAsync(int id)
         {
-
             return await _unitOfWork.paymentHistoryRepository.GetAllPaymentHistoryByIdAsync(paymentHistory => paymentHistory.UserId == id);
         }
 
@@ -40,24 +35,44 @@ namespace CentralizedApps.Services
             
 
             };
-
             await _unitOfWork.paymentHistoryRepository.AddAsync(paymentHistory);
+            await _unitOfWork.SaveChangesAsync();
             return paymentHistory;
         }
 
 
-        public void UpdatePaymentHistory(PaymentHistory paymentHistory, PaymentHistoryDto paymentHistoryDto)
+        public async Task<ValidationResponseDto> UpdatePaymentHistory(int id, PaymentHistoryDto updatepaymentHistoryDto)
         {
+
+            var paymentHistory = await _unitOfWork.paymentHistoryRepository.GetPaymentHistoryByIdAsync(paymentHistory => paymentHistory.Id == id);
+            if (paymentHistory == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "notfund"
+                };
+            }
+
             paymentHistory.Id = paymentHistory.Id;
-            paymentHistory.UserId = paymentHistoryDto.UserId;
-            paymentHistory.Amount = paymentHistoryDto.Amount;
-            paymentHistory.PaymentDate = paymentHistoryDto.PaymentDate;
-            paymentHistory.Status = paymentHistoryDto.Status;
-            paymentHistory.StatusType = paymentHistoryDto.StatusType;
-            paymentHistory.MunicipalityId = paymentHistoryDto.MunicipalityId;
-            paymentHistory.MunicipalityProceduresId = paymentHistoryDto.MunicipalityProceduresId;
+            paymentHistory.UserId = updatepaymentHistoryDto.UserId;
+            paymentHistory.Amount = updatepaymentHistoryDto.Amount;
+            paymentHistory.PaymentDate = updatepaymentHistoryDto.PaymentDate;
+            paymentHistory.Status = updatepaymentHistoryDto.Status;
+            paymentHistory.StatusType = updatepaymentHistoryDto.StatusType;
+            paymentHistory.MunicipalityId = updatepaymentHistoryDto.MunicipalityId;
+            paymentHistory.MunicipalityProceduresId = updatepaymentHistoryDto.MunicipalityProceduresId;
 
             _unitOfWork.paymentHistoryRepository.Update(paymentHistory);
+
+            await _unitOfWork.SaveChangesAsync();
+            return new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = "succesfully"
+                };
 
         }
     }
