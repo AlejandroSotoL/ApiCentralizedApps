@@ -11,7 +11,11 @@ namespace CentralizedApps.Services.Interfaces
         Task<DocumentType> createDocumentType(DocumentTypeDto documentTypeDto);
         Task<QueryField> createQueryField(QueryFieldDto queryFieldDto);
         Task<Availibity> createAvailibity(CreateAvailibityDto availibityDto);
+        Task<bool> createNewTheme(ThemeDto createThemeDto);
         Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
+
+        //PUT
+        Task<ValidationResponseDto> UpdateTheme(int Id, ThemeDto procedureDto);
         Task<Course> createCourse(CreateCourseDto createCourseDto);
         Task<SportsFacility> createSportsFacility(CreateSportsFacilityDto createSportsFacilityDto);
         Task<ValidationResponseDto> updateDocumentType(int id, DocumentTypeDto documentTypeDto);
@@ -21,3 +25,4 @@ namespace CentralizedApps.Services.Interfaces
         Task<ValidationResponseDto> updateSportsFacility(int id, CreateSportsFacilityDto updateSportsFacilityDto);
     }
 }
+

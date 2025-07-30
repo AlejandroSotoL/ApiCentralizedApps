@@ -5,6 +5,7 @@ using CentralizedApps.Models.Entities;
 using CentralizedApps.Services.Interfaces;
 using AutoMapper;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CentralizedApps.Services
 {
@@ -128,6 +129,79 @@ namespace CentralizedApps.Services
             }
         }
 
+        public Task<bool> createNewTheme(ThemeDto createThemeDto)
+        {
+            try
+            {
+                if (createThemeDto == null || string.IsNullOrWhiteSpace(createThemeDto.BackGroundColor))
+                {
+                    return Task.FromResult(false);
+                }
+                var theme = _mapper.Map<Theme>(createThemeDto);
+                _unitOfWork.genericRepository<Theme>().AddAsync(theme);
+                _unitOfWork.SaveChangesAsync();
+                return Task.FromResult(true);
+            }
+            catch (Exception e)
+            {
+                throw new BadHttpRequestException("Ocurrió un error al crear el tema.");
+            }
+        }
+
+        public async Task<ValidationResponseDto> UpdateTheme(int id, ThemeDto procedureDto)
+        {
+            try
+            {
+                if (procedureDto == null || string.IsNullOrWhiteSpace(procedureDto.BackGroundColor))
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = $"It's required: {id}"
+                    };
+                }
+
+                var theme = await _unitOfWork.genericRepository<Theme>()
+                    .FindAsync_Predicate(x => x.Id == id);
+                if (theme == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = $"Esta id no existe: {id}"
+                    };
+                }
+
+                theme.BackGroundColor = procedureDto.BackGroundColor;
+                theme.Shield = procedureDto.Shield;
+                theme.PrimaryColor = procedureDto.PrimaryColor;
+                theme.SecondaryColor = procedureDto.SecondaryColor;
+                theme.SecondaryColorBlack = procedureDto.SecondaryColorBlack;
+                theme.OnPrimaryColorLight = procedureDto.OnPrimaryColorLight;
+                theme.OnPrimaryColorDark = procedureDto.OnPrimaryColorDark;
+
+                _unitOfWork.genericRepository<Theme>().Update(theme);
+                await _unitOfWork.SaveChangesAsync();
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = "Editado"
+                };
+              catch (Exception ex)
+            {
+                return Ok(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = "Error al actualizar el tema: " + ex.Message
+                });
+            }
+        }
+        
+        
         public async Task<Course> createCourse(CreateCourseDto createCourseDto)
         {
             Course course = new Course
@@ -140,6 +214,8 @@ namespace CentralizedApps.Services
             await _unitOfWork.SaveChangesAsync();
             return course;
         }
+        
+        
         public async Task<SportsFacility> createSportsFacility(CreateSportsFacilityDto createSportsFacilityDto)
         {
             SportsFacility sportsFacility = new SportsFacility
@@ -202,6 +278,8 @@ namespace CentralizedApps.Services
                     SentencesError = "succesfully"
                 };
         }
+        
+        
         public async Task<ValidationResponseDto> updateAvailibity(int id, CreateAvailibityDto updateAvailibityDto)
         {
             var availibity = await _unitOfWork.genericRepository<Availibity>().GetByIdAsync(id);
@@ -217,7 +295,6 @@ namespace CentralizedApps.Services
 
             availibity.TypeStatus = updateAvailibityDto.TypeStatus;
             _unitOfWork.genericRepository<Availibity>().Update(availibity);
-
             return new ValidationResponseDto
                 {
                     CodeStatus = 200,
@@ -225,6 +302,8 @@ namespace CentralizedApps.Services
                     SentencesError = "succesfully"
                 };
         }
+        
+        
         public async Task<ValidationResponseDto> updateCourse(int id, CreateCourseDto updateCourseDto)
         {
             var Course = await _unitOfWork.genericRepository<Course>().GetByIdAsync(id);
@@ -242,7 +321,6 @@ namespace CentralizedApps.Services
             Course.Post = updateCourseDto.Post;
             Course.Get = updateCourseDto.Get;
             _unitOfWork.genericRepository<Course>().Update(Course);
-
             return new ValidationResponseDto
                 {
                     CodeStatus = 200,
@@ -250,6 +328,8 @@ namespace CentralizedApps.Services
                     SentencesError = "succesfully"
                 };
         }
+        
+        
         public async Task<ValidationResponseDto> updateSportsFacility(int id, CreateSportsFacilityDto updateSportsFacilityDto)
         {
             var SportsFacility = await _unitOfWork.genericRepository<SportsFacility>().GetByIdAsync(id);
@@ -259,7 +339,7 @@ namespace CentralizedApps.Services
                 {
                     BooleanStatus = false,
                     CodeStatus = 404,
-                    SentencesError = "NotFound"
+                    SentencesError = "Error al actualizar el tema: " + ex.Message
                 };
             }
 

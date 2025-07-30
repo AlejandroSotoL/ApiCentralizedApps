@@ -1,3 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using CentralizedApps.Models.Dtos;
+
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Services;
 using CentralizedApps.Services.Interfaces;
@@ -6,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CentralizedApps.Controllers
 {
+
+    [ApiController]
     [Route("api/[controller]")]
     public class MunicipalityController : ControllerBase
     {
@@ -17,27 +26,44 @@ namespace CentralizedApps.Controllers
             _logger = logger;
         }
 
-        [HttpPost("CompleteRegiser_Add")]
-        public async Task<IActionResult> AddMunicipalityAsync(CompleteMunicipalityDto dto)
+        [HttpPost("CompleteRegister_Add")]
+        public async Task<IActionResult> AddMunicipalityAsync([FromBody] CompleteMunicipalityDto dto)
         {
             try
             {
                 var result = await _MunicipalityServices.AddMunicipalityAsync(dto);
-                return Ok(new { success = result, message = "Municipio registrado correctamente." });
+                if (!result.BooleanStatus)
+                {
+                    return BadRequest(new
+                    {
+                        success = result.BooleanStatus,
+                        code = result.CodeStatus,
+                        error = result.SentencesError
+                    });
+                }
+
+                return Ok(new
+                {
+                    success = result.BooleanStatus,
+                    code = result.CodeStatus,
+                    message = result.SentencesError
+                });
             }
             catch (ApplicationException ex)
             {
                 return BadRequest(new
                 {
+                    success = false,
                     error = ex.Message
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado en AddMunicipality");
-                return StatusCode(500, new
+                return BadRequest(new ValidationResponseDto
                 {
-                    error = "Ocurrió un error interno del servidor."
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error extraño ${ex.Message}"
                 });
             }
         }
@@ -48,12 +74,25 @@ namespace CentralizedApps.Controllers
             try
             {
                 var response = await _MunicipalityServices.GetAllMunicipalityWithRelations();
+                if (response == null || !response.Any())
+                {
+                    return BadRequest(new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "No se encontraron municipios con relaciones."
+                    });
+                }
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en GetAllMunicipalityWithRelations: {Message}", ex.Message);
-                return StatusCode(500, "Ocurrió un error interno al procesar la solicitud.");
+                return BadRequest(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error extraño ${ex.Message}"
+                });
             }
         }
 
@@ -66,17 +105,23 @@ namespace CentralizedApps.Controllers
                 var relations = await _MunicipalityServices.justMunicipalitysDtos(DepartamentId);
                 if (relations == null || !relations.Any())
                 {
-                    _logger.LogWarning("No se encontraron municipios para el DepartamentoId: {DepartamentId}", DepartamentId);
-                    return NotFound("No se encontraron municipios.");
+                    return BadRequest(new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "No se encontraron municipios con relaciones."
+                    });
                 }
-
-                _logger.LogInformation("Municipios encontrados: {Count}", relations.Count);
                 return Ok(relations);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en JustMunicipalitys: {Message}", ex.Message);
-                return StatusCode(500, "Ocurrió un error interno al procesar la solicitud.");
+                return BadRequest(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error extraño ${ex.Message}"
+                });
             }
         }
 
@@ -84,9 +129,15 @@ namespace CentralizedApps.Controllers
         public async Task<IActionResult> GetJust(int IdMunicipality)
         {
             var response = await _MunicipalityServices.JustGetMunicipalityWithRelations(IdMunicipality);
-
             if (response == null)
-                return NotFound($"No se encontró el municipio con ID {IdMunicipality}");
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = $"No se encontro el municipio con ID {IdMunicipality}."
+                });
+            }
             return Ok(response);
         }
     }

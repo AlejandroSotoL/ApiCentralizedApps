@@ -221,9 +221,77 @@ namespace CentralizedApps.Controllers
                     CodeStatus = 400,
                     SentencesError = "Error: " + ex.Message
                 });
+
+            }
+        }
+
+
+        [HttpPost("Availibity")]
+        public async Task<IActionResult> createAvailibity([FromBody] CreateAvailibityDto availibityDto)
+        {
+            try
+            {
+                await _ProcedureServices.createAvailibity(availibityDto);
+
+                return Ok(new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = ""
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("NewTheme")]
+        public async Task<IActionResult> createNewTheme([FromBody] ThemeDto themeDto)
+        {
+            _logger.LogInformation("Creating new theme with data: {@ThemeDto}", themeDto);
+            if (themeDto == null)
+            {
+                _logger.LogWarning("Received null themeDto in createNewTheme.");
+                return BadRequest("Theme data is required.");
             }
 
-            
+            var response = await _ProcedureServices.createNewTheme(themeDto);
+            if (response == null)
+            {
+                _logger.LogError("Failed to create new theme.");
+                return BadRequest("Failed to create new theme.");
+            }
+            return Ok(response);
+        }
+
+        // PUT
+        [HttpPut("Update/NewTheme{id}")]
+        public async Task<IActionResult> UpdateTheme(int id, ThemeDto procedureDto)
+        {
+            try
+            {
+                var result = await _ProcedureServices.UpdateTheme(id, procedureDto);
+                if (!result.BooleanStatus)
+                {
+                    return BadRequest(new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = "Error al actualizar el tema: " + result.SentencesError
+                    });
+                }
+                return Ok(new ValidationResponseDto
+                {
+                    BooleanStatus = result.BooleanStatus,
+                    CodeStatus = result.CodeStatus,
+                    SentencesError = "Error al actualizar el tema: " + result.SentencesError
+                });
         }
 
         
@@ -371,13 +439,15 @@ namespace CentralizedApps.Controllers
                 return Ok(new ValidationResponseDto
                 {
                     BooleanStatus = false,
-                    CodeStatus = 400,
-                    SentencesError = "Error: " + ex.Message
+                    CodeStatus = 500,
+                    SentencesError = "Error al actualizar el tema: " + ex.Message
                 });
             }
+        }
+
+
 
             
-        }   
         [HttpPut("SportsFacility/{id}")]
         public async Task<IActionResult> updateSportsFacility(int id,[FromBody] CreateSportsFacilityDto updateSportsFacilityDto)
         {
@@ -425,7 +495,6 @@ namespace CentralizedApps.Controllers
                     SentencesError = "Error: " + ex.Message
                 });
             }
-
             
         }   
 
