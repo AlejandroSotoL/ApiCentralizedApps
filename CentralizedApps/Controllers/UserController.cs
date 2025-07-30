@@ -1,13 +1,7 @@
-
 using CentralizedApps.Services.Interfaces;
-
-
 using Microsoft.AspNetCore.Mvc;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
-
-
-
 
 namespace CentralizedApps.Contollers
 {
@@ -90,24 +84,46 @@ namespace CentralizedApps.Contollers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userUpdated)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-                if (user == null)
-                    return NotFound(new ValidationResponseDto
+            try{
+
+                if (userUpdated == null)
+                    return BadRequest(new ValidationResponseDto
                     {
                         BooleanStatus = false,
                         CodeStatus = 400,
-                        SentencesError = $"Error: not found"
+                        SentencesError = $"el objeto no puede ser null"
                     });
-                
-                _userService.UpdateUserAsync(user, userUpdated);
-                await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new ValidationResponseDto
+                var result = await _userService.UpdateUserAsync(id, userUpdated);
+                if (!result.BooleanStatus)
+                {
+                    return BadRequest(new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = "Error: " + result.SentencesError
+                    });
+                }
+                else
+                {
+                    return Ok(new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = result.SentencesError
+                    });
+                }
+                    
+            }
+            catch (Exception ex)
             {
-                BooleanStatus = true,
-                CodeStatus = 200,
-                SentencesError = ""
-            });
+                return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                });
+            }
             
         }
 

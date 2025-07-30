@@ -9,8 +9,8 @@ namespace CentralizedApps.FluentValidation
         public LoginValidator()
         {
             RuleFor(x => x.Email)
-                       .NotEmpty().WithMessage("El email es obligatorio.")
-                       .EmailAddress().WithMessage("Formato de email inválido.");
+                    .NotEmpty().WithMessage("El email es obligatorio.")
+                    .EmailAddress().WithMessage("Formato de email inválido.");
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("La contraseña es obligatoria.")

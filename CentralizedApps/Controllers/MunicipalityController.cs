@@ -4,13 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
+
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
-using CentralizedApps.Models.Entities;
-using CentralizedApps.Repositories;
 using CentralizedApps.Services;
 using CentralizedApps.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+
 
 namespace CentralizedApps.Controllers
 {

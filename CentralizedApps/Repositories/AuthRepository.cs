@@ -1,7 +1,6 @@
 
 using CentralizedApps.Data;
 using CentralizedApps.Models.Dtos;
-using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

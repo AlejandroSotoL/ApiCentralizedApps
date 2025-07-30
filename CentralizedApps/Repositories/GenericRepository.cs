@@ -2,7 +2,6 @@ using System.Linq.Expressions;
 using CentralizedApps.Data;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace CentralizedApps.Repositories
