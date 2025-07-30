@@ -135,19 +135,15 @@ namespace CentralizedApps.Services
             {
                 if (createThemeDto == null || string.IsNullOrWhiteSpace(createThemeDto.BackGroundColor))
                 {
-                    _logger.LogWarning("Datos inválidos para crear un nuevo tema.");
                     return Task.FromResult(false);
                 }
                 var theme = _mapper.Map<Theme>(createThemeDto);
                 _unitOfWork.genericRepository<Theme>().AddAsync(theme);
                 _unitOfWork.SaveChangesAsync();
-
-                _logger.LogInformation("Nuevo tema creado con éxito: {@Theme}", theme);
                 return Task.FromResult(true);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error al crear un nuevo tema: {Message}", e.Message);
                 throw new BadHttpRequestException("Ocurrió un error al crear el tema.");
             }
         }
@@ -194,8 +190,150 @@ namespace CentralizedApps.Services
                     CodeStatus = 200,
                     SentencesError = "Editado"
                 };
+              catch (Exception ex)
+            {
+                return Ok(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = "Error al actualizar el tema: " + ex.Message
+                });
             }
-            catch (Exception ex)
+        }
+        
+        
+        public async Task<Course> createCourse(CreateCourseDto createCourseDto)
+        {
+            Course course = new Course
+            {
+                Name = createCourseDto.Name,
+                Post = createCourseDto.Post,
+                Get = createCourseDto.Get,
+            };
+            await _unitOfWork.genericRepository<Course>().AddAsync(course);
+            await _unitOfWork.SaveChangesAsync();
+            return course;
+        }
+        
+        
+        public async Task<SportsFacility> createSportsFacility(CreateSportsFacilityDto createSportsFacilityDto)
+        {
+            SportsFacility sportsFacility = new SportsFacility
+            {
+                Name = createSportsFacilityDto.Name,
+                Get = createSportsFacilityDto.Get,
+                CalendaryPost = createSportsFacilityDto.CalendaryPost,
+                ReservationPost = createSportsFacilityDto.ReservationPost,
+            };
+            await _unitOfWork.genericRepository<SportsFacility>().AddAsync(sportsFacility);
+            await _unitOfWork.SaveChangesAsync();
+            return sportsFacility;
+        }
+
+        public async Task<ValidationResponseDto> updateDocumentType(int id, DocumentTypeDto updatedocumentTypeDto)
+        {
+            var documentType = await _unitOfWork.genericRepository<DocumentType>().GetByIdAsync(id);
+            if (documentType == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound"
+                };
+            }
+
+            documentType.NameDocument = updatedocumentTypeDto.NameDocument;
+            _unitOfWork.genericRepository<DocumentType>().Update(documentType);
+
+            return new ValidationResponseDto
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
+        }
+
+        public async Task<ValidationResponseDto> updateQueryField(int id, QueryFieldDto updatequeryFieldDto)
+        {
+            var queryField = await _unitOfWork.genericRepository<QueryFieldDto>().GetByIdAsync(id);
+            if (queryField == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound"
+                };
+            }
+
+            queryField.MunicipalityId = updatequeryFieldDto.MunicipalityId;
+            queryField.FieldName = updatequeryFieldDto.FieldName;
+            _unitOfWork.genericRepository<QueryFieldDto>().Update(queryField);
+
+            return new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = "succesfully"
+                };
+        }
+        
+        
+        public async Task<ValidationResponseDto> updateAvailibity(int id, CreateAvailibityDto updateAvailibityDto)
+        {
+            var availibity = await _unitOfWork.genericRepository<Availibity>().GetByIdAsync(id);
+            if (availibity == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound"
+                };
+            }
+
+            availibity.TypeStatus = updateAvailibityDto.TypeStatus;
+            _unitOfWork.genericRepository<Availibity>().Update(availibity);
+            return new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = "succesfully"
+                };
+        }
+        
+        
+        public async Task<ValidationResponseDto> updateCourse(int id, CreateCourseDto updateCourseDto)
+        {
+            var Course = await _unitOfWork.genericRepository<Course>().GetByIdAsync(id);
+            if (Course == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound"
+                };
+            }
+
+            Course.Name = updateCourseDto.Name;
+            Course.Post = updateCourseDto.Post;
+            Course.Get = updateCourseDto.Get;
+            _unitOfWork.genericRepository<Course>().Update(Course);
+            return new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = "succesfully"
+                };
+        }
+        
+        
+        public async Task<ValidationResponseDto> updateSportsFacility(int id, CreateSportsFacilityDto updateSportsFacilityDto)
+        {
+            var SportsFacility = await _unitOfWork.genericRepository<SportsFacility>().GetByIdAsync(id);
+            if (SportsFacility == null)
             {
                 return new ValidationResponseDto
                 {
@@ -204,7 +342,21 @@ namespace CentralizedApps.Services
                     SentencesError = "Error al actualizar el tema: " + ex.Message
                 };
             }
+
+            SportsFacility.Name = updateSportsFacilityDto.Name;
+            SportsFacility.Get = updateSportsFacilityDto.Get;
+            SportsFacility.ReservationPost = updateSportsFacilityDto.ReservationPost;
+            SportsFacility.CalendaryPost = updateSportsFacilityDto.CalendaryPost;
+            _unitOfWork.genericRepository<SportsFacility>().Update(SportsFacility);
+
+            return new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = "succesfully"
+                };
         }
     }
 }
+
 

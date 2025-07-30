@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
@@ -20,6 +16,13 @@ namespace CentralizedApps.Services.Interfaces
 
         //PUT
         Task<ValidationResponseDto> UpdateTheme(int Id, ThemeDto procedureDto);
+        Task<Course> createCourse(CreateCourseDto createCourseDto);
+        Task<SportsFacility> createSportsFacility(CreateSportsFacilityDto createSportsFacilityDto);
+        Task<ValidationResponseDto> updateDocumentType(int id, DocumentTypeDto documentTypeDto);
+        Task<ValidationResponseDto> updateQueryField(int id, QueryFieldDto queryFieldDto);
+        Task<ValidationResponseDto> updateAvailibity(int id, CreateAvailibityDto createAvailibityDto);
+        Task<ValidationResponseDto> updateCourse(int id, CreateCourseDto createCourseDto);
+        Task<ValidationResponseDto> updateSportsFacility(int id, CreateSportsFacilityDto updateSportsFacilityDto);
     }
 }
 

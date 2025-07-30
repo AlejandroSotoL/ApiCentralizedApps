@@ -1,5 +1,4 @@
 
-
 namespace CentralizedApps.Models.Dtos
 {
     public class UserDto

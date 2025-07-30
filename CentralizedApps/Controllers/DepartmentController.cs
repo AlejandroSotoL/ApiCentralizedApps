@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+
 
 namespace CentralizedApps.Controllers
 {
@@ -43,8 +38,17 @@ namespace CentralizedApps.Controllers
 
             try
             {
+                if (departmentDto == null)
+                {
+                    return BadRequest(
+                    new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "el objeto no puede ser null"
+                    });
+                }
                 await _departmentService.createDepartment(departmentDto);
-                await _unitOfWork.SaveChangesAsync();
                 return Ok(
                     new ValidationResponseDto
                     {
@@ -67,32 +71,52 @@ namespace CentralizedApps.Controllers
 
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> updateDepartment(int id, [FromBody] DepartmentDto departmentDto)
+        public async Task<IActionResult> updateDepartment(int id, [FromBody] DepartmentDto updatedepartmentDto)
         {
 
 
-            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(id);
-            if (department == null)
+            try
             {
-                return NotFound(new ValidationResponseDto
+
+                if (updatedepartmentDto == null)
+                {
+                    return BadRequest(
+                    new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "el objeto no puede ser null"
+                    });
+                }
+                var result = await _departmentService.updateDepartment(id, updatedepartmentDto);
+                if (!result.BooleanStatus)
+                    {
+                        return BadRequest(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = "Error: " + result.SentencesError
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = result.SentencesError
+                        });
+                    }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
                 {
                     BooleanStatus = false,
-                    CodeStatus = 404,
-                    SentencesError = "NotFound"
+                    CodeStatus = 400,
+                    SentencesError = "Error: " + ex.Message
                 });
             }
-
-            _departmentService.updateDepartment(department, departmentDto);
-            await _unitOfWork.SaveChangesAsync();
-
-            return Ok(
-                new ValidationResponseDto
-                {
-                    BooleanStatus = true,
-                    CodeStatus = 200,
-                    SentencesError = ""
-                }
-            );
 
         }
 
