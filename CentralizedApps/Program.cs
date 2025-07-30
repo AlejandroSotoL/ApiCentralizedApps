@@ -33,7 +33,6 @@ builder.Services
     .AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<SportsFacilityvalidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ProcedureValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<DocumentTypeValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<QueryFielValidator>();

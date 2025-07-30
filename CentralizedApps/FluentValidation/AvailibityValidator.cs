@@ -7,7 +7,7 @@ using FluentValidation;
 
 namespace CentralizedApps.FluentValidation
 {
-    public class AvailibityValidator : AbstractValidator<AvailibityDto>
+    public class AvailibityValidator : AbstractValidator<CreateAvailibityDto>
     {
         public AvailibityValidator()
         {

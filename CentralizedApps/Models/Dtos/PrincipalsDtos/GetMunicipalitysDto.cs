@@ -18,8 +18,8 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 
         public DepartmentDto? Department { get; set; }
         public ThemeDto? Theme { get; set; }
-
-        public List<CourseSportsFacilityDto>? CourseSportsFacilities { get; set; }
+        public List<CourseDto>? Courses { get; set; }
+        public List<SportsFacilitiesDto>? SportsFacilities { get; set; }
         public List<MunicipalityProcedureDto>? MunicipalityProcedures { get; set; }
         public List<MunicipalitySocialMediaDto>? MunicipalitySocialMedia { get; set; }
         public List<PaymentHistoryDto>? PaymentHistories { get; set; }
@@ -39,30 +39,50 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 
     public class ThemeDto
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? BackGroundColor { get; set; }
+
+    public int Id { get; set; }
+
+    public string? BackGroundColor { get; set; }
+
+    public string? Shield { get; set; }
+
+    public string? PrimaryColor { get; set; }
+
+    public string? SecondaryColor { get; set; }
+
+    public string? SecondaryColorBlack { get; set; }
+
+    public string? OnPrimaryColorLight { get; set; }
+
+    public string? OnPrimaryColorDark { get; set; }
+
     }
 
-    public class CourseSportsFacilityDto
+
+    public class SportsFacilitiesDto
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
 
-        public SportFacilityDto? SportFacilities { get; set; }
-        public CourseDto? Courses { get; set; }
-    }
+        public string? Get { get; set; }
 
-    public class SportFacilityDto
-    {
-        public int Id { get; set; }
-        public string? Name { get; set; }
+        public string? CalendaryPost { get; set; }
+
+        public string? ReservationPost { get; set; }
+
+        public int? MunicipalityId { get; set; }
     }
 
     public class CourseDto
     {
         public int Id { get; set; }
+
         public string? Name { get; set; }
+
+        public string? Get { get; set; }
+
+        public string? Post { get; set; }
+
+        public int? MunicipalityId { get; set; }
     }
 
     public class MunicipalityProcedureDto

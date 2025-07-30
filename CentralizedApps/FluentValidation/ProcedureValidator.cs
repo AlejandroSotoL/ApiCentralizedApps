@@ -7,7 +7,7 @@ using FluentValidation;
 
 namespace CentralizedApps.FluentValidation
 {
-    public class ProcedureValidator : AbstractValidator<ProcedureDto>
+    public class ProcedureValidator : AbstractValidator<CreateProcedureDto>
     {
         public ProcedureValidator()
         {

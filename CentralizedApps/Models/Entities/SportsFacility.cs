@@ -15,5 +15,7 @@ public partial class SportsFacility
 
     public string? ReservationPost { get; set; }
 
-    public virtual ICollection<CourseSportsFacility> CourseSportsFacilities { get; set; } = new List<CourseSportsFacility>();
+    public int? MunicipalityId { get; set; }
+
+    public virtual Municipality? Municipality { get; set; }
 }

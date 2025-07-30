@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CentralizedApps.Models.Dtos
 {
-    public class AvailibityDto
+    public class CreateAvailibityDto
     {
         public string? TypeStatus { get; set; }
     }
