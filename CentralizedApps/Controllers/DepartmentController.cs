@@ -33,7 +33,7 @@ namespace CentralizedApps.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> createDepartment([FromBody] DepartmentDto departmentDto)
+        public async Task<IActionResult> createDepartment([FromBody] CreateDepartmentDto departmentDto)
         {
 
             try
@@ -71,7 +71,7 @@ namespace CentralizedApps.Controllers
 
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> updateDepartment(int id, [FromBody] DepartmentDto updatedepartmentDto)
+        public async Task<IActionResult> updateDepartment(int id, [FromBody] CreateDepartmentDto updatedepartmentDto)
         {
 
 

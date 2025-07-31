@@ -20,7 +20,7 @@ namespace CentralizedApps.Services
         }
 
 
-        public async Task<PaymentHistory> createPaymentHistory(PaymentHistoryDto paymentHistoryDto)
+        public async Task<PaymentHistory> createPaymentHistory(CreatePaymentHistoryDto paymentHistoryDto)
         {
             PaymentHistory paymentHistory = new PaymentHistory
             {

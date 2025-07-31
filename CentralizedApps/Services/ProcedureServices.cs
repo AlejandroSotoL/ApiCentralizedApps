@@ -200,7 +200,7 @@ namespace CentralizedApps.Services
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = "Error al actualizar el tema: " + ex.Message
-                } ;
+                };
             }
         }
 
@@ -316,7 +316,7 @@ namespace CentralizedApps.Services
             availibity.TypeStatus = updateAvailibityDto.TypeStatus;
             _unitOfWork.genericRepository<Availibity>().Update(availibity);
             await _unitOfWork.SaveChangesAsync();
-            
+
             return new ValidationResponseDto
             {
                 CodeStatus = 200,
@@ -338,6 +338,7 @@ namespace CentralizedApps.Services
                     SentencesError = "NotFound"
                 };
             }
+
             Course.MunicipalityId = updateCourseDto.MunicipalityId;
             Course.Name = updateCourseDto.Name;
             Course.Post = updateCourseDto.Post;
@@ -366,6 +367,7 @@ namespace CentralizedApps.Services
                     SentencesError = "NotFound"
                 };
             }
+
             SportsFacility.MunicipalityId = updateSportsFacilityDto.MunicipalityId;
             SportsFacility.Name = updateSportsFacilityDto.Name;
             SportsFacility.Get = updateSportsFacilityDto.Get;
@@ -382,6 +384,8 @@ namespace CentralizedApps.Services
                 SentencesError = "succesfully"
             };
         }
+        
+        
         public async Task<ValidationResponseDto> updateSocialMediaType(int id, CreateSocialMediaTypeDto updateSocialMediaTypeDto)
         {
             var socialMediaType = await _unitOfWork.genericRepository<SocialMediaType>().GetByIdAsync(id);
@@ -407,6 +411,7 @@ namespace CentralizedApps.Services
                 SentencesError = "succesfully"
             };
         }
+        
         
         public async Task<ValidationResponseDto> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
         {
@@ -436,6 +441,45 @@ namespace CentralizedApps.Services
                 SentencesError = "succesfully"
             };
         }
+
+
+        public async Task<ValidationResponseDto> AsingProccessToMunicipality(MunicipalityProcedureAddDto addMunicipalityProcedures)
+        {
+            try
+            {
+                if (addMunicipalityProcedures == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Los datos del procedimiento son requeridos."
+                    };
+                }
+
+                var map =_mapper.Map<MunicipalityProcedure>(addMunicipalityProcedures);
+                var call = _unitOfWork.genericRepository<MunicipalityProcedure>();
+                await call.AddAsync(map);
+                await _unitOfWork.SaveChangesAsync();
+                
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = "Proceso asignado correctamente al municipio."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"{ex.Message} => Error al asignar procesos al municipio."
+                };
+            }
+        }
+
     }
 }
 

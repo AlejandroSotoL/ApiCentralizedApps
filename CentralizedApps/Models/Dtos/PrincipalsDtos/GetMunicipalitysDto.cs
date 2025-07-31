@@ -91,8 +91,10 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     public class MunicipalityProcedureDto
     {
         public int Id { get; set; }
-        public string? Description { get; set; }
+        public string IntegrationType { get; set; }
+        public bool? IsActive { get; set; }
         public ProcedureDto? Procedures { get; set; }
+        public JustMunicipalitysDto? Municipality { get; set; }
     }
 
     public class ProcedureDto

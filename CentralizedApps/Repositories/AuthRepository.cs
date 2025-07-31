@@ -22,7 +22,6 @@ namespace CentralizedApps.Repositories
                 if (user != null)
                 {
                 user.LoginStatus = true ;
-                    
                 }
                 
                 if (user is null)
@@ -45,7 +44,6 @@ namespace CentralizedApps.Repositories
                         SentencesError = "Contraseña incorrecta"
                     };
                 }
-                await _Context.SaveChangesAsync();
 
                 return new ValidationResponseDto
                 {
@@ -61,7 +59,7 @@ namespace CentralizedApps.Repositories
                 {
                     BooleanStatus = false,
                     CodeStatus = 500,
-                    SentencesError = $"Error interno: {ex.Message}"
+                    SentencesError = $"Error interno: {ex}"
                 };
             }
         }

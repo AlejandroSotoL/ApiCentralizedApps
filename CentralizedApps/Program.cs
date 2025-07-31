@@ -81,7 +81,7 @@ builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
 var app = builder.Build();
 
 // Middleware personalizado de errores
-app.UseMiddleware<GlobalExceptionMiddleware>();
+// app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // HTTPS redirection si usas certificado
 // app.UseHttpsRedirection();

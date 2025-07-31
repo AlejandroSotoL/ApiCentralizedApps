@@ -7,7 +7,7 @@ using FluentValidation;
 
 namespace CentralizedApps.FluentValidation
 {
-    public class DepartmentValidator : AbstractValidator<DepartmentDto>
+    public class DepartmentValidator : AbstractValidator<CreateDepartmentDto>
     {
         public DepartmentValidator()
         {

@@ -1,8 +1,7 @@
 namespace CentralizedApps.Models.Dtos
 {
-    public class DepartmentDto
+    public class CreateDepartmentDto
     {
-        
         public string? Name { get; set; }
     }
 }

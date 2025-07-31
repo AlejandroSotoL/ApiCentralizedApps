@@ -12,6 +12,10 @@ namespace CentralizedApps.Services.Interfaces
         Task<QueryField> createQueryField(QueryFieldDto queryFieldDto);
         Task<Availibity> createAvailibity(CreateAvailibityDto availibityDto);
         Task<bool> createNewTheme(ThemeDto createThemeDto);
+
+        Task<ValidationResponseDto> AsingProccessToMunicipality(MunicipalityProcedureAddDto addMunicipalityProcedures);
+        Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
+
         //PUT
         Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
         Task<Course> createCourse(CreateCourseDto createCourseDto);
