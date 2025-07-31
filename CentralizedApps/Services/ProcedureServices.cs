@@ -235,6 +235,19 @@ namespace CentralizedApps.Services
             return sportsFacility;
         }
 
+
+        public async Task<SocialMediaType> createSocialMediaType(CreateSocialMediaTypeDto createSocialMediaTypeDto)
+        {
+            SocialMediaType socialMediaType = new SocialMediaType
+            {
+                Name = createSocialMediaTypeDto.Name,
+                
+            };
+            await _unitOfWork.genericRepository<SocialMediaType>().AddAsync(socialMediaType);
+            await _unitOfWork.SaveChangesAsync();
+            return socialMediaType;
+        }
+
         public async Task<ValidationResponseDto> updateDocumentType(int id, DocumentTypeDto updatedocumentTypeDto)
         {
             var documentType = await _unitOfWork.genericRepository<DocumentType>().GetByIdAsync(id);
@@ -251,6 +264,7 @@ namespace CentralizedApps.Services
             documentType.NameDocument = updatedocumentTypeDto.NameDocument;
             _unitOfWork.genericRepository<DocumentType>().Update(documentType);
             await _unitOfWork.SaveChangesAsync();
+
             return new ValidationResponseDto
             {
                 CodeStatus = 200,
@@ -276,6 +290,7 @@ namespace CentralizedApps.Services
             queryField.FieldName = updatequeryFieldDto.FieldName;
             _unitOfWork.genericRepository<QueryFieldDto>().Update(queryField);
             await _unitOfWork.SaveChangesAsync();
+
             return new ValidationResponseDto
             {
                 CodeStatus = 200,
@@ -301,6 +316,7 @@ namespace CentralizedApps.Services
             availibity.TypeStatus = updateAvailibityDto.TypeStatus;
             _unitOfWork.genericRepository<Availibity>().Update(availibity);
             await _unitOfWork.SaveChangesAsync();
+
             return new ValidationResponseDto
             {
                 CodeStatus = 200,
@@ -348,7 +364,7 @@ namespace CentralizedApps.Services
                 {
                     BooleanStatus = false,
                     CodeStatus = 404,
-                    SentencesError = "Error al actualizar el tema: "
+                    SentencesError = "NotFound"
                 };
             }
 
@@ -359,6 +375,65 @@ namespace CentralizedApps.Services
             SportsFacility.CalendaryPost = updateSportsFacilityDto.CalendaryPost;
             _unitOfWork.genericRepository<SportsFacility>().Update(SportsFacility);
             await _unitOfWork.SaveChangesAsync();
+
+
+            return new ValidationResponseDto
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
+        }
+        
+        
+        public async Task<ValidationResponseDto> updateSocialMediaType(int id, CreateSocialMediaTypeDto updateSocialMediaTypeDto)
+        {
+            var socialMediaType = await _unitOfWork.genericRepository<SocialMediaType>().GetByIdAsync(id);
+            if (socialMediaType == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound "
+                };
+            }
+
+            socialMediaType.Name = updateSocialMediaTypeDto.Name;
+            
+            _unitOfWork.genericRepository<SocialMediaType>().Update(socialMediaType);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ValidationResponseDto
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
+        }
+        
+        
+        public async Task<ValidationResponseDto> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
+        {
+            var municipalitySocialMedium = await _unitOfWork.genericRepository<MunicipalitySocialMedium>().GetByIdAsync(id);
+            if (municipalitySocialMedium == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound "
+                };
+            }
+
+            municipalitySocialMedium.MunicipalityId = updateMunicipalitySocialMediumDto.MunicipalityId;
+            municipalitySocialMedium.SocialMediaTypeId = updateMunicipalitySocialMediumDto.SocialMediaTypeId;
+            municipalitySocialMedium.Url = updateMunicipalitySocialMediumDto.Url;
+            municipalitySocialMedium.IsActive = updateMunicipalitySocialMediumDto.IsActive;
+
+            _unitOfWork.genericRepository<MunicipalitySocialMedium>().Update(municipalitySocialMedium);
+            await _unitOfWork.SaveChangesAsync();
+
             return new ValidationResponseDto
             {
                 CodeStatus = 200,
