@@ -53,7 +53,7 @@ namespace CentralizedApps.Controllers
 
         [HttpPost]
 
-        public async Task<IActionResult> createPaymentHistory([FromBody] PaymentHistoryDto createPaymentHistoryDto)
+        public async Task<IActionResult> createPaymentHistory([FromBody] CreatePaymentHistoryDto createPaymentHistoryDto)
         {
             try
             {

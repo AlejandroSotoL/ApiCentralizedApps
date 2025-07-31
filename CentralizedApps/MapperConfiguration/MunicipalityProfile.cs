@@ -1,4 +1,5 @@
 using AutoMapper;
+using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
 
@@ -23,6 +24,8 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Municipality, JustMunicipalitysDto>();
             CreateMap<Availibity, AvailibityDto>();
             CreateMap<QueryField, QueryFieldDto_Relation>();
+            CreateMap<MunicipalityProcedureAddDto, MunicipalityProcedure>();
+
         }
     }
 }

@@ -31,7 +31,7 @@ namespace CentralizedApps.Services
             return listDepartamentsDto;
         }
 
-        public async Task<Department> createDepartment(DepartmentDto departmentDto)
+        public async Task<Department> createDepartment(CreateDepartmentDto departmentDto)
         {
             Department department = new Department
             {
@@ -44,7 +44,7 @@ namespace CentralizedApps.Services
         }
 
 
-        public async Task<ValidationResponseDto> updateDepartment(int id, DepartmentDto departmentDto)
+        public async Task<ValidationResponseDto> updateDepartment(int id, CreateDepartmentDto departmentDto)
         {
             var department = await _unitOfWork.genericRepository<Department>().GetByIdAsync(id);
             if (department == null)
