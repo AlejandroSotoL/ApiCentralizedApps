@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace CentralizedApps.Models.Entities;
 
 public partial class Theme
@@ -18,6 +20,8 @@ public partial class Theme
     public string? OnPrimaryColorLight { get; set; }
 
     public string? OnPrimaryColorDark { get; set; }
+
+    public string? NameTheme { get; set; }
 
     public virtual ICollection<Municipality> Municipalities { get; set; } = new List<Municipality>();
 }

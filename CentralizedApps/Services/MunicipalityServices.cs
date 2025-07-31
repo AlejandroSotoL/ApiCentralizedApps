@@ -60,7 +60,7 @@ namespace CentralizedApps.Services
                         try
                         {
                             var temaRepo = _unitOfWork.genericRepository<Theme>();
-                            tema = await temaRepo.FindAsync_Predicate(t => t.BackGroundColor == dto.ThemeDto);
+                            tema = await temaRepo.FindAsync_Predicate(t => t.NameTheme == dto.ThemeDto);
 
                             if (tema == null)
                             {
