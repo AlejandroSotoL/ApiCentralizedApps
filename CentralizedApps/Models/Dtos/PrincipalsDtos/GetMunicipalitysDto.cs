@@ -17,7 +17,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public List<SportsFacilitiesDto>? SportsFacilities { get; set; }
         public List<MunicipalityProcedureDto>? MunicipalityProcedures { get; set; }
         public List<MunicipalitySocialMediaDto>? MunicipalitySocialMedia { get; set; }
-        public List<PaymentHistoryDto>? PaymentHistories { get; set; }
+        // public List<PaymentHistoryDto>? PaymentHistories { get; set; }
         public List<QueryFieldDto_Relation>? QueryFields { get; set; }
     }
 
@@ -118,15 +118,15 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? Name { get; set; }
     }
 
-    public class PaymentHistoryDto
-    {
-        public int Id { get; set; }
-        public decimal Amount { get; set; }
-        public DateTime Date { get; set; }
-        public JustMunicipalitysDto? Municipality { get; set; }
-        public MunicipalityProcedureDto? MunicipalityProcedures { get; set; }
-        public AvailibityDto? Availability { get; set; }
-    }
+    // public class PaymentHistoryDto
+    // {
+    //     public int Id { get; set; }
+    //     public decimal Amount { get; set; }
+    //     public DateTime Date { get; set; }
+    //     public JustMunicipalitysDto? Municipality { get; set; }
+    //     public MunicipalityProcedureDto? MunicipalityProcedures { get; set; }
+    //     public AvailibityDto? Availability { get; set; }
+    // }
 
     public class AvailibityDto
     {

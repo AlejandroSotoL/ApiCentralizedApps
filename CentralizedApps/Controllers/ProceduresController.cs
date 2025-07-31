@@ -53,6 +53,8 @@ namespace CentralizedApps.Controllers
             }
         }
 
+
+
         [HttpPost("QueryField")]
 
         public async Task<IActionResult> createQueryField([FromBody] QueryFieldDto queryFieldDto)
@@ -106,6 +108,23 @@ namespace CentralizedApps.Controllers
                     SentencesError = ex.Message
                 });
             }
+        }
+
+        [HttpPost("AsingProccessToMunicipality")]
+        public async Task<IActionResult> AsingProccessToMunicipality(MunicipalityProcedureAddDto municipalityProcedureAddDto)
+        {
+            if (municipalityProcedureAddDto == null)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Los datos del procedimiento son requeridos."
+                });
+            }
+
+            var result = await _ProcedureServices.AsingProccessToMunicipality(municipalityProcedureAddDto);
+            return Ok(result);
         }
 
         [HttpPost("TypeSocialMedia_ToMunicipality")]
@@ -507,110 +526,110 @@ namespace CentralizedApps.Controllers
             }
         }
 
-            [HttpPut("SocialMediaType/{id}")]
-            public async Task<IActionResult> updateSocialMediaType(int id, [FromBody] CreateSocialMediaTypeDto updateSocialMediaTypeDto)
+        [HttpPut("SocialMediaType/{id}")]
+        public async Task<IActionResult> updateSocialMediaType(int id, [FromBody] CreateSocialMediaTypeDto updateSocialMediaTypeDto)
+        {
+
+            try
             {
-
-                try
+                if (updateSocialMediaTypeDto == null)
                 {
-                    if (updateSocialMediaTypeDto == null)
-                    {
-                        return BadRequest(
-                        new ValidationResponseDto
-                        {
-                            BooleanStatus = false,
-                            CodeStatus = 400,
-                            SentencesError = "el objeto no puede ser null"
-                        });
-                    }
-
-                    var result = await _ProcedureServices.updateSocialMediaType(id, updateSocialMediaTypeDto);
-
-                    if (!result.BooleanStatus)
-                    {
-                        return BadRequest(new ValidationResponseDto
-                        {
-                            BooleanStatus = result.BooleanStatus,
-                            CodeStatus = result.CodeStatus,
-                            SentencesError = "Error: " + result.SentencesError
-                        });
-                    }
-                    else
-                    {
-                        return Ok(new ValidationResponseDto
-                        {
-                            BooleanStatus = result.BooleanStatus,
-                            CodeStatus = result.CodeStatus,
-                            SentencesError = result.SentencesError
-                        });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(new ValidationResponseDto
+                    return BadRequest(
+                    new ValidationResponseDto
                     {
                         BooleanStatus = false,
                         CodeStatus = 400,
-                        SentencesError = "Error: " + ex.Message
+                        SentencesError = "el objeto no puede ser null"
                     });
                 }
 
-            }
-            
-            
-            [HttpPut("MunicipalitySocialMedium/{id}")]
-            public async Task<IActionResult> updateMunicipalitySocialMedium(int id, [FromBody] CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
-            {
+                var result = await _ProcedureServices.updateSocialMediaType(id, updateSocialMediaTypeDto);
 
-                try
-                {
-                    if (updateMunicipalitySocialMediumDto == null)
-                    {
-                        return BadRequest(
-                        new ValidationResponseDto
-                        {
-                            BooleanStatus = false,
-                            CodeStatus = 400,
-                            SentencesError = "el objeto no puede ser null"
-                        });
-                    }
-
-                    var result = await _ProcedureServices.updateMunicipalitySocialMedium(id, updateMunicipalitySocialMediumDto);
-
-                    if (!result.BooleanStatus)
-                    {
-                        return BadRequest(new ValidationResponseDto
-                        {
-                            BooleanStatus = result.BooleanStatus,
-                            CodeStatus = result.CodeStatus,
-                            SentencesError = "Error: " + result.SentencesError
-                        });
-                    }
-                    else
-                    {
-                        return Ok(new ValidationResponseDto
-                        {
-                            BooleanStatus = result.BooleanStatus,
-                            CodeStatus = result.CodeStatus,
-                            SentencesError = result.SentencesError
-                        });
-                    }
-                }
-                catch (Exception ex)
+                if (!result.BooleanStatus)
                 {
                     return BadRequest(new ValidationResponseDto
                     {
-                        BooleanStatus = false,
-                        CodeStatus = 400,
-                        SentencesError = "Error: " + ex.Message
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = "Error: " + result.SentencesError
                     });
                 }
-
+                else
+                {
+                    return Ok(new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = result.SentencesError
+                    });
+                }
             }
-
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error: " + ex.Message
+                });
+            }
 
         }
 
+
+        [HttpPut("MunicipalitySocialMedium/{id}")]
+        public async Task<IActionResult> updateMunicipalitySocialMedium(int id, [FromBody] CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
+        {
+
+            try
+            {
+                if (updateMunicipalitySocialMediumDto == null)
+                {
+                    return BadRequest(
+                    new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "el objeto no puede ser null"
+                    });
+                }
+
+                var result = await _ProcedureServices.updateMunicipalitySocialMedium(id, updateMunicipalitySocialMediumDto);
+
+                if (!result.BooleanStatus)
+                {
+                    return BadRequest(new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = "Error: " + result.SentencesError
+                    });
+                }
+                else
+                {
+                    return Ok(new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = result.SentencesError
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error: " + ex.Message
+                });
+            }
+
+        }
+
+
     }
+
 }
+
 

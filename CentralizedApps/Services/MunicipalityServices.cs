@@ -24,7 +24,6 @@ namespace CentralizedApps.Services
         public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipalityDto dto)
         {
             var strategy = _unitOfWork.GetExecutionStrategy();
-
             return await strategy.ExecuteAsync<object, ValidationResponseDto>(
                 null,
                 async (context, _, cancellationToken) =>
@@ -91,6 +90,7 @@ namespace CentralizedApps.Services
                             var municipality = new Municipality
                             {
                                 Name = dto.NameDto,
+                                EntityCode = dto.EntityCodeDto,
                                 DepartmentId = departament.Id,
                                 ThemeId = tema.Id,
                                 Domain = dto.DomainDto,
@@ -173,8 +173,6 @@ namespace CentralizedApps.Services
                             .ThenInclude(r => r.Procedures)!
                         .Include(r => r.MunicipalitySocialMedia)!
                             .ThenInclude(r => r.SocialMediaType)!
-                        .Include(r => r.PaymentHistories)
-                            .ThenInclude(r => r.StatusTypeNavigation)
                         .Include(r => r.Theme)
                 );
 
@@ -205,8 +203,6 @@ namespace CentralizedApps.Services
                             .ThenInclude(r => r.Procedures)
                         .Include(r => r.MunicipalitySocialMedia)
                             .ThenInclude(r => r.SocialMediaType)
-                        .Include(r => r.PaymentHistories)
-                            .ThenInclude(r => r.StatusTypeNavigation)
                         .Include(r => r.Theme),
                     m => m.Id == municipalityId
                 );

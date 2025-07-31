@@ -17,7 +17,6 @@ namespace CentralizedApps.Services.Interfaces
         Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
 
         //PUT
-        Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
         Task<Course> createCourse(CreateCourseDto createCourseDto);
         Task<SocialMediaType> createSocialMediaType(CreateSocialMediaTypeDto createSocialMediaTypeDto);
         Task<SportsFacility> createSportsFacility(CreateSportsFacilityDto createSportsFacilityDto);
