@@ -166,12 +166,13 @@ namespace CentralizedApps.Services
                 var entities = await response.GetAllWithNestedIncludesAsync(query =>
                     query
                         .Include(r => r.Courses)!
+                        .Include(r => r.QueryFields)!
                         .Include(r => r.SportsFacilities)!
-                        .Include(r => r.Department)
-                        .Include(r => r.MunicipalityProcedures)
-                            .ThenInclude(r => r.Procedures)
-                        .Include(r => r.MunicipalitySocialMedia)
-                            .ThenInclude(r => r.SocialMediaType)
+                        .Include(r => r.Department)!
+                        .Include(r => r.MunicipalityProcedures)!
+                            .ThenInclude(r => r.Procedures)!
+                        .Include(r => r.MunicipalitySocialMedia)!
+                            .ThenInclude(r => r.SocialMediaType)!
                         .Include(r => r.PaymentHistories)
                             .ThenInclude(r => r.StatusTypeNavigation)
                         .Include(r => r.Theme)
@@ -197,6 +198,7 @@ namespace CentralizedApps.Services
                 var entity = await response.GetOneWithNestedIncludesAsync(
                     query => query
                         .Include(m => m.Courses)!
+                        .Include(r => r.QueryFields)!
                         .Include(m => m.SportsFacilities)!
                         .Include(r => r.Department)
                         .Include(r => r.MunicipalityProcedures)
