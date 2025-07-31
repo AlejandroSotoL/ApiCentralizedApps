@@ -80,8 +80,35 @@ namespace CentralizedApps.Controllers
                 });
             }
         }
+        [HttpPost("SocialMediaType")]
 
-        [HttpPost("/Add/TypeSocialMedia_ToMunicipality")]
+        public async Task<IActionResult> createSocialMediaType([FromBody] CreateSocialMediaTypeDto createSocialMediaTypeDto)
+        {
+            try
+            {
+                await _ProcedureServices.createSocialMediaType(createSocialMediaTypeDto);
+
+                return Ok(new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = ""
+                });
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("TypeSocialMedia_ToMunicipality")]
         public async Task<IActionResult> AsignSocialMediaToMunicipality([FromBody] MunicipalitySocialMeditaDto_Response dto)
         {
             if (dto == null)
@@ -245,7 +272,7 @@ namespace CentralizedApps.Controllers
         }
 
         // PUT
-        [HttpPut("Update/NewTheme{id}")]
+        [HttpPut("Update/NewTheme/{id}")]
         public async Task<IActionResult> UpdateTheme(int id, ThemeDto procedureDto)
         {
             try
@@ -448,6 +475,105 @@ namespace CentralizedApps.Controllers
                     }
 
                     var result = await _ProcedureServices.updateSportsFacility(id, updateSportsFacilityDto);
+
+                    if (!result.BooleanStatus)
+                    {
+                        return BadRequest(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = "Error: " + result.SentencesError
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = result.SentencesError
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Error: " + ex.Message
+                    });
+                }
+
+            }
+
+            [HttpPut("SocialMediaType/{id}")]
+            public async Task<IActionResult> updateSocialMediaType(int id, [FromBody] CreateSocialMediaTypeDto updateSocialMediaTypeDto)
+            {
+
+                try
+                {
+                    if (updateSocialMediaTypeDto == null)
+                    {
+                        return BadRequest(
+                        new ValidationResponseDto
+                        {
+                            BooleanStatus = false,
+                            CodeStatus = 400,
+                            SentencesError = "el objeto no puede ser null"
+                        });
+                    }
+
+                    var result = await _ProcedureServices.updateSocialMediaType(id, updateSocialMediaTypeDto);
+
+                    if (!result.BooleanStatus)
+                    {
+                        return BadRequest(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = "Error: " + result.SentencesError
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ValidationResponseDto
+                        {
+                            BooleanStatus = result.BooleanStatus,
+                            CodeStatus = result.CodeStatus,
+                            SentencesError = result.SentencesError
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Error: " + ex.Message
+                    });
+                }
+
+            }
+            [HttpPut("MunicipalitySocialMedium/{id}")]
+            public async Task<IActionResult> updateMunicipalitySocialMedium(int id, [FromBody] CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
+            {
+
+                try
+                {
+                    if (updateMunicipalitySocialMediumDto == null)
+                    {
+                        return BadRequest(
+                        new ValidationResponseDto
+                        {
+                            BooleanStatus = false,
+                            CodeStatus = 400,
+                            SentencesError = "el objeto no puede ser null"
+                        });
+                    }
+
+                    var result = await _ProcedureServices.updateMunicipalitySocialMedium(id, updateMunicipalitySocialMediumDto);
 
                     if (!result.BooleanStatus)
                     {
