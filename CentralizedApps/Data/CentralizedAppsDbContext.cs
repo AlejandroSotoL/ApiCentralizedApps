@@ -45,6 +45,7 @@ public partial class CentralizedAppsDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Availibity>(entity =>
@@ -107,6 +108,9 @@ public partial class CentralizedAppsDbContext : DbContext
 
             entity.Property(e => e.Domain)
                 .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.EntityCode)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
