@@ -5,7 +5,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     {
         //Municipality Dtos
         public string? Name { get; set; }
-        public int? EntityCode { get; set; }
+        public string? EntityCode { get; set; }
         public string? Domain { get; set; }
         public string? UserFintech { get; set; }
         public string? PasswordFintech { get; set; }

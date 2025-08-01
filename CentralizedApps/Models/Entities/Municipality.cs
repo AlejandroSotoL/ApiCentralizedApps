@@ -9,7 +9,7 @@ public partial class Municipality
 
     public string? Name { get; set; }
 
-    public int? EntityCode { get; set; }
+    public string? EntityCode { get; set; }
 
     public int? DepartmentId { get; set; }
 

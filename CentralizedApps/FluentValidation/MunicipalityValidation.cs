@@ -18,8 +18,7 @@ namespace CentralizedApps.FluentValidation
 
             // Código de entidad
             RuleFor(x => x.EntityCode)
-                .Must(code => code.ToString().Length >= 8)
-                .WithMessage("El código de la entidad debe tener al menos 8 dígitos.");
+                .NotEmpty().WithMessage("El código de la entidad debe tener al menos 8 dígitos.");
 
             // Dominio
             RuleFor(x => x.Domain)

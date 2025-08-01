@@ -90,7 +90,7 @@ namespace CentralizedApps.Services
                             var municipality = new Municipality
                             {
                                 Name = dto.Name,
-                                EntityCode = dto.EntityCode,
+                                EntityCode = dto.EntityCode, 
                                 DepartmentId = departament.Id,
                                 ThemeId = tema.Id,
                                 Domain = dto.Domain,
