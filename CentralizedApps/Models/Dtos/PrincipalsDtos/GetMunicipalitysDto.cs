@@ -43,22 +43,21 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     public class ThemeDto
     {
 
-    // public int Id { get; set; }
+        public string? NameTheme { get; set; }
 
-    public string? BackGroundColor { get; set; }
+        public string? BackGroundColor { get; set; }
 
-    public string? Shield { get; set; }
+        public string? Shield { get; set; }
 
-    public string? PrimaryColor { get; set; }
+        public string? PrimaryColor { get; set; }
 
-    public string? SecondaryColor { get; set; }
+        public string? SecondaryColor { get; set; }
 
-    public string? SecondaryColorBlack { get; set; }
+        public string? SecondaryColorBlack { get; set; }
 
-    public string? OnPrimaryColorLight { get; set; }
+        public string? OnPrimaryColorLight { get; set; }
 
-    public string? OnPrimaryColorDark { get; set; }
-
+        public string? OnPrimaryColorDark { get; set; }
     }
 
 

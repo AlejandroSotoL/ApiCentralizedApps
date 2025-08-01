@@ -38,7 +38,6 @@ builder.Services.AddValidatorsFromAssemblyContaining<ProcedureValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<DocumentTypeValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<QueryFielValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<AvailibityValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<ThemeValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<MunicipalityValidation>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCourseValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateSportsFacilityvalidator>();
