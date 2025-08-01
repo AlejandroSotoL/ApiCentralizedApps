@@ -21,6 +21,7 @@ namespace CentralizedApps.Services
             _mapper = mapper;
         }
 
+
         public async Task<Procedure> createProcedures(CreateProcedureDto procedureDto)
         {
             Procedure procedure = new Procedure
@@ -480,6 +481,18 @@ namespace CentralizedApps.Services
             }
         }
 
+        public async Task<List<DocumentType>> GetDocumentTypes()
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<DocumentType>().GetAllAsync();
+                return response.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new BadHttpRequestException("Error al obtener los tipos de documentos: " + ex.Message);
+            }
+        }
     }
 }
 

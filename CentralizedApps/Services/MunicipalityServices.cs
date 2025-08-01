@@ -37,11 +37,11 @@ namespace CentralizedApps.Services
                         try
                         {
                             var departamentRepo = _unitOfWork.genericRepository<Department>();
-                            departament = await departamentRepo.FindAsync_Predicate(d => d.Name == dto.DepartmentDto);
+                            departament = await departamentRepo.FindAsync_Predicate(d => d.Name == dto.Department);
 
                             if (departament == null)
                             {
-                                departament = new Department { Name = dto.DepartmentDto };
+                                departament = new Department { Name = dto.Department };
                                 await departamentRepo.AddAsync(departament);
                                 await _unitOfWork.CompleteAsync();
                             }
@@ -60,7 +60,7 @@ namespace CentralizedApps.Services
                         try
                         {
                             var temaRepo = _unitOfWork.genericRepository<Theme>();
-                            tema = await temaRepo.FindAsync_Predicate(t => t.NameTheme == dto.ThemeDto);
+                            tema = await temaRepo.FindAsync_Predicate(t => t.NameTheme == dto.Theme);
 
                             if (tema == null)
                             {
@@ -69,7 +69,7 @@ namespace CentralizedApps.Services
                                 {
                                     BooleanStatus = false,
                                     CodeStatus = 404,
-                                    SentencesError = $"El tema '{dto.ThemeDto}' no existe. Debe crearlo en post/api/newTheme."
+                                    SentencesError = $"El tema '{dto.Theme}' no existe. Debe crearlo en post/api/newTheme."
                                 };
                             }
                         }
@@ -80,7 +80,7 @@ namespace CentralizedApps.Services
                             {
                                 BooleanStatus = false,
                                 CodeStatus = 400,
-                                SentencesError = $"Error al obtener el tema '{dto.ThemeDto}': {ex.Message}"
+                                SentencesError = $"Error al obtener el tema '{dto.Theme}': {ex.Message}"
                             };
                         }
 
@@ -89,14 +89,14 @@ namespace CentralizedApps.Services
                         {
                             var municipality = new Municipality
                             {
-                                Name = dto.NameDto,
-                                EntityCode = dto.EntityCodeDto,
+                                Name = dto.Name,
+                                EntityCode = dto.EntityCode,
                                 DepartmentId = departament.Id,
                                 ThemeId = tema.Id,
-                                Domain = dto.DomainDto,
-                                UserFintech = BCrypt.Net.BCrypt.HashPassword(dto.UserFintechDto),
-                                PasswordFintech = BCrypt.Net.BCrypt.HashPassword(dto.PasswordFintechDto),
-                                IsActive = dto.IsActiveDto
+                                Domain = dto.Domain,
+                                UserFintech = BCrypt.Net.BCrypt.HashPassword(dto.UserFintech),
+                                PasswordFintech = BCrypt.Net.BCrypt.HashPassword(dto.PasswordFintech),
+                                IsActive = dto.IsActive
                             };
 
                             var municipioRepo = _unitOfWork.genericRepository<Municipality>();

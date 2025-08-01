@@ -23,9 +23,9 @@ namespace CentralizedApps.Contollers
         {
             try
             {
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
-            return Ok(users);
-                
+                var users = await _unitOfWork.UserRepository.GetAllAsync();
+                return Ok(users);
+
             }
             catch
             {
@@ -53,8 +53,8 @@ namespace CentralizedApps.Contollers
             return Ok(user);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserDto userdto)
+        [HttpPost("CreateUser")]
+        public async Task<ValidationResponseDto> CreateUser(UserDto userdto)
         {
 
             try
@@ -62,29 +62,30 @@ namespace CentralizedApps.Contollers
                 await _userService.CreateUserAsync(userdto);
                 await _unitOfWork.SaveChangesAsync();
 
-                return Ok(new ValidationResponseDto
+                return new ValidationResponseDto
                 {
                     BooleanStatus = true,
                     CodeStatus = 200,
-                    SentencesError = ""
-                });
+                    SentencesError = "OKKKK"
+                };
             }
             catch (Exception ex)
             {
-                return BadRequest(new ValidationResponseDto
+                return new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 400,
                     SentencesError = $"Error: {ex.Message}"
-                });
+                };
             }
-        
+
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userUpdated)
         {
-            try{
+            try
+            {
 
                 if (userUpdated == null)
                     return BadRequest(new ValidationResponseDto
@@ -113,7 +114,7 @@ namespace CentralizedApps.Contollers
                         SentencesError = result.SentencesError
                     });
                 }
-                    
+
             }
             catch (Exception ex)
             {
@@ -124,7 +125,7 @@ namespace CentralizedApps.Contollers
                     SentencesError = ex.Message
                 });
             }
-            
+
         }
 
         [HttpDelete("{id}")]
@@ -136,12 +137,12 @@ namespace CentralizedApps.Contollers
 
             _unitOfWork.UserRepository.Delete(user);
             await _unitOfWork.SaveChangesAsync();
-            return  Ok(new ValidationResponseDto
-                {
-                    BooleanStatus = true,
-                    CodeStatus = 200,
-                    SentencesError = "delete user succcesfully"
-                });
+            return Ok(new ValidationResponseDto
+            {
+                BooleanStatus = true,
+                CodeStatus = 200,
+                SentencesError = "delete user succcesfully"
+            });
         }
 
         [HttpGet("by-email/{email}")]

@@ -20,67 +20,57 @@ namespace CentralizedApps.Controllers
             _departmentService = departmentService;
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> GetAllDepartments()
         {
-
             var listDepartaments = await _departmentService.GetAllDepartments();
             return Ok(listDepartaments);
-
-
         }
 
-        [HttpPost]
-        public async Task<IActionResult> createDepartment([FromBody] CreateDepartmentDto departmentDto)
+        [HttpPost("Create")]
+        public async Task<ValidationResponseDto> createDepartment([FromBody] CreateDepartmentDto departmentDto)
         {
 
             try
             {
                 if (departmentDto == null)
                 {
-                    return BadRequest(
+                    return
                     new ValidationResponseDto
                     {
                         BooleanStatus = false,
                         CodeStatus = 400,
                         SentencesError = "el objeto no puede ser null"
-                    });
+                    };
                 }
                 await _departmentService.createDepartment(departmentDto);
-                return Ok(
+                return
                     new ValidationResponseDto
                     {
                         BooleanStatus = true,
                         CodeStatus = 200,
                         SentencesError = ""
-                    }
-                );
-                
+                    };
             }
             catch (Exception ex)
             {
-                return BadRequest(new ValidationResponseDto
+                return new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 400,
                     SentencesError = $"Error: {ex.Message}"
-                });
+                };
             }
 
         }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> updateDepartment(int id, [FromBody] CreateDepartmentDto updatedepartmentDto)
+        [HttpPut("Edit{id}")]
+        public async Task<ValidationResponseDto> updateDepartment(int id, [FromBody] CreateDepartmentDto updatedepartmentDto)
         {
-
-
             try
             {
-
                 if (updatedepartmentDto == null)
                 {
-                    return BadRequest(
+                    return (
                     new ValidationResponseDto
                     {
                         BooleanStatus = false,
@@ -91,7 +81,7 @@ namespace CentralizedApps.Controllers
                 var result = await _departmentService.updateDepartment(id, updatedepartmentDto);
                 if (!result.BooleanStatus)
                     {
-                        return BadRequest(new ValidationResponseDto
+                        return (new ValidationResponseDto
                         {
                             BooleanStatus = result.BooleanStatus,
                             CodeStatus = result.CodeStatus,
@@ -100,25 +90,23 @@ namespace CentralizedApps.Controllers
                     }
                     else
                     {
-                        return Ok(new ValidationResponseDto
+                        return new ValidationResponseDto
                         {
                             BooleanStatus = result.BooleanStatus,
                             CodeStatus = result.CodeStatus,
                             SentencesError = result.SentencesError
-                        });
+                        };
                     }
             }
             catch (Exception ex)
             {
-                return BadRequest(new ValidationResponseDto
+                return new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 400,
                     SentencesError = "Error: " + ex.Message
-                });
+                };
             }
-
         }
-
     }
 }

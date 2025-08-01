@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
@@ -15,7 +16,8 @@ namespace CentralizedApps.Services.Interfaces
 
         Task<ValidationResponseDto> AsingProccessToMunicipality(MunicipalityProcedureAddDto addMunicipalityProcedures);
         Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
-
+        //GET
+        Task<List<DocumentType>> GetDocumentTypes();
         //PUT
         Task<Course> createCourse(CreateCourseDto createCourseDto);
         Task<SocialMediaType> createSocialMediaType(CreateSocialMediaTypeDto createSocialMediaTypeDto);

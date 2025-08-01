@@ -21,20 +21,21 @@ namespace CentralizedApps.Controllers
             if (!ModelState.IsValid)
             {
                 var error = ModelState.Values.SelectMany(v => v.Errors).FirstOrDefault()?.ErrorMessage;
-                return BadRequest(new ValidationResponseDto
+                return new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 400,
                     SentencesError = error ?? "Error de validación"
-                });
+                };
             }
-
             var status = await _Unit.AuthRepositoryUnitOfWork.Login(login.Email, login.Password);
-
             if (!status.BooleanStatus)
-                return NotFound(status);
-
-            return Ok(status);
+            {
+                status.CodeStatus = 404;
+                status.SentencesError = "Alguno de los datos ingresados es incorrecto";
+                return status;
+            }
+            return status;
         }
     }
 }
