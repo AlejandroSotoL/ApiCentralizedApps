@@ -21,6 +21,7 @@ namespace CentralizedApps.Services
             _mapper = mapper;
         }
 
+
         public async Task<Procedure> createProcedures(CreateProcedureDto procedureDto)
         {
             Procedure procedure = new Procedure
@@ -46,6 +47,7 @@ namespace CentralizedApps.Services
         {
             QueryField queryField = new QueryField
             {
+                MunicipalityId = queryFieldDto.MunicipalityId,
                 FieldName = queryFieldDto.FieldName
             };
             await _unitOfWork.genericRepository<QueryField>().AddAsync(queryField);
@@ -199,7 +201,7 @@ namespace CentralizedApps.Services
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = "Error al actualizar el tema: " + ex.Message
-                } ;
+                };
             }
         }
 
@@ -208,6 +210,7 @@ namespace CentralizedApps.Services
         {
             Course course = new Course
             {
+                MunicipalityId = createCourseDto.MunicipalityId,
                 Name = createCourseDto.Name,
                 Post = createCourseDto.Post,
                 Get = createCourseDto.Get,
@@ -222,6 +225,7 @@ namespace CentralizedApps.Services
         {
             SportsFacility sportsFacility = new SportsFacility
             {
+                MunicipalityId = createSportsFacilityDto.MunicipalityId,
                 Name = createSportsFacilityDto.Name,
                 Get = createSportsFacilityDto.Get,
                 CalendaryPost = createSportsFacilityDto.CalendaryPost,
@@ -230,6 +234,19 @@ namespace CentralizedApps.Services
             await _unitOfWork.genericRepository<SportsFacility>().AddAsync(sportsFacility);
             await _unitOfWork.SaveChangesAsync();
             return sportsFacility;
+        }
+
+
+        public async Task<SocialMediaType> createSocialMediaType(CreateSocialMediaTypeDto createSocialMediaTypeDto)
+        {
+            SocialMediaType socialMediaType = new SocialMediaType
+            {
+                Name = createSocialMediaTypeDto.Name,
+                
+            };
+            await _unitOfWork.genericRepository<SocialMediaType>().AddAsync(socialMediaType);
+            await _unitOfWork.SaveChangesAsync();
+            return socialMediaType;
         }
 
         public async Task<ValidationResponseDto> updateDocumentType(int id, DocumentTypeDto updatedocumentTypeDto)
@@ -247,6 +264,7 @@ namespace CentralizedApps.Services
 
             documentType.NameDocument = updatedocumentTypeDto.NameDocument;
             _unitOfWork.genericRepository<DocumentType>().Update(documentType);
+            await _unitOfWork.SaveChangesAsync();
 
             return new ValidationResponseDto
             {
@@ -269,9 +287,10 @@ namespace CentralizedApps.Services
                 };
             }
 
-            queryField.MunicipalityId = updatequeryFieldDto.MunicipalityId;
+            queryField.MunicipalityId = queryField.MunicipalityId;
             queryField.FieldName = updatequeryFieldDto.FieldName;
             _unitOfWork.genericRepository<QueryFieldDto>().Update(queryField);
+            await _unitOfWork.SaveChangesAsync();
 
             return new ValidationResponseDto
             {
@@ -297,6 +316,8 @@ namespace CentralizedApps.Services
 
             availibity.TypeStatus = updateAvailibityDto.TypeStatus;
             _unitOfWork.genericRepository<Availibity>().Update(availibity);
+            await _unitOfWork.SaveChangesAsync();
+
             return new ValidationResponseDto
             {
                 CodeStatus = 200,
@@ -319,10 +340,13 @@ namespace CentralizedApps.Services
                 };
             }
 
+            Course.MunicipalityId = updateCourseDto.MunicipalityId;
             Course.Name = updateCourseDto.Name;
             Course.Post = updateCourseDto.Post;
             Course.Get = updateCourseDto.Get;
             _unitOfWork.genericRepository<Course>().Update(Course);
+            await _unitOfWork.SaveChangesAsync();
+
             return new ValidationResponseDto
             {
                 CodeStatus = 200,
@@ -341,15 +365,18 @@ namespace CentralizedApps.Services
                 {
                     BooleanStatus = false,
                     CodeStatus = 404,
-                    SentencesError = "Error al actualizar el tema: "
+                    SentencesError = "NotFound"
                 };
             }
 
+            SportsFacility.MunicipalityId = updateSportsFacilityDto.MunicipalityId;
             SportsFacility.Name = updateSportsFacilityDto.Name;
             SportsFacility.Get = updateSportsFacilityDto.Get;
             SportsFacility.ReservationPost = updateSportsFacilityDto.ReservationPost;
             SportsFacility.CalendaryPost = updateSportsFacilityDto.CalendaryPost;
             _unitOfWork.genericRepository<SportsFacility>().Update(SportsFacility);
+            await _unitOfWork.SaveChangesAsync();
+
 
             return new ValidationResponseDto
             {
@@ -357,6 +384,114 @@ namespace CentralizedApps.Services
                 BooleanStatus = true,
                 SentencesError = "succesfully"
             };
+        }
+        
+        
+        public async Task<ValidationResponseDto> updateSocialMediaType(int id, CreateSocialMediaTypeDto updateSocialMediaTypeDto)
+        {
+            var socialMediaType = await _unitOfWork.genericRepository<SocialMediaType>().GetByIdAsync(id);
+            if (socialMediaType == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound "
+                };
+            }
+
+            socialMediaType.Name = updateSocialMediaTypeDto.Name;
+            
+            _unitOfWork.genericRepository<SocialMediaType>().Update(socialMediaType);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ValidationResponseDto
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
+        }
+        
+        
+        public async Task<ValidationResponseDto> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
+        {
+            var municipalitySocialMedium = await _unitOfWork.genericRepository<MunicipalitySocialMedium>().GetByIdAsync(id);
+            if (municipalitySocialMedium == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound "
+                };
+            }
+
+            municipalitySocialMedium.MunicipalityId = updateMunicipalitySocialMediumDto.MunicipalityId;
+            municipalitySocialMedium.SocialMediaTypeId = updateMunicipalitySocialMediumDto.SocialMediaTypeId;
+            municipalitySocialMedium.Url = updateMunicipalitySocialMediumDto.Url;
+            municipalitySocialMedium.IsActive = updateMunicipalitySocialMediumDto.IsActive;
+
+            _unitOfWork.genericRepository<MunicipalitySocialMedium>().Update(municipalitySocialMedium);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ValidationResponseDto
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
+        }
+
+
+        public async Task<ValidationResponseDto> AsingProccessToMunicipality(MunicipalityProcedureAddDto addMunicipalityProcedures)
+        {
+            try
+            {
+                if (addMunicipalityProcedures == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Los datos del procedimiento son requeridos."
+                    };
+                }
+
+                var map =_mapper.Map<MunicipalityProcedure>(addMunicipalityProcedures);
+                var call = _unitOfWork.genericRepository<MunicipalityProcedure>();
+                await call.AddAsync(map);
+                await _unitOfWork.SaveChangesAsync();
+                
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = "Proceso asignado correctamente al municipio."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"{ex.Message} => Error al asignar procesos al municipio."
+                };
+            }
+        }
+
+        public async Task<List<DocumentType>> GetDocumentTypes()
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<DocumentType>().GetAllAsync();
+                return response.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new BadHttpRequestException("Error al obtener los tipos de documentos: " + ex.Message);
+            }
         }
     }
 }

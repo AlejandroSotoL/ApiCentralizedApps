@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CentralizedApps.Models.Dtos
 {
-    public class PaymentHistoryDto
+    public class CreatePaymentHistoryDto
     {
         
 

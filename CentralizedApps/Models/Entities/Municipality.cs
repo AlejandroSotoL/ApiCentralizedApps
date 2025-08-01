@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace CentralizedApps.Models.Entities;
 
 public partial class Municipality
@@ -7,7 +9,7 @@ public partial class Municipality
 
     public string? Name { get; set; }
 
-    public int? EntityCode { get; set; }
+    public string? EntityCode { get; set; }
 
     public int? DepartmentId { get; set; }
 

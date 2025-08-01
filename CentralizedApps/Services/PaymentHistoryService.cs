@@ -20,7 +20,7 @@ namespace CentralizedApps.Services
         }
 
 
-        public async Task<PaymentHistory> createPaymentHistory(PaymentHistoryDto paymentHistoryDto)
+        public async Task<PaymentHistory> createPaymentHistory(CreatePaymentHistoryDto paymentHistoryDto)
         {
             PaymentHistory paymentHistory = new PaymentHistory
             {
@@ -41,7 +41,7 @@ namespace CentralizedApps.Services
         }
 
 
-        public async Task<ValidationResponseDto> UpdatePaymentHistory(int id, PaymentHistoryDto updatepaymentHistoryDto)
+        public async Task<ValidationResponseDto> UpdatePaymentHistory(int id, int idStatusType)
         {
 
             var paymentHistory = await _unitOfWork.paymentHistoryRepository.GetPaymentHistoryByIdAsync(paymentHistory => paymentHistory.Id == id);
@@ -55,14 +55,7 @@ namespace CentralizedApps.Services
                 };
             }
 
-            paymentHistory.Id = paymentHistory.Id;
-            paymentHistory.UserId = updatepaymentHistoryDto.UserId;
-            paymentHistory.Amount = updatepaymentHistoryDto.Amount;
-            paymentHistory.PaymentDate = updatepaymentHistoryDto.PaymentDate;
-            paymentHistory.Status = updatepaymentHistoryDto.Status;
-            paymentHistory.StatusType = updatepaymentHistoryDto.StatusType;
-            paymentHistory.MunicipalityId = updatepaymentHistoryDto.MunicipalityId;
-            paymentHistory.MunicipalityProceduresId = updatepaymentHistoryDto.MunicipalityProceduresId;
+            paymentHistory.StatusType = idStatusType;
 
             _unitOfWork.paymentHistoryRepository.Update(paymentHistory);
 

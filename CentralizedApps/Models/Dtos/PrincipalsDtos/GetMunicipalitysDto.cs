@@ -5,7 +5,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public int? EntityCode { get; set; }
+        public string? EntityCode { get; set; }
         public bool? IsActive { get; set; }
         public string? Domain { get; set; }
         public string? UserFintech { get; set; }
@@ -17,7 +17,15 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public List<SportsFacilitiesDto>? SportsFacilities { get; set; }
         public List<MunicipalityProcedureDto>? MunicipalityProcedures { get; set; }
         public List<MunicipalitySocialMediaDto>? MunicipalitySocialMedia { get; set; }
-        public List<PaymentHistoryDto>? PaymentHistories { get; set; }
+        // public List<PaymentHistoryDto>? PaymentHistories { get; set; }
+        public List<QueryFieldDto_Relation>? QueryFields { get; set; }
+    }
+
+    public class QueryFieldDto_Relation
+    {
+        public int Id { get; set; }
+        public string? FieldName { get; set; }
+        public JustMunicipalitysDto? Municipality { get; set; }
     }
 
     public class DepartmentDto
@@ -35,22 +43,21 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     public class ThemeDto
     {
 
-    // public int Id { get; set; }
+        public string? NameTheme { get; set; }
 
-    public string? BackGroundColor { get; set; }
+        public string? BackGroundColor { get; set; }
 
-    public string? Shield { get; set; }
+        public string? Shield { get; set; }
 
-    public string? PrimaryColor { get; set; }
+        public string? PrimaryColor { get; set; }
 
-    public string? SecondaryColor { get; set; }
+        public string? SecondaryColor { get; set; }
 
-    public string? SecondaryColorBlack { get; set; }
+        public string? SecondaryColorBlack { get; set; }
 
-    public string? OnPrimaryColorLight { get; set; }
+        public string? OnPrimaryColorLight { get; set; }
 
-    public string? OnPrimaryColorDark { get; set; }
-
+        public string? OnPrimaryColorDark { get; set; }
     }
 
 
@@ -83,8 +90,10 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     public class MunicipalityProcedureDto
     {
         public int Id { get; set; }
-        public string? Description { get; set; }
+        public string IntegrationType { get; set; }
+        public bool? IsActive { get; set; }
         public ProcedureDto? Procedures { get; set; }
+        public JustMunicipalitysDto? Municipality { get; set; }
     }
 
     public class ProcedureDto
@@ -108,15 +117,15 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? Name { get; set; }
     }
 
-    public class PaymentHistoryDto
-    {
-        public int Id { get; set; }
-        public decimal Amount { get; set; }
-        public DateTime Date { get; set; }
-        public JustMunicipalitysDto? Municipality { get; set; }
-        public MunicipalityProcedureDto? MunicipalityProcedures { get; set; }
-        public AvailibityDto? Availability { get; set; }
-    }
+    // public class PaymentHistoryDto
+    // {
+    //     public int Id { get; set; }
+    //     public decimal Amount { get; set; }
+    //     public DateTime Date { get; set; }
+    //     public JustMunicipalitysDto? Municipality { get; set; }
+    //     public MunicipalityProcedureDto? MunicipalityProcedures { get; set; }
+    //     public AvailibityDto? Availability { get; set; }
+    // }
 
     public class AvailibityDto
     {

@@ -26,7 +26,7 @@ namespace CentralizedApps.Controllers
             _logger = logger;
         }
 
-        [HttpPost("CompleteRegister_Add")]
+        [HttpPost("New")]
         public async Task<IActionResult> AddMunicipalityAsync([FromBody] CompleteMunicipalityDto dto)
         {
             try
@@ -68,7 +68,7 @@ namespace CentralizedApps.Controllers
             }
         }
 
-        [HttpGet("GetAllMunicipalityWithRelations")]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllMunicipalityWithRelations()
         {
             try
@@ -97,12 +97,12 @@ namespace CentralizedApps.Controllers
         }
 
 
-        [HttpGet("GetJustMunicipalitysByIdDepartaments_{DepartamentId}")]
-        public async Task<IActionResult> JustMunicipalitys(int DepartamentId)
+        [HttpGet("ByDepartamet_{Id}")]
+        public async Task<IActionResult> JustMunicipalitys(int Id)
         {
             try
             {
-                var relations = await _MunicipalityServices.justMunicipalitysDtos(DepartamentId);
+                var relations = await _MunicipalityServices.justMunicipalitysDtos(Id);
                 if (relations == null || !relations.Any())
                 {
                     return BadRequest(new ValidationResponseDto
@@ -125,17 +125,17 @@ namespace CentralizedApps.Controllers
             }
         }
 
-        [HttpGet("/GetJustGetMunicipalityWithRelations_{IdMunicipality}")]
-        public async Task<IActionResult> GetJust(int IdMunicipality)
+        [HttpGet("GetInfoBy{Id}")]
+        public async Task<IActionResult> GetJust(int Id)
         {
-            var response = await _MunicipalityServices.JustGetMunicipalityWithRelations(IdMunicipality);
+            var response = await _MunicipalityServices.JustGetMunicipalityWithRelations(Id);
             if (response == null)
             {
                 return BadRequest(new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 404,
-                    SentencesError = $"No se encontro el municipio con ID {IdMunicipality}."
+                    SentencesError = $"No se encontro el municipio con ID {Id}."
                 });
             }
             return Ok(response);

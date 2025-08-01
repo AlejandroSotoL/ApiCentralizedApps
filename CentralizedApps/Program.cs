@@ -38,10 +38,10 @@ builder.Services.AddValidatorsFromAssemblyContaining<ProcedureValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<DocumentTypeValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<QueryFielValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<AvailibityValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<ThemeValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<MunicipalityValidation>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateCourseDto>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateSportsFacilityDto>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateCourseValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateSportsFacilityvalidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<DepartmentValidator>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
