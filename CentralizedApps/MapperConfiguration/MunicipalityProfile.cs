@@ -25,7 +25,6 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Availibity, AvailibityDto>();
             CreateMap<QueryField, QueryFieldDto_Relation>();
             CreateMap<MunicipalityProcedureAddDto, MunicipalityProcedure>();
-
         }
     }
 }

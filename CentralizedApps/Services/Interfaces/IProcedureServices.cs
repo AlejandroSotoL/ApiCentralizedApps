@@ -19,6 +19,11 @@ namespace CentralizedApps.Services.Interfaces
         //GET
         Task<List<DocumentType>> GetDocumentTypes();
         //PUT
+
+        Task<ValidationResponseDto> UpdateMunicipality(int Id , CompleteMunicipalityDto MunicipalityDTO);
+
+
+        Task<ValidationResponseDto> createNewTypeProcedure( CreateProcedureDto createProcedureDto);
         Task<Course> createCourse(CreateCourseDto createCourseDto);
         Task<SocialMediaType> createSocialMediaType(CreateSocialMediaTypeDto createSocialMediaTypeDto);
         Task<SportsFacility> createSportsFacility(CreateSportsFacilityDto createSportsFacilityDto);

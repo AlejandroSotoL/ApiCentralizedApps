@@ -27,6 +27,30 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
+        [HttpPost("NewTypeProcedure")]
+        public async Task<ValidationResponseDto> createNewTypeProcedure(CreateProcedureDto typeProcedureDto)
+        {
+            try
+            {
+                var response = await _ProcedureServices.createNewTypeProcedure(typeProcedureDto);
+                return new ValidationResponseDto
+                {
+                    CodeStatus = response.CodeStatus,
+                    BooleanStatus = response.BooleanStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                };
+            }
+        }
+
         [HttpPost("DocumentType")]
         public async Task<IActionResult> createDocumentType([FromBody] DocumentTypeDto documentTypeDto)
         {
@@ -39,8 +63,6 @@ namespace CentralizedApps.Controllers
                     BooleanStatus = true,
                     SentencesError = ""
                 });
-
-
             }
             catch (Exception ex)
             {
@@ -54,9 +76,7 @@ namespace CentralizedApps.Controllers
         }
 
 
-
         [HttpPost("QueryField")]
-
         public async Task<IActionResult> createQueryField([FromBody] QueryFieldDto queryFieldDto)
         {
             try
@@ -96,7 +116,6 @@ namespace CentralizedApps.Controllers
                     BooleanStatus = true,
                     SentencesError = ""
                 });
-
 
             }
             catch (Exception ex)
@@ -628,8 +647,32 @@ namespace CentralizedApps.Controllers
         }
 
 
-    }
+        [HttpPut("UpdateMuncipality/{Id}")]
+        public async Task<ValidationResponseDto> UpdateMunicipality(int Id , CompleteMunicipalityDto MunicipalityDTO)
+        {
+            if (MunicipalityDTO == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Los datos del municipio son requeridos."
+                };
+            }
 
+            var result = await _ProcedureServices.UpdateMunicipality(Id , MunicipalityDTO);
+            if (!result.BooleanStatus)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = result.BooleanStatus,
+                    CodeStatus = result.CodeStatus,
+                    SentencesError = "Error: " + result.SentencesError
+                };
+            }
+            return result;
+        }
+    }
 }
 
 
