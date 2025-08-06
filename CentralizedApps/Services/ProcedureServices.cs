@@ -176,6 +176,7 @@ namespace CentralizedApps.Services
                     };
                 }
 
+                theme.NameTheme = procedureDto.NameTheme;
                 theme.BackGroundColor = procedureDto.BackGroundColor;
                 theme.Shield = procedureDto.Shield;
                 theme.PrimaryColor = procedureDto.PrimaryColor;
@@ -200,7 +201,7 @@ namespace CentralizedApps.Services
                 {
                     BooleanStatus = false,
                     CodeStatus = 500,
-                    SentencesError = "Error al actualizar el tema: " + ex.Message
+                    SentencesError = "Error al actualizar el tema: " + ex
                 };
             }
         }

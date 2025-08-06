@@ -311,36 +311,37 @@ namespace CentralizedApps.Controllers
 
         // PUT
         [HttpPut("Update/NewTheme/{id}")]
-        public async Task<IActionResult> UpdateTheme(int id, ThemeDto procedureDto)
+        public async Task<ValidationResponseDto> UpdateTheme(int id, ThemeDto procedureDto)
         {
             try
             {
                 var result = await _ProcedureServices.UpdateTheme(id, procedureDto);
                 if (!result.BooleanStatus)
                 {
-                    return BadRequest(new ValidationResponseDto
+                    return new ValidationResponseDto
                     {
                         BooleanStatus = result.BooleanStatus,
                         CodeStatus = result.CodeStatus,
                         SentencesError = "Error al actualizar el tema: " + result.SentencesError
-                    });
+                    };
                 }
-                return Ok(new ValidationResponseDto
+
+                return new ValidationResponseDto
                 {
                     BooleanStatus = result.BooleanStatus,
                     CodeStatus = result.CodeStatus,
-                    SentencesError = "Error al actualizar el tema: " + result.SentencesError
-                });
+                    SentencesError = "Actualizado " + result.SentencesError
+                };
+
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating theme with ID {Id}", id);
-                return BadRequest(new ValidationResponseDto
+                return new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = "Error al actualizar el tema: " + ex.Message
-                });
+                };
             }
         }
 
