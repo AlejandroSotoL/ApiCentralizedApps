@@ -17,7 +17,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public List<SportsFacilitiesDto>? SportsFacilities { get; set; }
         public List<MunicipalityProcedureDto>? MunicipalityProcedures { get; set; }
         public List<MunicipalitySocialMediaDto>? MunicipalitySocialMedia { get; set; }
-        // public List<PaymentHistoryDto>? PaymentHistories { get; set; }
         public List<QueryFieldDto_Relation>? QueryFields { get; set; }
     }
 
@@ -71,7 +70,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 
         public string? ReservationPost { get; set; }
 
-        public int? MunicipalityId { get; set; }
     }
 
     public class CourseDto
@@ -84,7 +82,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 
         public string? Post { get; set; }
 
-        public int? MunicipalityId { get; set; }
     }
 
     public class MunicipalityProcedureDto
@@ -93,7 +90,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string IntegrationType { get; set; }
         public bool? IsActive { get; set; }
         public ProcedureDto? Procedures { get; set; }
-        public JustMunicipalitysDto? Municipality { get; set; }
     }
 
     public class ProcedureDto
