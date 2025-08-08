@@ -131,22 +131,40 @@ namespace CentralizedApps.Services
             }
         }
 
-        public Task<bool> createNewTheme(ThemeDto createThemeDto)
+        public async Task<ValidationResponseDto> createNewTheme(ThemeDto createThemeDto)
         {
             try
             {
-                if (createThemeDto == null || string.IsNullOrWhiteSpace(createThemeDto.BackGroundColor))
-                {
-                    return Task.FromResult(false);
-                }
                 var theme = _mapper.Map<Theme>(createThemeDto);
-                _unitOfWork.genericRepository<Theme>().AddAsync(theme);
-                _unitOfWork.SaveChangesAsync();
-                return Task.FromResult(true);
-            }
+                await _unitOfWork.genericRepository<Theme>().AddAsync(theme);
+                var affectedRows = await _unitOfWork.SaveChangesAsync();
+                if (affectedRows > 0)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true, 
+                        CodeStatus = 201,    
+                        SentencesError = $"Tema creado correctamente: {createThemeDto.NameTheme}, filas afectadas: {affectedRows}."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,    
+                        SentencesError = $"Error al crear el tema: {createThemeDto.NameTheme}. No se guardaron cambios."
+                    };
+                }
+                }
             catch (Exception e)
             {
-                throw new BadHttpRequestException("Ocurrió un error al crear el tema.");
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al crear el tema: {e.Message}"
+                };
             }
         }
 
