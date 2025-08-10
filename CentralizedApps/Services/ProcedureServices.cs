@@ -131,22 +131,40 @@ namespace CentralizedApps.Services
             }
         }
 
-        public Task<bool> createNewTheme(ThemeDto createThemeDto)
+        public async Task<ValidationResponseDto> createNewTheme(ThemeDto createThemeDto)
         {
             try
             {
-                if (createThemeDto == null || string.IsNullOrWhiteSpace(createThemeDto.BackGroundColor))
-                {
-                    return Task.FromResult(false);
-                }
                 var theme = _mapper.Map<Theme>(createThemeDto);
-                _unitOfWork.genericRepository<Theme>().AddAsync(theme);
-                _unitOfWork.SaveChangesAsync();
-                return Task.FromResult(true);
-            }
+                await _unitOfWork.genericRepository<Theme>().AddAsync(theme);
+                var affectedRows = await _unitOfWork.SaveChangesAsync();
+                if (affectedRows > 0)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true, 
+                        CodeStatus = 201,    
+                        SentencesError = $"Tema creado correctamente: {createThemeDto.NameTheme}, filas afectadas: {affectedRows}."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,    
+                        SentencesError = $"Error al crear el tema: {createThemeDto.NameTheme}. No se guardaron cambios."
+                    };
+                }
+                }
             catch (Exception e)
             {
-                throw new BadHttpRequestException("Ocurrió un error al crear el tema.");
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al crear el tema: {e.Message}"
+                };
             }
         }
 
@@ -176,6 +194,7 @@ namespace CentralizedApps.Services
                     };
                 }
 
+                theme.NameTheme = procedureDto.NameTheme;
                 theme.BackGroundColor = procedureDto.BackGroundColor;
                 theme.Shield = procedureDto.Shield;
                 theme.PrimaryColor = procedureDto.PrimaryColor;
@@ -200,7 +219,7 @@ namespace CentralizedApps.Services
                 {
                     BooleanStatus = false,
                     CodeStatus = 500,
-                    SentencesError = "Error al actualizar el tema: " + ex.Message
+                    SentencesError = "Error al actualizar el tema: " + ex
                 };
             }
         }
@@ -242,7 +261,7 @@ namespace CentralizedApps.Services
             SocialMediaType socialMediaType = new SocialMediaType
             {
                 Name = createSocialMediaTypeDto.Name,
-                
+
             };
             await _unitOfWork.genericRepository<SocialMediaType>().AddAsync(socialMediaType);
             await _unitOfWork.SaveChangesAsync();
@@ -385,8 +404,8 @@ namespace CentralizedApps.Services
                 SentencesError = "succesfully"
             };
         }
-        
-        
+
+
         public async Task<ValidationResponseDto> updateSocialMediaType(int id, CreateSocialMediaTypeDto updateSocialMediaTypeDto)
         {
             var socialMediaType = await _unitOfWork.genericRepository<SocialMediaType>().GetByIdAsync(id);
@@ -401,7 +420,7 @@ namespace CentralizedApps.Services
             }
 
             socialMediaType.Name = updateSocialMediaTypeDto.Name;
-            
+
             _unitOfWork.genericRepository<SocialMediaType>().Update(socialMediaType);
             await _unitOfWork.SaveChangesAsync();
 
@@ -412,8 +431,8 @@ namespace CentralizedApps.Services
                 SentencesError = "succesfully"
             };
         }
-        
-        
+
+
         public async Task<ValidationResponseDto> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
         {
             var municipalitySocialMedium = await _unitOfWork.genericRepository<MunicipalitySocialMedium>().GetByIdAsync(id);
@@ -458,11 +477,11 @@ namespace CentralizedApps.Services
                     };
                 }
 
-                var map =_mapper.Map<MunicipalityProcedure>(addMunicipalityProcedures);
+                var map = _mapper.Map<MunicipalityProcedure>(addMunicipalityProcedures);
                 var call = _unitOfWork.genericRepository<MunicipalityProcedure>();
                 await call.AddAsync(map);
                 await _unitOfWork.SaveChangesAsync();
-                
+
                 return new ValidationResponseDto
                 {
                     BooleanStatus = true,
@@ -491,6 +510,144 @@ namespace CentralizedApps.Services
             catch (Exception ex)
             {
                 throw new BadHttpRequestException("Error al obtener los tipos de documentos: " + ex.Message);
+            }
+        }
+
+        public async Task<ValidationResponseDto> UpdateMunicipality(int id, CompleteMunicipalityDto municipalityDto)
+        {
+            try
+            {
+                if (municipalityDto == null || string.IsNullOrWhiteSpace(municipalityDto.Name))
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Los datos del municipio son requeridos."
+                    };
+                }
+
+                var existingMunicipality = await _unitOfWork
+                    .genericRepository<Municipality>()
+                    .GetByIdAsync(id);
+
+                if (existingMunicipality == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "El municipio no existe."
+                    };
+                }
+
+                // ======= Validar si Theme existe =======
+                Theme themeEntity = null;
+                if (!string.IsNullOrWhiteSpace(municipalityDto.Theme))
+                {
+                    themeEntity = await _unitOfWork
+                        .genericRepository<Theme>()
+                        .FindAsync_Predicate(x => x.NameTheme == municipalityDto.Theme);
+
+                    if (themeEntity == null)
+                    {
+                        return new ValidationResponseDto
+                        {
+                            BooleanStatus = false,
+                            CodeStatus = 400,
+                            SentencesError = $"El tema '{municipalityDto.Theme}' no existe. Debe crearlo antes de poder asignarlo al municipio."
+                        };
+                    }
+                }
+
+                // ======= Buscar o crear Department =======
+                Department departmentEntity = null;
+                if (!string.IsNullOrWhiteSpace(municipalityDto.Department))
+                {
+                    departmentEntity = await _unitOfWork
+                        .genericRepository<Department>()
+                        .FindAsync_Predicate(x => x.Name == municipalityDto.Department);
+
+                    if (departmentEntity == null)
+                    {
+                        departmentEntity = new Department { Name = municipalityDto.Department };
+                        await _unitOfWork.genericRepository<Department>().AddAsync(departmentEntity);
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+                }
+
+                // ======= Actualizar datos del municipio =======
+                existingMunicipality.Name = municipalityDto.Name;
+                existingMunicipality.EntityCode = municipalityDto.EntityCode;
+                existingMunicipality.IsActive = municipalityDto.IsActive;
+                existingMunicipality.Domain = municipalityDto.Domain;
+                existingMunicipality.UserFintech = BCrypt.Net.BCrypt.HashPassword(municipalityDto.UserFintech);
+                existingMunicipality.PasswordFintech = BCrypt.Net.BCrypt.HashPassword(municipalityDto.PasswordFintech);
+
+
+                if (departmentEntity != null)
+                    existingMunicipality.Department = departmentEntity;
+
+                if (themeEntity != null)
+                    existingMunicipality.Theme = themeEntity;
+
+                _unitOfWork.genericRepository<Municipality>().Update(existingMunicipality);
+                await _unitOfWork.SaveChangesAsync();
+
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = "Municipio actualizado correctamente."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = "Error al actualizar el municipio: " + ex.Message
+                };
+            }
+        }
+
+        public Task<ValidationResponseDto> createNewTypeProcedure(CreateProcedureDto createProcedureDto)
+        {
+            try
+            {
+                if (createProcedureDto == null || string.IsNullOrWhiteSpace(createProcedureDto.Name))
+                {
+                    return Task.FromResult(new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Los datos del procedimiento son requeridos."
+                    });
+                }
+
+                var procedure = new Procedure
+                {
+                    Name = createProcedureDto.Name
+                };
+                _unitOfWork.genericRepository<Procedure>().AddAsync(procedure);
+                _unitOfWork.SaveChangesAsync();
+
+                return Task.FromResult(new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = "Procedimiento creado correctamente."
+                });
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al crear el procedimiento: {ex.Message}"
+                });
             }
         }
     }

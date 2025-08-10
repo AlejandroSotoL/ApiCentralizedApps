@@ -12,13 +12,18 @@ namespace CentralizedApps.Services.Interfaces
         Task<DocumentType> createDocumentType(DocumentTypeDto documentTypeDto);
         Task<QueryField> createQueryField(QueryFieldDto queryFieldDto);
         Task<Availibity> createAvailibity(CreateAvailibityDto availibityDto);
-        Task<bool> createNewTheme(ThemeDto createThemeDto);
+        Task<ValidationResponseDto> createNewTheme(ThemeDto createThemeDto);
 
         Task<ValidationResponseDto> AsingProccessToMunicipality(MunicipalityProcedureAddDto addMunicipalityProcedures);
         Task<bool> AddMuncipalitySocialMediaToMunicipality(MunicipalitySocialMeditaDto_Response municipalitySocialMeditaDto_Response);
         //GET
         Task<List<DocumentType>> GetDocumentTypes();
         //PUT
+
+        Task<ValidationResponseDto> UpdateMunicipality(int Id , CompleteMunicipalityDto MunicipalityDTO);
+
+
+        Task<ValidationResponseDto> createNewTypeProcedure( CreateProcedureDto createProcedureDto);
         Task<Course> createCourse(CreateCourseDto createCourseDto);
         Task<SocialMediaType> createSocialMediaType(CreateSocialMediaTypeDto createSocialMediaTypeDto);
         Task<SportsFacility> createSportsFacility(CreateSportsFacilityDto createSportsFacilityDto);

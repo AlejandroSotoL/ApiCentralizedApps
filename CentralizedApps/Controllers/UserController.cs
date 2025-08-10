@@ -2,6 +2,7 @@ using CentralizedApps.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
+using CentralizedApps.Models.Entities;
 
 namespace CentralizedApps.Contollers
 {
@@ -145,22 +146,17 @@ namespace CentralizedApps.Contollers
             });
         }
 
-        [HttpGet("by-email/{email}")]
-        public async Task<IActionResult> GetByEmailUser(string email)
+        [HttpGet("by-email")]
+        public async Task<User> GetByEmailUser([FromQuery] string email)
         {
             try
             {
                 var response = await _unitOfWork.UserRepository.GetByEmailUserByAuthenticate(email);
-                return Ok(response);
+                return response;
             }
             catch (Exception e)
             {
-                return BadRequest(new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 404,
-                    SentencesError = e.Message
-                });
+                return new User();
             }
         }
 
