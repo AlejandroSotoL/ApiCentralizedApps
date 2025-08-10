@@ -23,24 +23,24 @@ namespace CentralizedApps.Repositories
         public async Task<IEnumerable<PaymentHistoryUserListDto>> GetAllPaymentHistoryByIdAsync(Expression<Func<PaymentHistory, bool>> filtro)
         {
             var listpaymentHistoryUser = await _context.PaymentHistories
-                                    .Where(filtro)
-                                    .Include(pa => pa.User)
-                                    .Include(pa => pa.Municipality)
-                                    .Include(pa => pa.StatusTypeNavigation)
-                                    .Include(pa => pa.MunicipalityProcedures)
-                                        .ThenInclude(mp => mp.Procedures)
-                                    .Select(pa => new PaymentHistoryUserListDto
-                                    {
-                                        Id = pa.Id,
-                                        Amount = pa.Amount,
-                                        Status = pa.Status,
-                                        PaymentDate = pa.PaymentDate,
-                                        UserFirtName = pa.User!.FirstName,
-                                        MunicipalityName = pa.Municipality!.Name,
-                                        StatusType = pa.StatusTypeNavigation!.TypeStatus,
-                                        ProcedureName = pa.MunicipalityProcedures!.Procedures!.Name
-                                    })
-                                    .ToListAsync();
+                .Where(filtro)
+                .Include(pa => pa.User)
+                .Include(pa => pa.Municipality)
+                .Include(pa => pa.StatusTypeNavigation)
+                .Include(pa => pa.MunicipalityProcedures)
+                    .ThenInclude(mp => mp.Procedures)
+                .Select(pa => new PaymentHistoryUserListDto
+                {
+                    Id = pa.Id,
+                    Amount = pa.Amount,
+                    Status = pa.Status,
+                    PaymentDate = pa.PaymentDate,
+                    UserFirtName = pa.User!.FirstName,
+                    MunicipalityName = pa.Municipality!.Name,
+                    StatusType = pa.StatusTypeNavigation!.TypeStatus,
+                    ProcedureName = pa.MunicipalityProcedures!.Procedures!.Name
+                })
+                .ToListAsync();
             return listpaymentHistoryUser;
 
         }
