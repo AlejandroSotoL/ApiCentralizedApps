@@ -35,10 +35,11 @@ namespace CentralizedApps.FluentValidation
             RuleFor(x => x.PasswordFintech)
                 .NotEmpty().WithMessage("La contraseña Fintech es obligatoria.")
                 .MinimumLength(8).WithMessage("La contraseña Fintech debe tener al menos 8 caracteres.")
-                .Matches(@"[A-Z]").WithMessage("La contraseña debe contener al menos una letra mayúscula.")
-                .Matches(@"[a-z]").WithMessage("La contraseña debe contener al menos una letra minúscula.")
-                .Matches(@"\d").WithMessage("La contraseña debe contener al menos un número.")
-                .Matches(@"[\W_]").WithMessage("La contraseña debe contener al menos un carácter especial.");
+                .Matches(@"[A-Z]").WithMessage("Debe contener al menos una letra mayúscula.")
+                .Matches(@"[a-z]").WithMessage("Debe contener al menos una letra minúscula.")
+                .Matches(@"\d").WithMessage("Debe contener al menos un número.")
+                .Matches(@"^[\w\W]+$").WithMessage("La contraseña contiene caracteres no permitidos.");
+
 
             // Estado activo
             RuleFor(x => x.IsActive)
