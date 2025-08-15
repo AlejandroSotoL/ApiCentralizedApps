@@ -10,8 +10,7 @@ namespace CentralizedApps.Repositories
     private IAuthRepository _AuthRepository;
     private IUserRepository _UserRepository;
     private IPaymentHistoryRepository _paymentHistoryRepository;
-    
-
+    private IConfigurationEmail _configurationEmail;
     
 
         public UnitOfWork(CentralizedAppsDbContext context)
@@ -24,6 +23,8 @@ namespace CentralizedApps.Repositories
         public IUserRepository UserRepository => _UserRepository ??= new UserRepository(_context);
 
         public IPaymentHistoryRepository paymentHistoryRepository => _paymentHistoryRepository ??= new PaymentHistoryRepository(_context);
+
+        public IConfigurationEmail configurationEmail => _configurationEmail ??= new ConfigurationEmail(_context);
 
         public IGenericRepository<T> genericRepository<T>() where T : class
         {

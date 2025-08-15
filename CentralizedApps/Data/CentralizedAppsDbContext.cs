@@ -18,6 +18,8 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<Availibity> Availibities { get; set; }
 
+    public virtual DbSet<ConfiguracionEmail> ConfiguracionEmails { get; set; }
+
     public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<Department> Departments { get; set; }
@@ -46,7 +48,10 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-CJE8DS1;Database=CentralizedApps;Trusted_Connection=True;TrustServerCertificate=True;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Availibity>(entity =>
@@ -58,6 +63,20 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.Property(e => e.TypeStatus)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<ConfiguracionEmail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Configur__3214EC075FE051B3");
+
+            entity.HasIndex(e => e.Recurso, "IX_ConfiguracionEmails_Recurso");
+
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+            entity.Property(e => e.Propiedad).HasMaxLength(100);
+            entity.Property(e => e.Recurso).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Course>(entity =>
