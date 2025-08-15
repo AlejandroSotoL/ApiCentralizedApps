@@ -13,6 +13,7 @@ using CentralizedApps.Data;
 using CentralizedApps.Middelware;
 using CentralizedApps.Profile_AutoMapper;
 using CentralizedApps.Models.Dtos;
+using System.Net;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +56,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 // Base de datos
 builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
     options.UseSqlServer(
@@ -64,8 +66,6 @@ builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
 );
 
 //AutoMapper
-
-
 // Repositorios y servicios
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

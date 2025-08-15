@@ -26,7 +26,7 @@ namespace CentralizedApps.Controllers
         {
             if (id <= 0)
             {
-                return  BadRequest(new ValidationResponseDto
+                return BadRequest(new ValidationResponseDto
                 {
                     CodeStatus = 400,
                     BooleanStatus = false,
@@ -52,7 +52,6 @@ namespace CentralizedApps.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> createPaymentHistory([FromBody] CreatePaymentHistoryDto createPaymentHistoryDto)
         {
             try
@@ -61,11 +60,11 @@ namespace CentralizedApps.Controllers
                 if (createPaymentHistoryDto == null)
                 {
                     return BadRequest(new ValidationResponseDto
-                {
-                    CodeStatus = 400,
-                    BooleanStatus = false,
-                    SentencesError = "el objeto no puede ser null"
-                });
+                    {
+                        CodeStatus = 400,
+                        BooleanStatus = false,
+                        SentencesError = "el objeto no puede ser null"
+                    });
                 }
 
                 await _paymentHistoryService.createPaymentHistory(createPaymentHistoryDto);
@@ -78,15 +77,15 @@ namespace CentralizedApps.Controllers
             }
             catch (Exception ex)
             {
-                return  BadRequest(new ValidationResponseDto
+                return BadRequest(new ValidationResponseDto
                 {
                     CodeStatus = 400,
                     BooleanStatus = false,
                     SentencesError = ex.Message
                 });
             }
-            
-            
+
+
         }
 
         [HttpPut("{id}")]
@@ -95,7 +94,7 @@ namespace CentralizedApps.Controllers
         {
             try
             {
-                
+
                 if (idStatusType <= 0)
                 {
                     return BadRequest(
@@ -109,23 +108,23 @@ namespace CentralizedApps.Controllers
 
                 var result = await _paymentHistoryService.UpdatePaymentHistory(id, idStatusType);
                 if (!result.BooleanStatus)
+                {
+                    return BadRequest(new ValidationResponseDto
                     {
-                        return BadRequest(new ValidationResponseDto
-                        {
-                            BooleanStatus = result.BooleanStatus,
-                            CodeStatus = result.CodeStatus,
-                            SentencesError = "Error: " + result.SentencesError
-                        });
-                    }
-                    else
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = "Error: " + result.SentencesError
+                    });
+                }
+                else
+                {
+                    return Ok(new ValidationResponseDto
                     {
-                        return Ok(new ValidationResponseDto
-                        {
-                            BooleanStatus = result.BooleanStatus,
-                            CodeStatus = result.CodeStatus,
-                            SentencesError = result.SentencesError
-                        });
-                    }
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = result.SentencesError
+                    });
+                }
 
 
             }
@@ -137,6 +136,53 @@ namespace CentralizedApps.Controllers
                     BooleanStatus = false,
                     SentencesError = ex.Message
                 });
+            }
+        }
+
+[HttpDelete("User/{idUser}/History/{idHistory}")]
+        public async Task<ValidationResponseDto> deletePaymentHistory(int idUser , int  idHistory )
+        {
+            try
+            {
+                if (idUser <= 0 || idHistory <= 0)
+                {
+                    return new ValidationResponseDto
+                    {
+                        CodeStatus = 400,
+                        BooleanStatus = false,
+                        SentencesError = "el id no puede ser null y debe ser mayor a cero"
+                    };
+                }
+
+
+                var result = await _paymentHistoryService.DeletePaymentHistory(idUser , idHistory);
+                if (!result.BooleanStatus)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = "Error: " + result.SentencesError
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = result.SentencesError
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                };
             }
         }
     

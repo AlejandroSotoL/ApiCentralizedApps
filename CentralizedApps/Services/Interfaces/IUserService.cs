@@ -8,5 +8,6 @@ namespace CentralizedApps.Services.Interfaces
     {
         Task<User> CreateUserAsync(UserDto dto);
         Task<ValidationResponseDto> UpdateUserAsync(int id, UserDto updateUserDto);
+        Task<ValidationResponseDto> UpdatePasswordUser(int userId, string CurrentlyPassword, string NewPassword);
     }
 }

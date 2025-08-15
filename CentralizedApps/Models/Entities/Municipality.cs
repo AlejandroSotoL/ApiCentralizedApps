@@ -31,6 +31,8 @@ public partial class Municipality
 
     public virtual ICollection<MunicipalitySocialMedium> MunicipalitySocialMedia { get; set; } = new List<MunicipalitySocialMedium>();
 
+    public virtual ICollection<NewsByMunicipality> NewsByMunicipalities { get; set; } = new List<NewsByMunicipality>();
+
     public virtual ICollection<PaymentHistory> PaymentHistories { get; set; } = new List<PaymentHistory>();
 
     public virtual ICollection<QueryField> QueryFields { get; set; } = new List<QueryField>();

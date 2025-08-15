@@ -160,5 +160,41 @@ namespace CentralizedApps.Contollers
             }
         }
 
+        [HttpPut("update-password/user{userId}/CurrentlyPassword/{CurrentlyPassword}/NewPassword/{NewPassword}")]
+        public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, string CurrentlyPassword, string NewPassword)
+        {
+            try
+            {
+                var response = await _userService.UpdatePasswordUser(userId, CurrentlyPassword, NewPassword);
+                if (response.BooleanStatus == false)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = response.SentencesError
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = $"{response.SentencesError} - por favor iniciar sesión nuevamente"
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error: no se pudo actualizar la contraseña ERROR: " + e.Message
+                };
+            }
+        }
+
     }
 }

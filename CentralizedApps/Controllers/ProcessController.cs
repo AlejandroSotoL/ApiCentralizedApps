@@ -47,6 +47,40 @@ namespace CentralizedApps.Controllers
             }
         }
 
+        [HttpPost("Create/NewNotice")]
+        public async Task<ValidationResponseDto> CreateNewNotice( NewsByMunicipalityDto newsByMunicipalityDto)
+        {
+            try
+            {
+                if (newsByMunicipalityDto == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        CodeStatus = 400,
+                        BooleanStatus = false,
+                        SentencesError = "NewsByMunicipalityDto no puede ser nulo."
+                    };
+                    
+                }
+                var response = await _ProcedureServices.createNewNotice(newsByMunicipalityDto);
+                return new ValidationResponseDto
+                {
+                    CodeStatus = response.CodeStatus,
+                    BooleanStatus = response.BooleanStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 500,
+                    BooleanStatus = false,
+                    SentencesError = "Tenemos problemas técnicos, por favor intente más tarde." + e.Message
+                };
+            }
+        }
+
 
         [HttpPost("Create/NewTheme")]
         public async Task<ValidationResponseDto> CreateNewTheme([FromBody] ThemeDto themeDto)

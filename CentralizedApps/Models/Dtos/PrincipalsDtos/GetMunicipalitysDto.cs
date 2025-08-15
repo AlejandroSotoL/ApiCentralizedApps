@@ -18,13 +18,19 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public List<MunicipalityProcedureDto>? MunicipalityProcedures { get; set; }
         public List<MunicipalitySocialMediaDto>? MunicipalitySocialMedia { get; set; }
         public List<QueryFieldDto_Relation>? QueryFields { get; set; }
+        public List<NewsByMunicipalityDto>? NewsByMunicipalities { get; set; }
     }
 
     public class QueryFieldDto_Relation
     {
         public int Id { get; set; }
         public string? FieldName { get; set; }
-        public JustMunicipalitysDto? Municipality { get; set; }
+    }
+
+    public class NewsByMunicipalityDto
+    {
+        public string? GetUrlNew { get; set; }
+        public int? IdMunicipality { get; set; }
     }
 
     public class DepartmentDto

@@ -68,5 +68,41 @@ namespace CentralizedApps.Services
                 };
 
         }
+
+        public async Task<ValidationResponseDto> DeletePaymentHistory(int idUser, int idHistory)
+        {
+            try
+            {
+                var paymentHistory = await _unitOfWork.genericRepository<PaymentHistory>().FindAsync_Predicate(ph => ph.UserId == idUser && ph.Id == idHistory);
+                if (paymentHistory == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "Historial de pago no encontrado"
+                    };
+                }
+
+                _unitOfWork.paymentHistoryRepository.Delete(paymentHistory);
+                var rows = await _unitOfWork.SaveChangesAsync();
+
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 200,
+                    BooleanStatus = true,
+                    SentencesError = "Historial de pago eliminado correctamente - lineas afectadas: " + rows
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = ex.Message
+                };
+            }
+        }
     }
 }

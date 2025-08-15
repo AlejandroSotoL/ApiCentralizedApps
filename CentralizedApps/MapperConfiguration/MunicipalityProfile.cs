@@ -9,10 +9,12 @@ namespace CentralizedApps.Profile_AutoMapper
     {
         public MunicipalityProfile()
         {
-            CreateMap<Municipality, GetMunicipalitysDto>();
+            CreateMap<NewsByMunicipalityDto, NewsByMunicipality>();
+            CreateMap<NewsByMunicipalityDto, NewsByMunicipality>().ReverseMap();
             CreateMap<Department, DepartmentDto>();
             CreateMap<Theme, ThemeDto>().ReverseMap();
             CreateMap<SportsFacility, SportsFacilitiesDto>();
+            CreateMap<Municipality, GetMunicipalitysDto>().ReverseMap();
             CreateMap<Course, CourseDto>();
             CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>();
             CreateMap<Procedure, ProcedureDto>();

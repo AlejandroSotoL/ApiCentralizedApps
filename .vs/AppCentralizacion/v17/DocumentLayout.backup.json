@@ -18,8 +18,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -28,14 +32,10 @@
               "RelativeDocumentMoniker": "CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
               "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
               "RelativeToolTip": "CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAAwCMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-11T14:10:35.32Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Document",
@@ -45,7 +45,7 @@
               "RelativeDocumentMoniker": "CentralizedApps\\appsettings.json",
               "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\appsettings.json",
               "RelativeToolTip": "CentralizedApps\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-07-31T16:21:21.895Z",
               "EditorCaption": ""

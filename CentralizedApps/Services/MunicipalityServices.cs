@@ -124,8 +124,6 @@ namespace CentralizedApps.Services
                     catch (SqlException sqlEx)
                     {
                         await transaction.RollbackAsync();
-                        _logger.LogError(sqlEx, "SQL Error Code {ErrorCode}: {Message}", sqlEx.Number, sqlEx.Message);
-
                         if (sqlEx.Number == 2627 || sqlEx.Number == 2601) 
                         {
                             return new ValidationResponseDto
@@ -166,6 +164,7 @@ namespace CentralizedApps.Services
                 var entities = await response.GetAllWithNestedIncludesAsync(query =>
                     query
                         .Include(r => r.Courses)!
+                        .Include(r => r.NewsByMunicipalities)!
                         .Include(r => r.QueryFields)!
                         .Include(r => r.SportsFacilities)!
                         .Include(r => r.Department)!
@@ -196,6 +195,7 @@ namespace CentralizedApps.Services
                 var entity = await response.GetOneWithNestedIncludesAsync(
                     query => query
                         .Include(m => m.Courses)!
+                        .Include(r => r.NewsByMunicipalities)!
                         .Include(r => r.QueryFields)!
                         .Include(m => m.SportsFacilities)!
                         .Include(r => r.Department)
@@ -236,7 +236,8 @@ namespace CentralizedApps.Services
                     {
                         Id = m.Id,
                         Name = m.Name,
-                        Domain = m.Domain
+                        Domain = m.Domain,
+                        IsActive = m.IsActive
                     })
                     .ToList();
 

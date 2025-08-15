@@ -30,6 +30,8 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<MunicipalitySocialMedium> MunicipalitySocialMedia { get; set; }
 
+    public virtual DbSet<NewsByMunicipality> NewsByMunicipalities { get; set; }
+
     public virtual DbSet<PaymentHistory> PaymentHistories { get; set; }
 
     public virtual DbSet<Procedure> Procedures { get; set; }
@@ -44,10 +46,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-CJE8DS1;Database=CentralizedApps;Trusted_Connection=True;TrustServerCertificate=True;");
-
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Availibity>(entity =>
@@ -170,6 +169,23 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.HasOne(d => d.SocialMediaType).WithMany(p => p.MunicipalitySocialMedia)
                 .HasForeignKey(d => d.SocialMediaTypeId)
                 .HasConstraintName("FK_Municipality_SocialMedia_ToType");
+        });
+
+        modelBuilder.Entity<NewsByMunicipality>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__NewsByMu__3214EC0722834A37");
+
+            entity.ToTable("NewsByMunicipality");
+
+            entity.Property(e => e.GetUrlNew)
+                .IsUnicode(false)
+                .HasColumnName("Get_UrlNew");
+            entity.Property(e => e.IdMunicipality).HasColumnName("Id_Municipality");
+
+            entity.HasOne(d => d.IdMunicipalityNavigation).WithMany(p => p.NewsByMunicipalities)
+                .HasForeignKey(d => d.IdMunicipality)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_NewsByMunicipalityToMunicipality");
         });
 
         modelBuilder.Entity<PaymentHistory>(entity =>

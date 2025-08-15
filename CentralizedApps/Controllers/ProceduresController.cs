@@ -27,23 +27,6 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // PUT
         [HttpPut("Update/NewTheme/{id}")]
         public async Task<ValidationResponseDto> UpdateTheme(int id, ThemeDto procedureDto)
@@ -379,8 +362,42 @@ namespace CentralizedApps.Controllers
                     SentencesError = "Error: " + ex.Message
                 });
             }
-
         }
+
+        [HttpPut("News/{id}")]
+        public async Task<ValidationResponseDto> UpdateNews(int id, [FromBody] NewsByMunicipalityDto newsByMunicipalityDto)
+        {
+            try
+            {
+                if (newsByMunicipalityDto == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        CodeStatus = 400,
+                        BooleanStatus = false,
+                        SentencesError = "NewsByMunicipalityDto no puede ser nulo."
+                    };
+                }
+
+                var response = await _ProcedureServices.updateNews(id, newsByMunicipalityDto);
+                return new ValidationResponseDto
+                {
+                    CodeStatus = response.CodeStatus,
+                    BooleanStatus = response.BooleanStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 500,
+                    BooleanStatus = false,
+                    SentencesError = "Error al actualizar la noticia: " + e.Message
+                };
+            }
+            }
+
     }
 }
 
