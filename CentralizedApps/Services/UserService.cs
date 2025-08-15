@@ -16,6 +16,52 @@ public class UserService : IUserService
         _unitOfWork = unitOfWork;
     }
 
+    public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool ?status)
+    {
+        try
+        {
+            var user = await _unitOfWork.genericRepository<User>().FindAsync_Predicate(u => u.Id == userId);
+            if (user == null || status == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Usuario no encontrado o estado inválido"
+                };
+            }
+
+            user.LoginStatus = status.Value;
+            _unitOfWork.genericRepository<User>().Update(user);
+            var rowsAffected = await _unitOfWork.SaveChangesAsync();
+            if (rowsAffected > 0)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = "Muchas Gracias por visitarnos..."
+                };
+            }
+            else
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error al actualizar el estado del usuario"
+                };
+            }
+        } catch (Exception e) {
+            return new ValidationResponseDto
+            {
+                BooleanStatus = false,
+                CodeStatus = 400,
+                SentencesError = "Error: no se pudo cambiar el estado del usuario ERROR: " + e.Message
+            };
+        }
+    }
+
     public async Task<User> CreateUserAsync(UserDto dto)
     {
 

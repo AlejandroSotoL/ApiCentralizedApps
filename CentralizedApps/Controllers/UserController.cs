@@ -196,5 +196,28 @@ namespace CentralizedApps.Contollers
             }
         }
 
+        [HttpPut("ChangeStatusUser/{userId}/status/{status}")]
+        public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool status)
+        {
+            try
+            {
+                var response = await _userService.ChangeStatusUser(userId, status);
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = response.BooleanStatus,
+                    CodeStatus = response.CodeStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error: no se pudo cambiar el estado del usuario ERROR: " + e.Message
+                };
+            }
+        }
     }
 }
