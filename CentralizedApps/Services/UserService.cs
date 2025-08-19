@@ -1,5 +1,6 @@
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Entities;
+using CentralizedApps.Models.UserDtos;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
 
@@ -88,7 +89,7 @@ public class UserService : IUserService
 
     }
 
-    public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, string CurrentlyPassword, string NewPassword)
+    public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePasswordRequestDto  updatePasswordRequestDto)
     {
         try
         {
@@ -104,7 +105,7 @@ public class UserService : IUserService
             }
 
             //validation password
-            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(CurrentlyPassword, currentlyUser.Password);
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(updatePasswordRequestDto.CurrentPassword, currentlyUser.Password);
             if (!isPasswordValid)
             {
                 return new ValidationResponseDto
@@ -115,7 +116,7 @@ public class UserService : IUserService
                 };
             }
 
-            var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(NewPassword);
+            var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(updatePasswordRequestDto.NewPassword);
             currentlyUser.Password = hashedNewPassword;
             _unitOfWork.genericRepository<User>().Update(currentlyUser);
             var rowws = await _unitOfWork.SaveChangesAsync();

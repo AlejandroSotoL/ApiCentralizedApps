@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Models.Entities;
+using CentralizedApps.Models.UserDtos;
 
 namespace CentralizedApps.Contollers
 {
@@ -160,12 +161,12 @@ namespace CentralizedApps.Contollers
             }
         }
 
-        [HttpPut("update-password/user{userId}/CurrentlyPassword/{CurrentlyPassword}/NewPassword/{NewPassword}")]
-        public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, string CurrentlyPassword, string NewPassword)
+        [HttpPut("update-password/{userId}")]
+        public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, [FromBody] UpdatePasswordRequestDto  updatePasswordRequestDto)
         {
             try
             {
-                var response = await _userService.UpdatePasswordUser(userId, CurrentlyPassword, NewPassword);
+                var response = await _userService.UpdatePasswordUser(userId, updatePasswordRequestDto);
                 if (response.BooleanStatus == false)
                 {
                     return new ValidationResponseDto
