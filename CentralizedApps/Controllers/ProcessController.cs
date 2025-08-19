@@ -15,11 +15,35 @@ namespace CentralizedApps.Controllers
     {
 
         private readonly IProcedureServices _ProcedureServices;
-        public ProcessController(IProcedureServices ProcedureServices)
+        private readonly IBank _BankService;
+        public ProcessController(IProcedureServices ProcedureServices, IBank BankService)
         {
             _ProcedureServices = ProcedureServices;
+            _BankService = BankService;
         }
 
+        [HttpPost("Create/Bank")]
+        public async Task<ValidationResponseDto> CreateBank([FromBody] CreateBankDto createBankDto) {
+            try
+            {                
+                var response = await _BankService.CreateBank(createBankDto);
+                return new ValidationResponseDto
+                {
+                    CodeStatus = response.CodeStatus,
+                    BooleanStatus = response.BooleanStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = $"Error: {ex.Message}"
+                };
+            }
+        }
 
         [HttpPost("Create/SocialMediaType")]
         public async Task<IActionResult> createSocialMediaType([FromBody] CreateSocialMediaTypeDto createSocialMediaTypeDto)

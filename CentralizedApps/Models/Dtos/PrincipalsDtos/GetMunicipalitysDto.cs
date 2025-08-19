@@ -1,4 +1,6 @@
 
+using CentralizedApps.Models.Entities;
+
 namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 {
     public class GetMunicipalitysDto
@@ -10,7 +12,8 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? Domain { get; set; }
         public string? UserFintech { get; set; }
         public string? PasswordFintech { get; set; }
-
+        public BankDto? IdBankNavigation { get; set; }
+        public ShieldMunicipalityDto? IdShieldNavigation { get; set; }
         public DepartmentDto? Department { get; set; }
         public ThemeDto? Theme { get; set; }
         public List<CourseDto>? Courses { get; set; }
@@ -21,6 +24,15 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public List<NewsByMunicipalityDto>? NewsByMunicipalities { get; set; }
     }
 
+    public class BankDto
+    {
+        public string NameBank { get; set; }
+    }
+
+    public class ShieldMunicipalityDto
+    {
+        public string Url { get; set; }
+    }
     public class QueryFieldDto_Relation
     {
         public int Id { get; set; }
@@ -51,8 +63,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? NameTheme { get; set; }
 
         public string? BackGroundColor { get; set; }
-
-        public string? Shield { get; set; }
 
         public string? PrimaryColor { get; set; }
 

@@ -18,6 +18,8 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<Availibity> Availibities { get; set; }
 
+    public virtual DbSet<Bank> Banks { get; set; }
+
     public virtual DbSet<ConfiguracionEmail> ConfiguracionEmails { get; set; }
 
     public virtual DbSet<Course> Courses { get; set; }
@@ -40,6 +42,8 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<QueryField> QueryFields { get; set; }
 
+    public virtual DbSet<ShieldMunicipality> ShieldMunicipalities { get; set; }
+
     public virtual DbSet<SocialMediaType> SocialMediaTypes { get; set; }
 
     public virtual DbSet<SportsFacility> SportsFacilities { get; set; }
@@ -61,6 +65,15 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.ToTable("Availibity");
 
             entity.Property(e => e.TypeStatus)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Bank>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Banks__3214EC07FFE9D6AE");
+
+            entity.Property(e => e.NameBank)
                 .HasMaxLength(100)
                 .IsUnicode(false);
         });
@@ -132,6 +145,8 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.Property(e => e.EntityCode)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.IdBank).HasColumnName("Id_Bank");
+            entity.Property(e => e.IdShield).HasColumnName("Id_Shield");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -145,6 +160,14 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.HasOne(d => d.Department).WithMany(p => p.Municipalities)
                 .HasForeignKey(d => d.DepartmentId)
                 .HasConstraintName("FK_Municipality_ToDepartment");
+
+            entity.HasOne(d => d.IdBankNavigation).WithMany(p => p.Municipalities)
+                .HasForeignKey(d => d.IdBank)
+                .HasConstraintName("FK_MunicipalityToBanks");
+
+            entity.HasOne(d => d.IdShieldNavigation).WithMany(p => p.Municipalities)
+                .HasForeignKey(d => d.IdShield)
+                .HasConstraintName("FK_MunicipalityToShieldMunicipality");
 
             entity.HasOne(d => d.Theme).WithMany(p => p.Municipalities)
                 .HasForeignKey(d => d.ThemeId)
@@ -258,6 +281,18 @@ public partial class CentralizedAppsDbContext : DbContext
                 .HasConstraintName("FK_QueryField_ToMunicipality");
         });
 
+        modelBuilder.Entity<ShieldMunicipality>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Shield_M__3214EC0771B5A892");
+
+            entity.ToTable("Shield_Municipality");
+
+            entity.Property(e => e.NameOfMunicipality)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.Url).IsUnicode(false);
+        });
+
         modelBuilder.Entity<SocialMediaType>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__SocialMe__3214EC07645744B3");
@@ -318,7 +353,6 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.Property(e => e.SecondaryColorBlack)
                 .HasMaxLength(200)
                 .IsUnicode(false);
-            entity.Property(e => e.Shield).IsUnicode(false);
         });
 
         modelBuilder.Entity<User>(entity =>

@@ -75,6 +75,8 @@ builder.Services.AddScoped<IMunicipalityServices, MunicipalityServices>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
+builder.Services.AddScoped<IBank, BankService>();
+
 
 
 var app = builder.Build();

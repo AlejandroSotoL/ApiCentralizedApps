@@ -194,7 +194,6 @@ namespace CentralizedApps.Services
 
                 theme.NameTheme = procedureDto.NameTheme;
                 theme.BackGroundColor = procedureDto.BackGroundColor;
-                theme.Shield = procedureDto.Shield;
                 theme.PrimaryColor = procedureDto.PrimaryColor;
                 theme.SecondaryColor = procedureDto.SecondaryColor;
                 theme.SecondaryColorBlack = procedureDto.SecondaryColorBlack;
@@ -830,8 +829,6 @@ namespace CentralizedApps.Services
                 };
             }
         }
-
-        
     }
 }
 

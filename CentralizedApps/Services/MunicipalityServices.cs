@@ -164,6 +164,8 @@ namespace CentralizedApps.Services
                 var entities = await response.GetAllWithNestedIncludesAsync(query =>
                     query
                         .Include(r => r.Courses)!
+                        .Include(r => r.IdShieldNavigation)!
+                        .Include(r => r.IdBankNavigation)!
                         .Include(r => r.NewsByMunicipalities)!
                         .Include(r => r.QueryFields)!
                         .Include(r => r.SportsFacilities)!
@@ -196,6 +198,8 @@ namespace CentralizedApps.Services
                     query => query
                         .Include(m => m.Courses)!
                         .Include(r => r.NewsByMunicipalities)!
+                        .Include(r => r.IdShieldNavigation)!
+                        .Include(r => r.IdBankNavigation)!
                         .Include(r => r.QueryFields)!
                         .Include(m => m.SportsFacilities)!
                         .Include(r => r.Department)

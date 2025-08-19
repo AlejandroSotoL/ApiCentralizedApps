@@ -9,6 +9,8 @@ namespace CentralizedApps.Profile_AutoMapper
     {
         public MunicipalityProfile()
         {
+            CreateMap<CreateBankDto, Bank>();
+            CreateMap<ShieldMunicipalityDto , ShieldMunicipality>();
             CreateMap<NewsByMunicipalityDto, NewsByMunicipality>();
             CreateMap<NewsByMunicipalityDto, NewsByMunicipality>().ReverseMap();
             CreateMap<Department, DepartmentDto>();
