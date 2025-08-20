@@ -10,12 +10,13 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? UserFintech { get; set; }
         public string? PasswordFintech { get; set; }
         public bool? IsActive { get; set; }
-        //Departament Dto
+        //Departament Dtoc
         public string? Department { get; set; }
         //Theme Dto
         public string? Theme { get; set; }
         public string? NameEscudo { get; set; }
         public string? NameBank { get; set; }
-        
+        public string? DataPrivacy { get; set; }
+        public string? DataProcessingPrivacy { get; set; }
     }
 }
