@@ -106,17 +106,20 @@ public class UserService : IUserService
 
             //validation password
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(updatePasswordRequestDto.CurrentPassword, currentlyUser.Password);
+
+            
             if (!isPasswordValid)
             {
                 return new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 400,
-                    SentencesError = "La Contraseña actual es incorrecta"
+                    SentencesError = $"La Contraseña actual es incorrecta"
                 };
             }
 
             var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(updatePasswordRequestDto.NewPassword);
+            
             currentlyUser.Password = hashedNewPassword;
             _unitOfWork.genericRepository<User>().Update(currentlyUser);
             var rowws = await _unitOfWork.SaveChangesAsync();
