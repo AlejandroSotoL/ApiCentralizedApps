@@ -27,10 +27,13 @@ public partial class Municipality
 
     public int? IdBank { get; set; }
 
+    public string? DataPrivacy { get; set; }
+
+    public string? DataProcessingPrivacy { get; set; }
+
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
     public virtual Department? Department { get; set; }
-
 
     public virtual Bank? IdBankNavigation { get; set; }
 

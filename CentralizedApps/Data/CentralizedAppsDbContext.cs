@@ -139,6 +139,8 @@ public partial class CentralizedAppsDbContext : DbContext
 
             entity.ToTable("Municipality");
 
+            entity.Property(e => e.DataPrivacy).IsUnicode(false);
+            entity.Property(e => e.DataProcessingPrivacy).IsUnicode(false);
             entity.Property(e => e.Domain)
                 .HasMaxLength(100)
                 .IsUnicode(false);
