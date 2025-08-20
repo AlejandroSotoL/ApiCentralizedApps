@@ -148,17 +148,31 @@ namespace CentralizedApps.Contollers
         }
 
         [HttpGet("by-email")]
-        public async Task<User> GetByEmailUser([FromQuery] string email)
+        public async Task<IActionResult> GetByEmailUser([FromQuery] string email)
         {
-            try
+            if (string.IsNullOrWhiteSpace(email))
             {
-                var response = await _unitOfWork.UserRepository.GetByEmailUserByAuthenticate(email);
-                return response;
+                return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = "El email no puede estar vacío"
+                });
             }
-            catch (Exception e)
+
+            var response = await _unitOfWork.UserRepository.GetByEmailUserByAuthenticate(email);
+
+            if (response == null)
             {
-                return new User();
+                return NotFound(new ValidationResponseDto
+                {
+                    CodeStatus = 404,
+                    BooleanStatus = false,
+                    SentencesError = "Usuario no encontrado"
+                });
             }
+
+            return Ok(response);
         }
 
         [HttpPut("update-password/{userId}")]
