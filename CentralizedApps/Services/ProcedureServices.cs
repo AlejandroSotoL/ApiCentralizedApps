@@ -846,7 +846,7 @@ namespace CentralizedApps.Services
 
                 // Verificamos si ya existe un escudo con ese nombre de municipio
                 var existingShield = await _unitOfWork.genericRepository<ShieldMunicipality>()
-                    .FindAsync_Predicate(x => x.NameOfMunicipality == createShieldDto.NameOfMuniciopality);
+                    .FindAsync_Predicate(x => x.NameOfMunicipality == createShieldDto.NameOfMunicipality);
 
                 if (existingShield != null)
                 {
@@ -860,7 +860,7 @@ namespace CentralizedApps.Services
 
                 var shield = new ShieldMunicipality
                 {
-                    NameOfMunicipality = createShieldDto.NameOfMuniciopality,
+                    NameOfMunicipality = createShieldDto.NameOfMunicipality,
                     Url = createShieldDto.Url
                 };
 

@@ -33,7 +33,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 
     public class ShieldMunicipalityDto
     {
-        public string NameOfMuniciopality { get; set; }
+        public string NameOfMunicipality { get; set; }
         public string Url { get; set; }
     }
 
