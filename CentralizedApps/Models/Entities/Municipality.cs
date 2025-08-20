@@ -31,6 +31,7 @@ public partial class Municipality
 
     public virtual Department? Department { get; set; }
 
+
     public virtual Bank? IdBankNavigation { get; set; }
 
     public virtual ShieldMunicipality? IdShieldNavigation { get; set; }

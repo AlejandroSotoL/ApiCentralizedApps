@@ -11,8 +11,11 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? PasswordFintech { get; set; }
         public bool? IsActive { get; set; }
         //Departament Dto
-        public string? Department{ get; set; }
+        public string? Department { get; set; }
         //Theme Dto
         public string? Theme { get; set; }
+        public string? NameEscudo { get; set; }
+        public string? NameBank { get; set; }
+        
     }
 }

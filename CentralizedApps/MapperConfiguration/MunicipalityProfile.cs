@@ -9,24 +9,48 @@ namespace CentralizedApps.Profile_AutoMapper
     {
         public MunicipalityProfile()
         {
-            CreateMap<CreateBankDto, Bank>();
-            CreateMap<ShieldMunicipalityDto , ShieldMunicipality>();
-            CreateMap<NewsByMunicipalityDto, NewsByMunicipality>();
-            CreateMap<NewsByMunicipalityDto, NewsByMunicipality>().ReverseMap();
-            CreateMap<Department, DepartmentDto>();
+            // Municipios
+            CreateMap<Municipality, GetMunicipalitysDto>()
+                .ForMember(dest => dest.Bank, opt => opt.MapFrom(src => src.IdBankNavigation))
+                .ForMember(dest => dest.Shield, opt => opt.MapFrom(src => src.IdShieldNavigation))
+                .ReverseMap();
+
+            CreateMap<Municipality, JustMunicipalitysDto>().ReverseMap();
+
+            // Bancos y Escudos 
+            CreateMap<Bank, BankDto>().ReverseMap();
+            CreateMap<ShieldMunicipality, ShieldMunicipalityDto>().ReverseMap();
+
+            // Noticias
+            CreateMap<NewsByMunicipality, NewsByMunicipalityDto>().ReverseMap();
+
+            // Departamentos
+            CreateMap<Department, DepartmentDto>().ReverseMap();
+
+            // Temas
             CreateMap<Theme, ThemeDto>().ReverseMap();
-            CreateMap<SportsFacility, SportsFacilitiesDto>();
-            CreateMap<Municipality, GetMunicipalitysDto>().ReverseMap();
-            CreateMap<Course, CourseDto>();
-            CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>();
-            CreateMap<Procedure, ProcedureDto>();
-            CreateMap<MunicipalitySocialMedium, MunicipalitySocialMediaDto>();
-            CreateMap<MunicipalitySocialMedium, MunicipalitySocialMeditaDto_Response>().ReverseMap();
-            CreateMap<SocialMediaType, SocialMediaTypeDto>();
-            CreateMap<Availibity, AvailibityDto>();
-            CreateMap<Municipality, JustMunicipalitysDto>();
-            CreateMap<QueryField, QueryFieldDto_Relation>();
+
+            // Instalaciones deportivas
+            CreateMap<SportsFacility, SportsFacilitiesDto>().ReverseMap();
+
+            // Cursos
+            CreateMap<Course, CourseDto>().ReverseMap();
+
+            // Trámites
+            CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>().ReverseMap();
+            CreateMap<Procedure, ProcedureDto>().ReverseMap();
             CreateMap<MunicipalityProcedureAddDto, MunicipalityProcedure>();
+
+            // Redes sociales
+            CreateMap<MunicipalitySocialMedium, MunicipalitySocialMediaDto>().ReverseMap();
+            CreateMap<MunicipalitySocialMedium, MunicipalitySocialMeditaDto_Response>().ReverseMap(); // revisar si el nombre es correcto
+            CreateMap<SocialMediaType, SocialMediaTypeDto>().ReverseMap();
+
+            // Disponibilidad
+            CreateMap<Availibity, AvailibityDto>().ReverseMap();
+
+            // QueryFields
+            CreateMap<QueryField, QueryFieldDto_Relation>().ReverseMap();
         }
     }
 }

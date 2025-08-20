@@ -14,6 +14,7 @@ namespace CentralizedApps.Services.Interfaces
         Task<List<DocumentType>> GetDocumentTypes();
 
 
+        Task<ValidationResponseDto> createShield(ShieldMunicipalityDto createShieldDto);
         Task<Procedure> createProcedures(CreateProcedureDto procedureDto);
         Task<DocumentType> createDocumentType(DocumentTypeDto documentTypeDto);
         Task<QueryField> createQueryField(QueryFieldDto queryFieldDto);

@@ -22,6 +22,30 @@ namespace CentralizedApps.Controllers
             _BankService = BankService;
         }
 
+        [HttpPost("Create/Shield")]
+        public async Task<ValidationResponseDto> CreateShield([FromBody] ShieldMunicipalityDto createShieldDto)
+        {
+            try
+            {
+                var response = await _ProcedureServices.createShield(createShieldDto);
+                return new ValidationResponseDto
+                {
+                    CodeStatus = response.CodeStatus,
+                    BooleanStatus = response.BooleanStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = $"Error: {ex.Message}"
+                };
+            }
+        }
+
         [HttpPost("Create/Bank")]
         public async Task<ValidationResponseDto> CreateBank([FromBody] CreateBankDto createBankDto) {
             try

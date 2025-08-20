@@ -780,7 +780,7 @@ namespace CentralizedApps.Services
             }
         }
 
-        public async Task<ValidationResponseDto> UpdateProcedureStatus(int Id ,  bool status)
+        public async Task<ValidationResponseDto> UpdateProcedureStatus(int Id, bool status)
         {
             try
             {
@@ -816,7 +816,7 @@ namespace CentralizedApps.Services
                         CodeStatus = 500,
                         SentencesError = "Error al actualizar el estado del procedimiento."
                     };
-                    
+
                 }
             }
             catch (Exception e)
@@ -826,6 +826,59 @@ namespace CentralizedApps.Services
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = "Error al actualizar el estado del procedimiento."
+                };
+            }
+        }
+
+        public async Task<ValidationResponseDto> createShield(ShieldMunicipalityDto createShieldDto)
+        {
+            try
+            {
+                if (createShieldDto == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Los datos del escudo son requeridos."
+                    };
+                }
+
+                var municipality = await _unitOfWork.genericRepository<Municipality>()
+                    .FindAsync_Predicate(x => x.Name == createShieldDto.NameOfMuniciopality);
+                if (municipality == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "Municipio no encontrado."
+                    };
+                }
+
+                var shield = new ShieldMunicipality
+                {
+                    NameOfMunicipality = createShieldDto.NameOfMuniciopality,
+                    Url = createShieldDto.Url
+                };
+
+                await _unitOfWork.genericRepository<ShieldMunicipality>().AddAsync(shield);
+                await _unitOfWork.SaveChangesAsync();
+
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 201,
+                    SentencesError = "Escudo creado correctamente."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = $"Error ${ex.Message} al crear el escudo."
                 };
             }
         }
