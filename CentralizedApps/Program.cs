@@ -44,6 +44,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateCourseValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateSportsFacilityvalidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<DepartmentValidator>();
 
+builder.Services.AddControllersWithViews();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -99,7 +101,11 @@ app.UseSwaggerUI(c =>
 
 app.UseAuthorization();
 
-app.MapControllers();
+// WEB (Razor)
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();
 
