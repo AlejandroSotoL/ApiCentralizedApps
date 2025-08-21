@@ -23,13 +23,27 @@ public partial class Municipality
 
     public string? PasswordFintech { get; set; }
 
+    public int? IdShield { get; set; }
+
+    public int? IdBank { get; set; }
+
+    public string? DataPrivacy { get; set; }
+
+    public string? DataProcessingPrivacy { get; set; }
+
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
     public virtual Department? Department { get; set; }
 
+    public virtual Bank? IdBankNavigation { get; set; }
+
+    public virtual ShieldMunicipality? IdShieldNavigation { get; set; }
+
     public virtual ICollection<MunicipalityProcedure> MunicipalityProcedures { get; set; } = new List<MunicipalityProcedure>();
 
     public virtual ICollection<MunicipalitySocialMedium> MunicipalitySocialMedia { get; set; } = new List<MunicipalitySocialMedium>();
+
+    public virtual ICollection<NewsByMunicipality> NewsByMunicipalities { get; set; } = new List<NewsByMunicipality>();
 
     public virtual ICollection<PaymentHistory> PaymentHistories { get; set; } = new List<PaymentHistory>();
 

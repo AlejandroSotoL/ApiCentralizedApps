@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Models.Entities;
+using CentralizedApps.Models.UserDtos;
 
 namespace CentralizedApps.Contollers
 {
@@ -147,18 +148,91 @@ namespace CentralizedApps.Contollers
         }
 
         [HttpGet("by-email")]
-        public async Task<User> GetByEmailUser([FromQuery] string email)
+        public async Task<IActionResult> GetByEmailUser([FromQuery] string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = "El email no puede estar vacío"
+                });
+            }
+
+            var response = await _unitOfWork.UserRepository.GetByEmailUserByAuthenticate(email);
+
+            if (response == null)
+            {
+                return NotFound(new ValidationResponseDto
+                {
+                    CodeStatus = 404,
+                    BooleanStatus = false,
+                    SentencesError = "Usuario no encontrado"
+                });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPut("update-password/{userId}")]
+        public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, [FromBody] UpdatePasswordRequestDto  updatePasswordRequestDto)
         {
             try
             {
-                var response = await _unitOfWork.UserRepository.GetByEmailUserByAuthenticate(email);
-                return response;
+                var response = await _userService.UpdatePasswordUser(userId, updatePasswordRequestDto);
+                if (response.BooleanStatus == false)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = response.SentencesError
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = $"{response.SentencesError} - por favor iniciar sesión nuevamente"
+                    };
+                }
             }
             catch (Exception e)
             {
-                return new User();
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error: no se pudo actualizar la contraseña ERROR: " + e.Message
+                };
             }
         }
 
+        [HttpPut("ChangeStatusUser/{userId}/status/{status}")]
+        public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool status)
+        {
+            try
+            {
+                var response = await _userService.ChangeStatusUser(userId, status);
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = response.BooleanStatus,
+                    CodeStatus = response.CodeStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error: no se pudo cambiar el estado del usuario ERROR: " + e.Message
+                };
+            }
+        }
     }
 }

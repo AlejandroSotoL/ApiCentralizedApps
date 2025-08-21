@@ -55,7 +55,6 @@ namespace CentralizedApps.Services
             return queryField;
         }
 
-
         public async Task<Availibity> createAvailibity(CreateAvailibityDto availibityDto)
         {
             Availibity availibity = new Availibity
@@ -66,7 +65,6 @@ namespace CentralizedApps.Services
             await _unitOfWork.SaveChangesAsync();
             return availibity;
         }
-
 
         public async Task<bool> AddSocialMediaType(SocialMediaTypeDto socialMediaType)
         {
@@ -142,8 +140,8 @@ namespace CentralizedApps.Services
                 {
                     return new ValidationResponseDto
                     {
-                        BooleanStatus = true, 
-                        CodeStatus = 201,    
+                        BooleanStatus = true,
+                        CodeStatus = 201,
                         SentencesError = $"Tema creado correctamente: {createThemeDto.NameTheme}, filas afectadas: {affectedRows}."
                     };
                 }
@@ -152,11 +150,11 @@ namespace CentralizedApps.Services
                     return new ValidationResponseDto
                     {
                         BooleanStatus = false,
-                        CodeStatus = 500,    
+                        CodeStatus = 500,
                         SentencesError = $"Error al crear el tema: {createThemeDto.NameTheme}. No se guardaron cambios."
                     };
                 }
-                }
+            }
             catch (Exception e)
             {
                 return new ValidationResponseDto
@@ -196,7 +194,6 @@ namespace CentralizedApps.Services
 
                 theme.NameTheme = procedureDto.NameTheme;
                 theme.BackGroundColor = procedureDto.BackGroundColor;
-                theme.Shield = procedureDto.Shield;
                 theme.PrimaryColor = procedureDto.PrimaryColor;
                 theme.SecondaryColor = procedureDto.SecondaryColor;
                 theme.SecondaryColorBlack = procedureDto.SecondaryColorBlack;
@@ -612,42 +609,279 @@ namespace CentralizedApps.Services
             }
         }
 
-        public Task<ValidationResponseDto> createNewTypeProcedure(CreateProcedureDto createProcedureDto)
+        public async Task<ValidationResponseDto> createNewTypeProcedure(CreateProcedureDto createProcedureDto)
         {
             try
             {
                 if (createProcedureDto == null || string.IsNullOrWhiteSpace(createProcedureDto.Name))
                 {
-                    return Task.FromResult(new ValidationResponseDto
+                    return new ValidationResponseDto
                     {
                         BooleanStatus = false,
                         CodeStatus = 400,
                         SentencesError = "Los datos del procedimiento son requeridos."
-                    });
+                    };
                 }
 
                 var procedure = new Procedure
                 {
                     Name = createProcedureDto.Name
                 };
-                _unitOfWork.genericRepository<Procedure>().AddAsync(procedure);
-                _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.genericRepository<Procedure>().AddAsync(procedure);
+                var response = await _unitOfWork.SaveChangesAsync();
+                if (response <= 0)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al crear el procedimiento."
+                    };
+                }
 
-                return Task.FromResult(new ValidationResponseDto
+                return new ValidationResponseDto
                 {
                     BooleanStatus = true,
                     CodeStatus = 200,
                     SentencesError = "Procedimiento creado correctamente."
-                });
+                };
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new ValidationResponseDto
+                return new ValidationResponseDto
                 {
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = $"Error al crear el procedimiento: {ex.Message}"
-                });
+                };
+            }
+        }
+
+        public async Task<ValidationResponseDto> createNewNotice(NewsByMunicipalityDto newsByMunicipalityDto)
+        {
+            try
+            {
+                var exixsted = await _unitOfWork.genericRepository<Municipality>()
+                    .FindAsync_Predicate(x => x.Id == newsByMunicipalityDto.IdMunicipality);
+
+                if (exixsted == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "Municipio no encontrado."
+                    };
+                }
+
+                var news = _mapper.Map<NewsByMunicipality>(newsByMunicipalityDto);
+                await _unitOfWork.genericRepository<NewsByMunicipality>().AddAsync(news);
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (newsByMunicipalityDto != null && rows > 0)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 201,
+                        SentencesError = "Noticia creada correctamente. lineas afectadas: " + rows
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al crear la noticia."
+                    };
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al crear la noticia: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ValidationResponseDto> updateNews(int id, NewsByMunicipalityDto newsByMunicipalityDto)
+        {
+            try
+            {
+                if (newsByMunicipalityDto == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Datos inválidos."
+                    };
+                }
+
+                var existidNew = await _unitOfWork.genericRepository<NewsByMunicipality>()
+                    .FindAsync_Predicate(x => x.Id == id);
+
+                if (existidNew == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "Noticia no encontrada."
+                    };
+                }
+
+                var search = await _unitOfWork.genericRepository<Municipality>()
+                    .FindAsync_Predicate(x => x.Id == newsByMunicipalityDto.IdMunicipality);
+                if (search == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "Municipio no encontrado."
+                    };
+                }
+                _mapper.Map(newsByMunicipalityDto, existidNew);
+                _unitOfWork.genericRepository<NewsByMunicipality>().Update(existidNew);
+
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = "Noticia actualizada correctamente. lineas afectadas: " + rows
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al actualizar la noticia."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al actualizar la noticia: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ValidationResponseDto> UpdateProcedureStatus(int Id, bool status)
+        {
+            try
+            {
+                var find = await _unitOfWork.genericRepository<MunicipalityProcedure>()
+                    .FindAsync_Predicate(x => x.Id == Id);
+                if (find == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "No se encontró el procedimiento."
+                    };
+                }
+
+                find.IsActive = status;
+                _unitOfWork.genericRepository<MunicipalityProcedure>().Update(find);
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0 && find != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = "Estado del procedimiento actualizado correctamente. " + rows + " filas afectadas."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al actualizar el estado del procedimiento."
+                    };
+
+                }
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = "Error al actualizar el estado del procedimiento."
+                };
+            }
+        }
+
+        public async Task<ValidationResponseDto> createShield(ShieldMunicipalityDto createShieldDto)
+        {
+            try
+            {
+                if (createShieldDto == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Los datos del escudo son requeridos."
+                    };
+                }
+
+                // Verificamos si ya existe un escudo con ese nombre de municipio
+                var existingShield = await _unitOfWork.genericRepository<ShieldMunicipality>()
+                    .FindAsync_Predicate(x => x.NameOfMunicipality == createShieldDto.NameOfMunicipality);
+
+                if (existingShield != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Ya existe un escudo con el mismo nombre de municipio."
+                    };
+                }
+
+                var shield = new ShieldMunicipality
+                {
+                    NameOfMunicipality = createShieldDto.NameOfMunicipality,
+                    Url = createShieldDto.Url
+                };
+
+                await _unitOfWork.genericRepository<ShieldMunicipality>().AddAsync(shield);
+                await _unitOfWork.SaveChangesAsync();
+
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 201,
+                    SentencesError = "Escudo creado correctamente."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error {ex.Message} al crear el escudo."
+                };
             }
         }
     }

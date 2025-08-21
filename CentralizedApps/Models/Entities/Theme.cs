@@ -9,8 +9,6 @@ public partial class Theme
 
     public string? BackGroundColor { get; set; }
 
-    public string? Shield { get; set; }
-
     public string? PrimaryColor { get; set; }
 
     public string? SecondaryColor { get; set; }

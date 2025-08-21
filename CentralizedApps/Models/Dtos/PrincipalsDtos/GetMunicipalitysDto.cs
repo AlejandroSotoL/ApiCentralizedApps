@@ -1,4 +1,6 @@
 
+using CentralizedApps.Models.Entities;
+
 namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 {
     public class GetMunicipalitysDto
@@ -10,7 +12,10 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? Domain { get; set; }
         public string? UserFintech { get; set; }
         public string? PasswordFintech { get; set; }
-
+        public string? DataPrivacy { get; set; }
+        public string? DataProcessingPrivacy { get; set; }
+        public BankDto? Bank { get; set; }
+        public ShieldMunicipalityDto? Shield { get; set; }
         public DepartmentDto? Department { get; set; }
         public ThemeDto? Theme { get; set; }
         public List<CourseDto>? Courses { get; set; }
@@ -18,13 +23,30 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public List<MunicipalityProcedureDto>? MunicipalityProcedures { get; set; }
         public List<MunicipalitySocialMediaDto>? MunicipalitySocialMedia { get; set; }
         public List<QueryFieldDto_Relation>? QueryFields { get; set; }
+        public List<NewsByMunicipalityDto>? NewsByMunicipalities { get; set; }
+    }
+
+    public class BankDto
+    {
+        public string NameBank { get; set; }
+    }
+
+    public class ShieldMunicipalityDto
+    {
+        public string NameOfMunicipality { get; set; }
+        public string Url { get; set; }
     }
 
     public class QueryFieldDto_Relation
     {
         public int Id { get; set; }
         public string? FieldName { get; set; }
-        public JustMunicipalitysDto? Municipality { get; set; }
+    }
+
+    public class NewsByMunicipalityDto
+    {
+        public string? GetUrlNew { get; set; }
+        public int? IdMunicipality { get; set; }
     }
 
     public class DepartmentDto
@@ -45,8 +67,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? NameTheme { get; set; }
 
         public string? BackGroundColor { get; set; }
-
-        public string? Shield { get; set; }
 
         public string? PrimaryColor { get; set; }
 

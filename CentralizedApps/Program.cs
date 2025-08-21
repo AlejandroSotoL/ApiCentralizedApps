@@ -13,6 +13,7 @@ using CentralizedApps.Data;
 using CentralizedApps.Middelware;
 using CentralizedApps.Profile_AutoMapper;
 using CentralizedApps.Models.Dtos;
+using System.Net;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +44,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateCourseValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateSportsFacilityvalidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<DepartmentValidator>();
 
+builder.Services.AddControllersWithViews();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -55,6 +58,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 // Base de datos
 builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
     options.UseSqlServer(
@@ -64,8 +68,6 @@ builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
 );
 
 //AutoMapper
-
-
 // Repositorios y servicios
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -75,6 +77,8 @@ builder.Services.AddScoped<IMunicipalityServices, MunicipalityServices>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
+builder.Services.AddScoped<IBank, BankService>();
+
 
 
 var app = builder.Build();
@@ -97,7 +101,11 @@ app.UseSwaggerUI(c =>
 
 app.UseAuthorization();
 
-app.MapControllers();
+// WEB (Razor)
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();
 

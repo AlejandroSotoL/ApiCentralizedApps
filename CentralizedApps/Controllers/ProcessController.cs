@@ -15,11 +15,59 @@ namespace CentralizedApps.Controllers
     {
 
         private readonly IProcedureServices _ProcedureServices;
-        public ProcessController(IProcedureServices ProcedureServices)
+        private readonly IBank _BankService;
+        public ProcessController(IProcedureServices ProcedureServices, IBank BankService)
         {
             _ProcedureServices = ProcedureServices;
+            _BankService = BankService;
         }
 
+        [HttpPost("Create/Shield")]
+        public async Task<ValidationResponseDto> CreateShield([FromBody] ShieldMunicipalityDto createShieldDto)
+        {
+            try
+            {
+                var response = await _ProcedureServices.createShield(createShieldDto);
+                return new ValidationResponseDto
+                {
+                    CodeStatus = response.CodeStatus,
+                    BooleanStatus = response.BooleanStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = $"Error: {ex.Message}"
+                };
+            }
+        }
+
+        [HttpPost("Create/Bank")]
+        public async Task<ValidationResponseDto> CreateBank([FromBody] CreateBankDto createBankDto) {
+            try
+            {                
+                var response = await _BankService.CreateBank(createBankDto);
+                return new ValidationResponseDto
+                {
+                    CodeStatus = response.CodeStatus,
+                    BooleanStatus = response.BooleanStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 400,
+                    BooleanStatus = false,
+                    SentencesError = $"Error: {ex.Message}"
+                };
+            }
+        }
 
         [HttpPost("Create/SocialMediaType")]
         public async Task<IActionResult> createSocialMediaType([FromBody] CreateSocialMediaTypeDto createSocialMediaTypeDto)
@@ -44,6 +92,40 @@ namespace CentralizedApps.Controllers
                     BooleanStatus = false,
                     SentencesError = ex.Message
                 });
+            }
+        }
+
+        [HttpPost("Create/NewNotice")]
+        public async Task<ValidationResponseDto> CreateNewNotice( NewsByMunicipalityDto newsByMunicipalityDto)
+        {
+            try
+            {
+                if (newsByMunicipalityDto == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        CodeStatus = 400,
+                        BooleanStatus = false,
+                        SentencesError = "NewsByMunicipalityDto no puede ser nulo."
+                    };
+                    
+                }
+                var response = await _ProcedureServices.createNewNotice(newsByMunicipalityDto);
+                return new ValidationResponseDto
+                {
+                    CodeStatus = response.CodeStatus,
+                    BooleanStatus = response.BooleanStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 500,
+                    BooleanStatus = false,
+                    SentencesError = "Tenemos problemas técnicos, por favor intente más tarde." + e.Message
+                };
             }
         }
 

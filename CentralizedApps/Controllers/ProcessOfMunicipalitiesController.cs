@@ -150,5 +150,39 @@ namespace CentralizedApps.Controllers
             }
             return result;
         }
+        [HttpPut("Update/ProcedureStatus/{id}")]
+        public async Task<ValidationResponseDto> UpdateProcedureStatus(int id, [FromQuery] bool ?status)
+        {
+            if (id <= 0 || status == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Datos enviados incorrectos."
+                };
+            }
+
+            try
+            {
+                var result = await _ProcedureServices.UpdateProcedureStatus(id, status.Value);
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = result.BooleanStatus,
+                    CodeStatus = result.CodeStatus,
+                    SentencesError = result.SentencesError
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = "Error inesperado al actualizar el estado del procedimiento."
+                };
+            }
+        }
+
     }
 }
