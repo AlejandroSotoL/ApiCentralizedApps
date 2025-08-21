@@ -6,6 +6,7 @@ using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.EmailDto;
 using CentralizedApps.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CentralizedApps.Controllers
 {
@@ -33,6 +34,38 @@ namespace CentralizedApps.Controllers
                 {
                     SentencesError = "Error sending email: " + e.Message,
                     BooleanStatus = false
+                };
+            }
+        }
+
+
+        [HttpGet("SendEmail/ValidationCode")]
+        public async Task<ValidationResponseExtraDto> SendEmailValidationCode([FromQuery] string To)
+        {
+            try
+            {
+                if (To.IsNullOrEmpty())
+                {
+                    return new ValidationResponseExtraDto
+                    {
+                        CodeStatus = 400,
+                        SentencesError = "Email address is required.",
+                        BooleanStatus = false,
+                        ExtraData = null
+                    };
+                }
+                
+                var response = await _unitOfWork.configurationEmail.SendEmailValidationCode(To);
+                return response;
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseExtraDto
+                {
+                    CodeStatus = 500,
+                    SentencesError = "Error sending validation code: " + e.Message,
+                    BooleanStatus = false,
+                    ExtraData = null
                 };
             }
         }

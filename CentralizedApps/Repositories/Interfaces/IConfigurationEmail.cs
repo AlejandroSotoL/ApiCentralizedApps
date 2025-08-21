@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 
 namespace CentralizedApps.Repositories.Interfaces
@@ -10,5 +6,6 @@ namespace CentralizedApps.Repositories.Interfaces
     {
         Task<ValidationResponseDto> EmailConfiguration(string Subject, string Body, string To);
 
+        Task<ValidationResponseExtraDto> SendEmailValidationCode(string To);
     }
 }

@@ -12,10 +12,10 @@ namespace CentralizedApps.FluentValidation
         public ShieldValidator()
         {
             RuleFor(x => x.Url)
-    .NotEmpty().WithMessage("El dominio es obligatorio.")
-    .Must(url => url.StartsWith("http")).WithMessage("El dominio no tiene un formato válido.");
+        .NotEmpty().WithMessage("El dominio es obligatorio.")
+        .Must(url => url.StartsWith("http")).WithMessage("El dominio no tiene un formato válido.");
 
-            RuleFor(x => x.NameOfMuniciopality)
+            RuleFor(x => x.NameOfMunicipality)
         .NotEmpty().WithMessage("El dominio es obligatorio.");
         }
     }

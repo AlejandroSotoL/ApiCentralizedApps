@@ -844,21 +844,23 @@ namespace CentralizedApps.Services
                     };
                 }
 
-                var municipality = await _unitOfWork.genericRepository<Municipality>()
-                    .FindAsync_Predicate(x => x.Name == createShieldDto.NameOfMuniciopality);
-                if (municipality == null)
+                // Verificamos si ya existe un escudo con ese nombre de municipio
+                var existingShield = await _unitOfWork.genericRepository<ShieldMunicipality>()
+                    .FindAsync_Predicate(x => x.NameOfMunicipality == createShieldDto.NameOfMunicipality);
+
+                if (existingShield != null)
                 {
                     return new ValidationResponseDto
                     {
                         BooleanStatus = false,
-                        CodeStatus = 404,
-                        SentencesError = "Municipio no encontrado."
+                        CodeStatus = 400,
+                        SentencesError = "Ya existe un escudo con el mismo nombre de municipio."
                     };
                 }
 
                 var shield = new ShieldMunicipality
                 {
-                    NameOfMunicipality = createShieldDto.NameOfMuniciopality,
+                    NameOfMunicipality = createShieldDto.NameOfMunicipality,
                     Url = createShieldDto.Url
                 };
 
@@ -877,8 +879,8 @@ namespace CentralizedApps.Services
                 return new ValidationResponseDto
                 {
                     BooleanStatus = false,
-                    CodeStatus = 404,
-                    SentencesError = $"Error ${ex.Message} al crear el escudo."
+                    CodeStatus = 500,
+                    SentencesError = $"Error {ex.Message} al crear el escudo."
                 };
             }
         }

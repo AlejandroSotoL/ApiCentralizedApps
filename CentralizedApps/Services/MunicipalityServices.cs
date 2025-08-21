@@ -129,6 +129,7 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                 {
                     var bankRepo = _unitOfWork.genericRepository<Bank>();
                     bank = await bankRepo.FindAsync_Predicate(b => b.NameBank == dto.NameBank);
+
                     if (bank == null)
                     {
                         await transaction.RollbackAsync();
@@ -166,9 +167,14 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                         UserFintech = BCrypt.Net.BCrypt.HashPassword(dto.UserFintech),
                         PasswordFintech = BCrypt.Net.BCrypt.HashPassword(dto.PasswordFintech),
                         IsActive = dto.IsActive,
-                        IdBank = bank.Id,      
-                        IdShield = shield.Id   
+                        IdBank = bank.Id,
+                        IdShield = shield.Id,
+                        DataPrivacy = dto.DataPrivacy,
+                        DataProcessingPrivacy = dto.DataProcessingPrivacy
                     };
+
+                    
+                    
 
                     var municipioRepo = _unitOfWork.genericRepository<Municipality>();
                     await municipioRepo.AddAsync(municipality);

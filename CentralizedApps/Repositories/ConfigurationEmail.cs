@@ -6,7 +6,9 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using CentralizedApps.Data;
 using CentralizedApps.Models.Dtos;
+using CentralizedApps.Models.EmailDto;
 using CentralizedApps.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CentralizedApps.Repositories
@@ -70,6 +72,42 @@ namespace CentralizedApps.Repositories
                     CodeStatus = 500,
                     SentencesError = "An error occurred while processing your request." + e.Message,
                     BooleanStatus = false
+                };
+            }
+        }
+
+        public async Task<ValidationResponseExtraDto> SendEmailValidationCode([FromBody] string To)
+        {
+            try
+            {
+                var random = new Random();
+                int validationCode = random.Next(100000, 999999);
+
+                string subject = "Código de recuperación de contraseña";
+                string body = $@"
+            <h3>Recuperación de contraseña</h3>
+            <p>Tu código de validación es:</p>
+            <h2 style='color:#4364CD'>{validationCode}</h2>
+            <p>Este código expira en 10 minutos.</p>";
+
+                var result = await EmailConfiguration(subject, body, To);
+
+                return new ValidationResponseExtraDto
+                {
+                    CodeStatus = result.CodeStatus,
+                    SentencesError = result.SentencesError,
+                    BooleanStatus = result.BooleanStatus,
+                    ExtraData = result.BooleanStatus ? validationCode.ToString() : null
+                };
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseExtraDto
+                {
+                    CodeStatus = 500,
+                    SentencesError = "Error sending validation code: " + e.Message,
+                    BooleanStatus = false,
+                    ExtraData = null
                 };
             }
         }

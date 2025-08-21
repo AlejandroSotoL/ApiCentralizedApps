@@ -12,6 +12,8 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? Domain { get; set; }
         public string? UserFintech { get; set; }
         public string? PasswordFintech { get; set; }
+        public string? DataPrivacy { get; set; }
+        public string? DataProcessingPrivacy { get; set; }
         public BankDto? Bank { get; set; }
         public ShieldMunicipalityDto? Shield { get; set; }
         public DepartmentDto? Department { get; set; }
@@ -31,7 +33,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 
     public class ShieldMunicipalityDto
     {
-        public string NameOfMuniciopality { get; set; }
+        public string NameOfMunicipality { get; set; }
         public string Url { get; set; }
     }
 
