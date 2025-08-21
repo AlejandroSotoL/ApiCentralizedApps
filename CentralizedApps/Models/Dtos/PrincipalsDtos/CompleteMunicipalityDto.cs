@@ -18,5 +18,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? NameBank { get; set; }
         public string? DataPrivacy { get; set; }
         public string? DataProcessingPrivacy { get; set; }
+
     }
 }
