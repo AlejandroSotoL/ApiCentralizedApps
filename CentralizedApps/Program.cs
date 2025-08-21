@@ -1,7 +1,6 @@
 
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Repositories;
-using AutoMapper;
 using CentralizedApps.Services.Interfaces;
 using CentralizedApps.Services;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,6 @@ using CentralizedApps.FluentValidation;
 using CentralizedApps.Data;
 using CentralizedApps.Middelware;
 using CentralizedApps.Profile_AutoMapper;
-using CentralizedApps.Models.Dtos;
 using System.Net;
 using Microsoft.Extensions.FileProviders;
 
@@ -83,6 +81,7 @@ builder.Services.AddScoped<IBank, BankService>();
 
 
 var app = builder.Build();
+
 
 // Middleware personalizado de errores
 app.UseMiddleware<GlobalExceptionMiddleware>();

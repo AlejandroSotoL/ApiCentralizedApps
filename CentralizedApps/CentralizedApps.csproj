@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-  <EnableDefaultStaticWebAssets>false</EnableDefaultStaticWebAssets>
 <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -37,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Uploads\" />
     <Folder Include="Views\" />
   </ItemGroup>
 
