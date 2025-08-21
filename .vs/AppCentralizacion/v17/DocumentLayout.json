@@ -3,12 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Controllers\\web\\WebController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CentralizedApps\\Controllers\\web\\WebController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\data\\centralizedappsdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\data\\centralizedappsdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CentralizedApps\\CentralizedApps.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CentralizedApps\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Data\\CentralizedAppsDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CentralizedApps\\Data\\CentralizedAppsDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CentralizedApps\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,7 +38,44 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "WebController.cs",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Controllers\\web\\WebController.cs",
+              "RelativeDocumentMoniker": "CentralizedApps\\Controllers\\web\\WebController.cs",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Controllers\\web\\WebController.cs",
+              "RelativeToolTip": "CentralizedApps\\Controllers\\web\\WebController.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAowCYAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-21T15:11:40.174Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "CentralizedApps.csproj",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj",
+              "RelativeDocumentMoniker": "CentralizedApps\\CentralizedApps.csproj",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj",
+              "RelativeToolTip": "CentralizedApps\\CentralizedApps.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-21T15:02:30.253Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Program.cs",
+              "RelativeDocumentMoniker": "CentralizedApps\\Program.cs",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Program.cs",
+              "RelativeToolTip": "CentralizedApps\\Program.cs",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAAAFMAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-21T15:00:17.975Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "CentralizedAppsDbContext.cs",
               "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
               "RelativeDocumentMoniker": "CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
@@ -34,21 +83,19 @@
               "RelativeToolTip": "CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
               "ViewState": "AgIAACwAAAAAAAAAAAAxwDgAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-11T14:10:35.32Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-11T14:10:35.32Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\appsettings.json",
               "RelativeDocumentMoniker": "CentralizedApps\\appsettings.json",
               "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\appsettings.json",
               "RelativeToolTip": "CentralizedApps\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-07-31T16:21:21.895Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-31T16:21:21.895Z"
             }
           ]
         }

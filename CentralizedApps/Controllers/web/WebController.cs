@@ -1,7 +1,4 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +20,11 @@ namespace CentralizedApps.Controllers.web
         // Mostrar el formulario
         [HttpGet]
         [HttpPost]
-        public async Task<IActionResult> SubirImagen([FromForm] string municipio, [FromForm] IFormFile archivo)
+        public async Task<IActionResult> SubirImagen(string municipio, [FromForm] IFormFile archivo)
         {
             if (HttpContext.Request.Method == "GET")
             {
-                return View(); // Muestra el formulario
+                return View();
             }
 
             if (archivo == null || archivo.Length == 0)
@@ -41,8 +38,10 @@ namespace CentralizedApps.Controllers.web
             foreach (var c in Path.GetInvalidFileNameChars())
                 municipio = municipio.Replace(c, '_');
 
-            // Crear carpeta si no existe
-            string pathCarpeta = Path.Combine(_env.WebRootPath, municipio);
+            // Carpeta base fuera de wwwroot
+            string carpetaBase = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+            string pathCarpeta = Path.Combine(carpetaBase, municipio);
+
             if (!Directory.Exists(pathCarpeta))
                 Directory.CreateDirectory(pathCarpeta);
 
@@ -65,8 +64,8 @@ namespace CentralizedApps.Controllers.web
             using (var stream = new FileStream(pathArchivo, FileMode.Create))
                 await archivo.CopyToAsync(stream);
 
-            // URL pública
-            string url = $"{Request.Scheme}://{Request.Host}/{municipio}/{nombreArchivo}";
+            // La URL la manejas tú (si decides exponerla)
+            string url = $"/Uploads/{municipio}/{nombreArchivo}";
 
             // Guardar en DB
             var shieldMunicipality = new ShieldMunicipality
@@ -83,6 +82,7 @@ namespace CentralizedApps.Controllers.web
 
             return View();
         }
+
     }
 }
 

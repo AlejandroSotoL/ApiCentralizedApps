@@ -14,6 +14,7 @@ using CentralizedApps.Middelware;
 using CentralizedApps.Profile_AutoMapper;
 using CentralizedApps.Models.Dtos;
 using System.Net;
+using Microsoft.Extensions.FileProviders;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -86,10 +87,13 @@ var app = builder.Build();
 // Middleware personalizado de errores
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-// HTTPS redirection si usas certificado
-// app.UseHttpsRedirection();
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+    RequestPath = "/uploads"
+});
 
 // Swagger
 app.UseSwagger();
