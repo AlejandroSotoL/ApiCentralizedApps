@@ -39,7 +39,7 @@ namespace CentralizedApps.Controllers.web
                 municipio = municipio.Replace(c, '_');
 
             // Carpeta base fuera de wwwroot
-            string carpetaBase = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+            string carpetaBase = Path.Combine(_env.WebRootPath, "Uploads");
             string pathCarpeta = Path.Combine(carpetaBase, municipio);
 
             if (!Directory.Exists(pathCarpeta))
@@ -59,13 +59,14 @@ namespace CentralizedApps.Controllers.web
             string nombreBase = Path.GetFileNameWithoutExtension(archivo.FileName);
             string nombreArchivo = $"{nombreBase}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}";
             string pathArchivo = Path.Combine(pathCarpeta, nombreArchivo);
+            var remoteIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             // Guardar en disco
             using (var stream = new FileStream(pathArchivo, FileMode.Create))
                 await archivo.CopyToAsync(stream);
 
             // La URL la manejas tú (si decides exponerla)
-            string url = $"/Uploads/{municipio}/{nombreArchivo}";
+            string url = $"{Request.Scheme}://{Request.Host}/uploads/{municipio}/{nombreArchivo}";
 
             // Guardar en DB
             var shieldMunicipality = new ShieldMunicipality
@@ -77,7 +78,7 @@ namespace CentralizedApps.Controllers.web
             await _unitOfWork.genericRepository<ShieldMunicipality>().AddAsync(shieldMunicipality);
             await _unitOfWork.SaveChangesAsync();
 
-            ViewBag.Mensaje = "Imagen subida correctamente";
+            ViewBag.Mensaje = $"Imagen subida correctamente curretly url ${remoteIpAddress}";
             ViewBag.Url = url;
 
             return View();
