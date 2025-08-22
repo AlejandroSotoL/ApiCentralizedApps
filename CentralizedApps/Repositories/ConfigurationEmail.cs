@@ -61,7 +61,7 @@ namespace CentralizedApps.Repositories
                 return new ValidationResponseDto
                 {
                     CodeStatus = 200,
-                    SentencesError = "Email sent successfully.",
+                    SentencesError = "¡Correo enviado!",
                     BooleanStatus = true
                 };
             }
