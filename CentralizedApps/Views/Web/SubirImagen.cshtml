@@ -1,45 +1,43 @@
 @{
     ViewData["Title"] = "Subir Imagen";
+    Layout = "Layout";
 }
 
-<div class="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-xl p-6">
+<div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
+    <div class="max-w-md w-full bg-base-100 shadow-lg rounded-xl p-8">
+        <h2 class="text-2xl font-bold text-center mb-6">Subir Imagen</h2>
 
-    <form asp-action="SubirImagen" asp-controller="Web" method="post" enctype="multipart/form-data" class="space-y-5">
+        <form asp-action="SubirImagen" asp-controller="Web" method="post" enctype="multipart/form-data" class="space-y-5">
 
-        <!-- Campo Municipio -->
-        <div>
-            <label for="municipio" class="block text-sm font-medium text-gray-700 mb-1">Municipio</label>
-            <input id="municipio" name="municipio" type="text"
-                   class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-                   placeholder="Ej: Medellín" required />
-        </div>
+            <div>
+                <label for="municipio" class="block text-sm font-semibold mb-1">Municipio</label>
+                <input id="municipio" name="municipio" type="text"
+                       class="input input-bordered w-full text-lg"
+                       placeholder="Ej: Medellín" required />
+            </div>
 
-        <!-- Campo Archivo -->
-        <div>
-            <label for="archivo" class="block text-sm font-medium text-gray-700 mb-1">Seleccionar Imagen</label>
-            <input id="archivo" name="archivo" type="file" accept="image/*"
-                   class="w-full border rounded-lg px-3 py-2 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
-                   required />
-        </div>
+            <div>
+                <label for="archivo" class="block text-sm font-semibold mb-1">Seleccionar Imagen</label>
+                <input id="archivo" name="archivo" type="file" accept="image/*"
+                       class="file-input file-input-bordered w-full text-lg" required />
+            </div>
 
-        <!-- Botón de envío -->
-        <button type="submit"
-                class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-indigo-700">
-            Subir Imagen
-        </button>
+            <button type="submit" class="btn btn-primary w-full py-3 text-lg font-semibold">
+                Subir Imagen
+            </button>
 
-    </form>
+        </form>
 
-    <!-- Mensajes de éxito -->
-    @if(ViewBag.Mensaje != null)
-    {
-        <p class="mt-4 text-green-600 font-semibold">@ViewBag.Mensaje</p>
-        <p class="text-blue-600"><a href="@ViewBag.Url" target="_blank">@ViewBag.Url</a></p>
-    }
+        @if(ViewBag.Mensaje != null)
+        {
+            <p class="mt-4 text-green-600 font-semibold text-center">@ViewBag.Mensaje</p>
+            <p class="text-blue-600 text-center"><a href="@ViewBag.Url" target="_blank">@ViewBag.Url</a></p>
+        }
 
-    <!-- Mensajes de error -->
-    @if(ViewBag.Error != null)
-    {
-        <p class="mt-4 text-red-600 font-semibold">@ViewBag.Error</p>
-    }
+        <!-- Mensajes de error -->
+        @if(ViewBag.Error != null)
+        {
+            <p class="mt-4 text-red-600 font-semibold text-center">@ViewBag.Error</p>
+        }
+    </div>
 </div>

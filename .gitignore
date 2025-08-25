@@ -1,3 +1,22 @@
 .vs/AppCentralizacion/FileContentIndex/3ec46e44-828a-467b-83ac-cc5d35df585c.vsidx
 .vs/AppCentralizacion/FileContentIndex/5f503b47-4a6e-4c22-8e35-5b717e1dbca6.vsidx
 .vs/AppCentralizacion/FileContentIndex/2bbc8ed1-3adc-4575-8f52-c2bb8413b77e.vsidx
+.vs/AppCentralizacion/FileContentIndex/2bbc8ed1-3adc-4575-8f52-c2bb8413b77e.vsidx
+.vs/AppCentralizacion/FileContentIndex/69e967b2-09eb-4925-b35d-21cb7e85b0e2.vsidx
+.vs/AppCentralizacion/FileContentIndex/69e967b2-09eb-4925-b35d-21cb7e85b0e2.vsidx
+.vs/AppCentralizacion/FileContentIndex/69e967b2-09eb-4925-b35d-21cb7e85b0e2.vsidx
+.vs/AppCentralizacion/FileContentIndex/2bbc8ed1-3adc-4575-8f52-c2bb8413b77e.vsidx
+.vs/AppCentralizacion/FileContentIndex/fd0ac94e-30b6-4587-a741-8c6eee585226.vsidx
+.vs/AppCentralizacion/FileContentIndex/e4d0b726-29a1-432f-888a-a1e70fb89aa9.vsidx
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Archivos bin/obj
+bin/
+obj/
+
+# Node / Tailwind / paquetes
+node_modules/

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html data-theme="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Mi Proyecto</title>
+    <link rel="stylesheet" href="~/css/output.css" />
+</head>
+
+<body>
+    <button id="toggle-theme" class="btn btn-primary">Cambiar tema</button>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/Dashboard">Dashboard</a></li>
+                <li><a href="/Home/Index">Vista 1</a></li>
+                <li><a href="/Web/SubirImagen">Subir Imagen</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>
+        <p>&copy; 2025 - 1cero1 Software - CENTRALIZATED</p>
+    </footer>
+    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+
+    <script>
+        const button = document.getElementById('toggle-theme');
+        button.addEventListener('click', () => {
+            const html = document.documentElement;
+            html.dataset.theme = html.dataset.theme === 'light' ? 'dark' : 'light';
+        });
+    </script>
+</body>
+
+</html>

@@ -590,3 +590,5 @@ C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\ru
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.RazorAssemblyInfo.cache
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.RazorAssemblyInfo.cs
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\CentralizedApps.staticwebassets.runtime.json
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\package-lock.json
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\package.json
