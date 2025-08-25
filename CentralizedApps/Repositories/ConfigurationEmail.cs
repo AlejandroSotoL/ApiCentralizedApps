@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CentralizedApps.Data;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.EmailDto;
+using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,11 @@ namespace CentralizedApps.Repositories
     {
 
         private readonly CentralizedAppsDbContext _context;
-        public ConfigurationEmail(CentralizedAppsDbContext context)
+        private readonly IUnitOfWork _Unit;
+        public ConfigurationEmail(CentralizedAppsDbContext context, IUnitOfWork Unit) 
         {
             _context = context;
+            _Unit = Unit;
         }
 
         public async Task<ValidationResponseDto> EmailConfiguration(string Subject, string Body, string To)
@@ -80,6 +83,18 @@ namespace CentralizedApps.Repositories
         {
             try
             {
+                var response = await _Unit.genericRepository<User>().FindAsync_Predicate(x => x.Email == To);
+                if (response == null)
+                {
+                    return new ValidationResponseExtraDto
+                    {
+                        CodeStatus = 404,
+                        SentencesError = "Usuario no encontrado",
+                        BooleanStatus = false,
+                        ExtraData = null
+                    };
+                    
+                }
                 var random = new Random();
                 int validationCode = random.Next(100000, 999999);
 

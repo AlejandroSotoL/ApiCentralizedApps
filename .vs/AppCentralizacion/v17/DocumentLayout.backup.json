@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\centralizedapps.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\centralizedapps.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -26,47 +30,61 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 5,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\appsettings.json",
+              "RelativeDocumentMoniker": "CentralizedApps\\appsettings.json",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\appsettings.json",
+              "RelativeToolTip": "CentralizedApps\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-31T16:21:21.895Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "WebController.cs",
               "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Controllers\\web\\WebController.cs",
               "RelativeDocumentMoniker": "CentralizedApps\\Controllers\\web\\WebController.cs",
               "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Controllers\\web\\WebController.cs",
               "RelativeToolTip": "CentralizedApps\\Controllers\\web\\WebController.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAowDkAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAADUAAAAAAAAAAAAQwEAAAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-21T15:11:40.174Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Program.cs",
               "RelativeDocumentMoniker": "CentralizedApps\\Program.cs",
               "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Program.cs",
               "RelativeToolTip": "CentralizedApps\\Program.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAAAFMAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAFMAAAAAAAAAAAAAAFEAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-21T15:00:17.975Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "CentralizedAppsDbContext.cs",
               "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
               "RelativeDocumentMoniker": "CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
               "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
               "RelativeToolTip": "CentralizedApps\\Data\\CentralizedAppsDbContext.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAxwDgAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAACoAAAAAAAAAAEBTwDgAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-11T14:10:35.32Z",
               "EditorCaption": ""
@@ -74,14 +92,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\appsettings.json",
-              "RelativeDocumentMoniker": "CentralizedApps\\appsettings.json",
-              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\appsettings.json",
-              "RelativeToolTip": "CentralizedApps\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-07-31T16:21:21.895Z",
+              "Title": "CentralizedApps.csproj",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj",
+              "RelativeDocumentMoniker": "CentralizedApps\\CentralizedApps.csproj",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\CentralizedApps.csproj",
+              "RelativeToolTip": "CentralizedApps\\CentralizedApps.csproj",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-21T16:53:03.49Z",
               "EditorCaption": ""
             }
           ]

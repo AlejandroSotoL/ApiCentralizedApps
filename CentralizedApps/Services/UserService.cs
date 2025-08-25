@@ -153,6 +153,43 @@ public class UserService : IUserService
         }
     }
 
+    public async Task<ValidationResponseDto> UpdatePasswordByForget(int userId, UpdatePasswordByForget request)
+    {
+        try
+        {
+            var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(userId);
+            if (user == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Usuario no encontrado"
+                };
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            _unitOfWork.genericRepository<User>().Update(user);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ValidationResponseDto
+            {
+                BooleanStatus = true,
+                CodeStatus = 200,
+                SentencesError = "Contraseña actualizada correctamente"
+            };
+        }
+        catch (Exception e)
+        {
+            return new ValidationResponseDto
+            {
+                BooleanStatus = false,
+                CodeStatus = 500,
+                SentencesError = "Error al actualizar la contraseña: " + e.Message
+            };
+        }
+    }
+
     public async Task<ValidationResponseDto> UpdateUserAsync(int id, UserDto updateUserDto)
     {
         var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(id);

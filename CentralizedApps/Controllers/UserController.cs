@@ -176,7 +176,7 @@ namespace CentralizedApps.Contollers
         }
 
         [HttpPut("update-password/{userId}")]
-        public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, [FromBody] UpdatePasswordRequestDto  updatePasswordRequestDto)
+        public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, [FromBody] UpdatePasswordRequestDto updatePasswordRequestDto)
         {
             try
             {
@@ -210,29 +210,52 @@ namespace CentralizedApps.Contollers
                 };
             }
         }
-
-        [HttpPut("ChangeStatusUser/{userId}/status/{status}")]
-        public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool status)
+        [HttpPut("updatePasswordByForget/{userId}")]
+        public async Task<ValidationResponseDto> UpdatePasswordByForget(int userId, [FromBody] UpdatePasswordByForget request)
         {
-            try
-            {
-                var response = await _userService.ChangeStatusUser(userId, status);
-                return new ValidationResponseDto
+                try
                 {
-                    BooleanStatus = response.BooleanStatus,
-                    CodeStatus = response.CodeStatus,
-                    SentencesError = response.SentencesError
-                };
+                    var response = await _userService.UpdatePasswordByForget(userId, request);
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = response.BooleanStatus,
+                        CodeStatus = response.CodeStatus,
+                        SentencesError = response.SentencesError
+                    };
+                }
+                catch (Exception e)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Error: no se pudo actualizar la contraseña ERROR: " + e.Message
+                    };
+                }
             }
-            catch (Exception e)
+
+            [HttpPut("ChangeStatusUser/{userId}/status/{status}")]
+            public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool status)
             {
-                return new ValidationResponseDto
+                try
                 {
-                    BooleanStatus = false,
-                    CodeStatus = 400,
-                    SentencesError = "Error: no se pudo cambiar el estado del usuario ERROR: " + e.Message
-                };
+                    var response = await _userService.ChangeStatusUser(userId, status);
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = response.BooleanStatus,
+                        CodeStatus = response.CodeStatus,
+                        SentencesError = response.SentencesError
+                    };
+                }
+                catch (Exception e)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = "Error: no se pudo cambiar el estado del usuario ERROR: " + e.Message
+                    };
+                }
             }
         }
     }
-}
