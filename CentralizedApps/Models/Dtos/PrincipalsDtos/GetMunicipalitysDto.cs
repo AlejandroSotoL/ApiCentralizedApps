@@ -124,7 +124,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? Url { get; set; }
         public bool? IsActive { get; set; }
         public SocialMediaTypeDto? SocialMediaType { get; set; }
-        public JustMunicipalitysDto? Municipality { get; set; }
     }
 
     public class SocialMediaTypeDto

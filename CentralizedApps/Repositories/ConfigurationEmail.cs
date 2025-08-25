@@ -19,7 +19,7 @@ namespace CentralizedApps.Repositories
 
         private readonly CentralizedAppsDbContext _context;
         private readonly IUnitOfWork _Unit;
-        public ConfigurationEmail(CentralizedAppsDbContext context, IUnitOfWork Unit) 
+        public ConfigurationEmail(CentralizedAppsDbContext context, IUnitOfWork Unit)
         {
             _context = context;
             _Unit = Unit;
@@ -58,6 +58,7 @@ namespace CentralizedApps.Repositories
                     credential.UseDefaultCredentials = false;
                     credential.EnableSsl = true;
 
+                    credential.Timeout = 10000;
                     await credential.SendMailAsync(email);
                 }
 
@@ -93,7 +94,7 @@ namespace CentralizedApps.Repositories
                         BooleanStatus = false,
                         ExtraData = null
                     };
-                    
+
                 }
                 var random = new Random();
                 int validationCode = random.Next(100000, 999999);

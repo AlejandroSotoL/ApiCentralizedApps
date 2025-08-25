@@ -844,7 +844,6 @@ namespace CentralizedApps.Services
                     };
                 }
 
-                // Verificamos si ya existe un escudo con ese nombre de municipio
                 var existingShield = await _unitOfWork.genericRepository<ShieldMunicipality>()
                     .FindAsync_Predicate(x => x.NameOfMunicipality == createShieldDto.NameOfMunicipality);
 
