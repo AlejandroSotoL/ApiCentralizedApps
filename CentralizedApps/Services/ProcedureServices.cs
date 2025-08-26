@@ -883,6 +883,32 @@ namespace CentralizedApps.Services
                 };
             }
         }
+
+        public async Task<ValidationResponseDto> createReminders(CreateReminderDto createReminderDto)
+        {
+            try
+            {
+                var reminder = _mapper.Map<Reminder>(createReminderDto);
+                await _unitOfWork.genericRepository<Reminder>().AddAsync(reminder);
+                await _unitOfWork.SaveChangesAsync();
+
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 201,
+                    SentencesError = "Recordatorio creado correctamente."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al crear el recordatorio: {ex.Message}"
+                };
+            }
+        }
     }
 }
 

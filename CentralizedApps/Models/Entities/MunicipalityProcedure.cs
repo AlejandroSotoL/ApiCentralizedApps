@@ -20,4 +20,6 @@ public partial class MunicipalityProcedure
     public virtual ICollection<PaymentHistory> PaymentHistories { get; set; } = new List<PaymentHistory>();
 
     public virtual Procedure? Procedures { get; set; }
+
+    public virtual ICollection<Reminder> Reminders { get; set; } = new List<Reminder>();
 }

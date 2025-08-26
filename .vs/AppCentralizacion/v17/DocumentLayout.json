@@ -1,7 +1,24 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\views\\shared\\layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\views\\shared\\layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\views\\account\\accessdenied.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\views\\account\\accessdenied.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +26,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "site.css",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "CentralizedApps\\wwwroot\\css\\site.css",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "CentralizedApps\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-08-25T20:34:16.783Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Views\\Shared\\Layout.cshtml",
+              "RelativeDocumentMoniker": "CentralizedApps\\Views\\Shared\\Layout.cshtml",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Views\\Shared\\Layout.cshtml",
+              "RelativeToolTip": "CentralizedApps\\Views\\Shared\\Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-25T20:32:37.871Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "CentralizedApps\\Views\\Account\\Login.cshtml",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "CentralizedApps\\Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-25T20:32:11.967Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AccessDenied.cshtml",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Views\\Account\\AccessDenied.cshtml",
+              "RelativeDocumentMoniker": "CentralizedApps\\Views\\Account\\AccessDenied.cshtml",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Views\\Account\\AccessDenied.cshtml",
+              "RelativeToolTip": "CentralizedApps\\Views\\Account\\AccessDenied.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-25T20:32:10.269Z",
+              "EditorCaption": ""
             }
           ]
         }
