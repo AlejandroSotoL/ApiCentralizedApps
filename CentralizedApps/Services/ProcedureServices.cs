@@ -48,7 +48,9 @@ namespace CentralizedApps.Services
             QueryField queryField = new QueryField
             {
                 MunicipalityId = queryFieldDto.MunicipalityId,
-                FieldName = queryFieldDto.FieldName
+                FieldName = queryFieldDto.FieldName,
+                QueryFieldType = queryFieldDto.QueryFieldType
+            
             };
             await _unitOfWork.genericRepository<QueryField>().AddAsync(queryField);
             await _unitOfWork.SaveChangesAsync();
@@ -880,32 +882,6 @@ namespace CentralizedApps.Services
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = $"Error {ex.Message} al crear el escudo."
-                };
-            }
-        }
-
-        public async Task<ValidationResponseDto> createReminders(CreateReminderDto createReminderDto)
-        {
-            try
-            {
-                var reminder = _mapper.Map<Reminder>(createReminderDto);
-                await _unitOfWork.genericRepository<Reminder>().AddAsync(reminder);
-                await _unitOfWork.SaveChangesAsync();
-
-                return new ValidationResponseDto
-                {
-                    BooleanStatus = true,
-                    CodeStatus = 201,
-                    SentencesError = "Recordatorio creado correctamente."
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 500,
-                    SentencesError = $"Error al crear el recordatorio: {ex.Message}"
                 };
             }
         }

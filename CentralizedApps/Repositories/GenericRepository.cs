@@ -28,13 +28,13 @@ namespace CentralizedApps.Repositories
             _DBset.Remove(entity);
         }
 
-        //Predication
+
         public async Task<T?> FindAsync_Predicate(Expression<Func<T, bool>> predicate)
         {
             return await _DBset.FirstOrDefaultAsync(predicate);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync()
         {
 
             return await _DBset.ToListAsync();
@@ -88,6 +88,16 @@ namespace CentralizedApps.Repositories
         public void Update(T entity)
         {
             _DBset.Update(entity);
+        }
+
+        public void DeleteRange(IEnumerable<T> entities)
+        {
+            _DBset.RemoveRange(entities);
+        }
+
+        public async Task<List<T>> GetAllWithFilterAsync(Expression<Func<T, bool>> filter)
+        {
+            return await _DBset.Where(filter).ToListAsync();
         }
     }
 }

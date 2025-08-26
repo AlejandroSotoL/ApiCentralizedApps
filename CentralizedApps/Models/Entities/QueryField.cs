@@ -11,5 +11,7 @@ public partial class QueryField
 
     public string? FieldName { get; set; }
 
+    public string? QueryFieldType { get; set; }
+
     public virtual Municipality? Municipality { get; set; }
 }

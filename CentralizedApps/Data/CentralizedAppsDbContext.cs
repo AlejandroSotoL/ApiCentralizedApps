@@ -54,10 +54,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-CJE8DS1;Database=CentralizedApps;Trusted_Connection=True;TrustServerCertificate=True;");
-
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Availibity>(entity =>
@@ -278,6 +275,10 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.Property(e => e.FieldName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.QueryFieldType)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("QueryField_Type");
 
             entity.HasOne(d => d.Municipality).WithMany(p => p.QueryFields)
                 .HasForeignKey(d => d.MunicipalityId)
@@ -290,6 +291,7 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC071AECE808");
 
             entity.Property(e => e.IdProcedureMunicipality).HasColumnName("Id_Procedure_Municipality");
+            entity.Property(e => e.IdUser).HasColumnName("Id_User");
             entity.Property(e => e.ReminderType)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -300,6 +302,10 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.HasOne(d => d.IdProcedureMunicipalityNavigation).WithMany(p => p.Reminders)
                 .HasForeignKey(d => d.IdProcedureMunicipality)
                 .HasConstraintName("FK_RemidersToMunicipalityProcedure");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Reminders)
+                .HasForeignKey(d => d.IdUser)
+                .HasConstraintName("FK_RemindersToUsers");
         });
 
         modelBuilder.Entity<ShieldMunicipality>(entity =>

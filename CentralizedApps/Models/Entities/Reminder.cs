@@ -15,5 +15,9 @@ public partial class Reminder
 
     public string? ReminderType { get; set; }
 
+    public int? IdUser { get; set; }
+
     public virtual MunicipalityProcedure? IdProcedureMunicipalityNavigation { get; set; }
+
+    public virtual User? IdUserNavigation { get; set; }
 }

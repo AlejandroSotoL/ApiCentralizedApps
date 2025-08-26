@@ -22,29 +22,6 @@ namespace CentralizedApps.Controllers
             _BankService = BankService;
         }
 
-        [HttpPost("Create/Reminders")]
-        public async Task<ValidationResponseDto> CreateReminders([FromBody] CreateReminderDto createReminderDto)
-        {
-            try
-            {
-                var response = await _ProcedureServices.createReminders(createReminderDto);
-                return new ValidationResponseDto
-                {
-                    CodeStatus = response.CodeStatus,
-                    BooleanStatus = response.BooleanStatus,
-                    SentencesError = response.SentencesError
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ValidationResponseDto
-                {
-                    CodeStatus = 400,
-                    BooleanStatus = false,
-                    SentencesError = $"Error: {ex.Message}"
-                };
-            }
-        }
 
         [HttpPost("Create/Shield")]
         public async Task<ValidationResponseDto> CreateShield([FromBody] ShieldMunicipalityDto createShieldDto)

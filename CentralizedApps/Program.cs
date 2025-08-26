@@ -60,6 +60,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMunicipalityServices, MunicipalityServices>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
+builder.Services.AddScoped<IRemidersService, RemidersService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
 builder.Services.AddScoped<IBank, BankService>();
 
@@ -70,6 +71,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
+
 
 builder.Services.AddAuthorization(options =>
 {
@@ -89,7 +91,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<GlobalExceptionMiddleware>();
+// app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Swagger
 app.UseSwagger();

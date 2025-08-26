@@ -1,3 +1,4 @@
+using CentralizedApps.Data;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Models.UserDtos;
@@ -10,14 +11,14 @@ public class UserService : IUserService
 {
 
     private readonly IUnitOfWork _unitOfWork;
-
-    public UserService(IUnitOfWork unitOfWork)
+    private readonly CentralizedAppsDbContext _context;
+    public UserService(IUnitOfWork unitOfWork, CentralizedAppsDbContext context)
     {
-
         _unitOfWork = unitOfWork;
+        _context = context;
     }
 
-    public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool ?status)
+    public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool? status)
     {
         try
         {
@@ -53,7 +54,9 @@ public class UserService : IUserService
                     SentencesError = "Error al actualizar el estado del usuario"
                 };
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             return new ValidationResponseDto
             {
                 BooleanStatus = false,
@@ -89,7 +92,7 @@ public class UserService : IUserService
 
     }
 
-    public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePasswordRequestDto  updatePasswordRequestDto)
+    public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePasswordRequestDto updatePasswordRequestDto)
     {
         try
         {
@@ -103,11 +106,8 @@ public class UserService : IUserService
                     SentencesError = "Usuario no encontrado"
                 };
             }
-
-            //validation password
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(updatePasswordRequestDto.CurrentPassword, currentlyUser.Password);
 
-            
             if (!isPasswordValid)
             {
                 return new ValidationResponseDto
@@ -119,7 +119,7 @@ public class UserService : IUserService
             }
 
             var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(updatePasswordRequestDto.NewPassword);
-            
+
             currentlyUser.Password = hashedNewPassword;
             _unitOfWork.genericRepository<User>().Update(currentlyUser);
             var rowws = await _unitOfWork.SaveChangesAsync();
@@ -223,7 +223,97 @@ public class UserService : IUserService
             BooleanStatus = true,
             SentencesError = "succesfully"
         };
-
     }
+
+    public async Task<ValidationResponseDto> DeleteUser(int id)
+    {
+        await using var transaction = await _unitOfWork.BeginTransactionAsync();
+        try
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "Usuario no encontrado"
+                };
+            }
+
+            try
+            {
+                var reminders = await _unitOfWork.genericRepository<Reminder>()
+                    .GetAllWithFilterAsync(r => r.IdUser == id); 
+                if (reminders.Any())
+                    _unitOfWork.genericRepository<Reminder>().DeleteRange(reminders);
+            }
+            catch (Exception exReminders)
+            {
+                await transaction.RollbackAsync();
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error eliminando recordatorios: {exReminders.Message}"
+                };
+            }
+
+
+            try
+            {
+                var payments = await _unitOfWork.paymentHistoryRepository
+                    .GetAllWithFilterAsync(p => p.UserId == id); 
+                if (payments.Any())
+                    _unitOfWork.paymentHistoryRepository.DeleteRange(payments);
+            }
+            catch (Exception exPayments)
+            {
+                await transaction.RollbackAsync();
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error eliminando historiales de pago: {exPayments.Message}"
+                };
+            }
+
+            try
+            {
+                _unitOfWork.UserRepository.Delete(user);
+            }
+            catch (Exception exUser)
+            {
+                await transaction.RollbackAsync(); 
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error eliminando usuario: {exUser.Message}"
+                };
+            }
+
+            await _unitOfWork.CompleteAsync();
+            await transaction.CommitAsync();
+
+            return new ValidationResponseDto
+            {
+                BooleanStatus = true,
+                CodeStatus = 200,
+                SentencesError = $"{user.FirstName} {user.LastName} y todos sus registros asociados han sido eliminados correctamente."
+            };
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return new ValidationResponseDto
+            {
+                BooleanStatus = false,
+                CodeStatus = 500,
+                SentencesError = $"Ocurrió un error inesperado: {ex.Message}"
+            };
+        }
+    }
+
 
 }

@@ -2,6 +2,7 @@ using AutoMapper;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
+using CentralizedApps.Models.RemidersDto;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace CentralizedApps.Profile_AutoMapper
@@ -16,8 +17,14 @@ namespace CentralizedApps.Profile_AutoMapper
                 .ForMember(dest => dest.Shield, opt => opt.MapFrom(src => src.IdShieldNavigation))
                 .ReverseMap();
 
-            CreateMap<Municipality, JustMunicipalitysDto>().ReverseMap();
+            CreateMap<User , UserDto_Munucipality>().ReverseMap();
+
+            // Remiders
+            CreateMap<Reminder, ResponseReminderDto>().ReverseMap();
             CreateMap<Reminder, CreateReminderDto>().ReverseMap();
+
+            CreateMap<Municipality, JustMunicipalitysDto>().ReverseMap();
+
             // Bancos y Escudos 
             CreateMap<Bank, BankDto>().ReverseMap();
             CreateMap<ShieldMunicipality, ShieldMunicipalityDto>().ReverseMap();

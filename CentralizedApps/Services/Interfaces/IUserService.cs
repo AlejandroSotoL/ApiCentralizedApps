@@ -12,5 +12,6 @@ namespace CentralizedApps.Services.Interfaces
         Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePasswordRequestDto updatePasswordRequestDto);
         Task<ValidationResponseDto> ChangeStatusUser(int userId, bool? status);
         Task<ValidationResponseDto> UpdatePasswordByForget(int userId, UpdatePasswordByForget request);
+        Task<ValidationResponseDto> DeleteUser(int id);
     }
 }

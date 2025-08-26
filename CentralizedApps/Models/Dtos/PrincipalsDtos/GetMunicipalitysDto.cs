@@ -41,6 +41,8 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     {
         public int Id { get; set; }
         public string? FieldName { get; set; }
+        public string? QueryFieldType { get; set; }
+
     }
 
     public class NewsByMunicipalityDto
@@ -55,10 +57,10 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? Name { get; set; }
     }
 
-    public class UserDto
+    public class UserDto_Munucipality
     {
         public string FirstName { get; set; }
-        public string MiddleName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class ThemeDto

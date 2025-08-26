@@ -4,6 +4,9 @@ using CentralizedApps.Models.Dtos;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Models.UserDtos;
+using System.ComponentModel.DataAnnotations;
+using CentralizedApps.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CentralizedApps.Contollers
 {
@@ -12,12 +15,17 @@ namespace CentralizedApps.Contollers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRemidersService _remidersService;
 
-        public UserController(IUserService userService, IUnitOfWork unitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly CentralizedAppsDbContext _context;
+
+        public UserController(IUserService userService, IUnitOfWork unitOfWork, CentralizedAppsDbContext context, IRemidersService remidersService)
         {
             _userService = userService;
             _unitOfWork = unitOfWork;
+            _context = context;
+            _remidersService = remidersService;
         }
 
         [HttpGet]
@@ -130,22 +138,26 @@ namespace CentralizedApps.Contollers
 
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        [HttpDelete("Delete/{id}")]
+        public async Task<ValidationResponseDto> DeleteUser(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-            if (user == null)
-                return NotFound("User not found");
-
-            _unitOfWork.UserRepository.Delete(user);
-            await _unitOfWork.SaveChangesAsync();
-            return Ok(new ValidationResponseDto
+            try
             {
-                BooleanStatus = true,
-                CodeStatus = 200,
-                SentencesError = "delete user succcesfully"
-            });
+                var result = await _userService.DeleteUser(id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Ocurrió un error inesperado eliminando el usuario: {ex.Message}"
+                };
+            }
         }
+
+
 
         [HttpGet("by-email")]
         public async Task<IActionResult> GetByEmailUser([FromQuery] string email)
@@ -210,52 +222,54 @@ namespace CentralizedApps.Contollers
                 };
             }
         }
+
+
         [HttpPut("updatePasswordByForget/{userId}")]
         public async Task<ValidationResponseDto> UpdatePasswordByForget(int userId, [FromBody] UpdatePasswordByForget request)
         {
-                try
-                {
-                    var response = await _userService.UpdatePasswordByForget(userId, request);
-                    return new ValidationResponseDto
-                    {
-                        BooleanStatus = response.BooleanStatus,
-                        CodeStatus = response.CodeStatus,
-                        SentencesError = response.SentencesError
-                    };
-                }
-                catch (Exception e)
-                {
-                    return new ValidationResponseDto
-                    {
-                        BooleanStatus = false,
-                        CodeStatus = 400,
-                        SentencesError = "Error: no se pudo actualizar la contraseña ERROR: " + e.Message
-                    };
-                }
-            }
-
-            [HttpPut("ChangeStatusUser/{userId}/status/{status}")]
-            public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool status)
+            try
             {
-                try
+                var response = await _userService.UpdatePasswordByForget(userId, request);
+                return new ValidationResponseDto
                 {
-                    var response = await _userService.ChangeStatusUser(userId, status);
-                    return new ValidationResponseDto
-                    {
-                        BooleanStatus = response.BooleanStatus,
-                        CodeStatus = response.CodeStatus,
-                        SentencesError = response.SentencesError
-                    };
-                }
-                catch (Exception e)
+                    BooleanStatus = response.BooleanStatus,
+                    CodeStatus = response.CodeStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
                 {
-                    return new ValidationResponseDto
-                    {
-                        BooleanStatus = false,
-                        CodeStatus = 400,
-                        SentencesError = "Error: no se pudo cambiar el estado del usuario ERROR: " + e.Message
-                    };
-                }
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error: no se pudo actualizar la contraseña ERROR: " + e.Message
+                };
+            }
+        }
+
+        [HttpPut("ChangeStatusUser/{userId}/status/{status}")]
+        public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool status)
+        {
+            try
+            {
+                var response = await _userService.ChangeStatusUser(userId, status);
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = response.BooleanStatus,
+                    CodeStatus = response.CodeStatus,
+                    SentencesError = response.SentencesError
+                };
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error: no se pudo cambiar el estado del usuario ERROR: " + e.Message
+                };
             }
         }
     }
+}
