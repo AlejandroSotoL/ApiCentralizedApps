@@ -72,6 +72,7 @@ namespace CentralizedApps.Repositories
         public async Task<User?> GetByEmailUserByAuthenticate(string email)
         {
             return await _Context.Users
+                .Include(x => x.DocumentType)
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 

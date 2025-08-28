@@ -61,6 +61,8 @@ namespace CentralizedApps.Services
                         .Include(r => r.IdProcedureMunicipalityNavigation)!
                             .ThenInclude(pm => pm.Procedures)!
                         .Include(r => r.IdUserNavigation)!
+                        .Include(r => r.IdProcedureMunicipalityNavigation)
+                            .ThenInclude(pm => pm.Municipality)
                 );
 
                 if (entities == null || !entities.Any())
@@ -79,11 +81,13 @@ namespace CentralizedApps.Services
             {
                 var entities = await _unitOfWork.genericRepository<Reminder>().GetAllWithNestedIncludesAsync(query =>
                     query
-                        .Include(r => r.IdProcedureMunicipalityNavigation)!
-                            .ThenInclude(pm => pm.Procedures)!
-                        .Include(r => r.IdUserNavigation)!
-                        .Where(r => r.IdUser == userId)
-                );
+                                .Where(r => r.IdUser == userId)
+                                .Include(r => r.IdProcedureMunicipalityNavigation)
+                                    .ThenInclude(pm => pm.Procedures)
+                                .Include(r => r.IdProcedureMunicipalityNavigation)
+                                    .ThenInclude(pm => pm.Municipality)
+                                .Include(r => r.IdUserNavigation)
+                        );
 
                 if (entities == null || !entities.Any())
                     return new List<ResponseReminderDto>();

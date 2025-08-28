@@ -592,3 +592,4 @@ C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\Ce
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\CentralizedApps.pdb
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\CentralizedApps.genruntimeconfig.cache
 C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\obj\Debug\net8.0\ref\CentralizedApps.dll
+C:\Users\PERSONAL\Desktop\ApiCentralizedApps\CentralizedApps\bin\Debug\net8.0\tailwind.extension.json
