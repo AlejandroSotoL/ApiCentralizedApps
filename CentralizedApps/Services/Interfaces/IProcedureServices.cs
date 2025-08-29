@@ -27,6 +27,7 @@ namespace CentralizedApps.Services.Interfaces
         Task<ValidationResponseDto> createNewNotice(NewsByMunicipalityDto newsByMunicipalityDto);
 
 
+        Task<ValidationResponseDto> UpdateStatusCourse(int Id, bool status);
         Task<ValidationResponseDto> UpdateProcedureStatus(int Id , bool status);
         Task<ValidationResponseDto> updateNews(int id, NewsByMunicipalityDto newsByMunicipalityDto);
         Task<ValidationResponseDto> UpdateMunicipality(int Id , CompleteMunicipalityDto MunicipalityDTO);

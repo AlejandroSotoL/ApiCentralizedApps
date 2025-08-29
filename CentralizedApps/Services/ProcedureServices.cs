@@ -50,7 +50,7 @@ namespace CentralizedApps.Services
                 MunicipalityId = queryFieldDto.MunicipalityId,
                 FieldName = queryFieldDto.FieldName,
                 QueryFieldType = queryFieldDto.QueryFieldType
-            
+
             };
             await _unitOfWork.genericRepository<QueryField>().AddAsync(queryField);
             await _unitOfWork.SaveChangesAsync();
@@ -307,6 +307,7 @@ namespace CentralizedApps.Services
 
             queryField.MunicipalityId = queryField.MunicipalityId;
             queryField.FieldName = updatequeryFieldDto.FieldName;
+            queryField.QueryFieldType = updatequeryFieldDto.QueryFieldType;
             _unitOfWork.genericRepository<QueryFieldDto>().Update(queryField);
             await _unitOfWork.SaveChangesAsync();
 
@@ -575,14 +576,29 @@ namespace CentralizedApps.Services
                     }
                 }
 
+                var response = await _unitOfWork.genericRepository<ShieldMunicipality>()
+                .FindAsync_Predicate(x => x.NameOfMunicipality == municipalityDto.NameEscudo);
+
+                if (response == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "Debe de ir a crear el shield en Create/ShieldMuniciaplity"
+                    };
+                }
+
                 // ======= Actualizar datos del municipio =======
                 existingMunicipality.Name = municipalityDto.Name;
+                existingMunicipality.IdShield = response.Id;
+                existingMunicipality.DataPrivacy = municipalityDto.DataPrivacy;
+                existingMunicipality.DataProcessingPrivacy = municipalityDto.DataProcessingPrivacy;
                 existingMunicipality.EntityCode = municipalityDto.EntityCode;
                 existingMunicipality.IsActive = municipalityDto.IsActive;
                 existingMunicipality.Domain = municipalityDto.Domain;
                 existingMunicipality.UserFintech = BCrypt.Net.BCrypt.HashPassword(municipalityDto.UserFintech);
                 existingMunicipality.PasswordFintech = BCrypt.Net.BCrypt.HashPassword(municipalityDto.PasswordFintech);
-
 
                 if (departmentEntity != null)
                     existingMunicipality.Department = departmentEntity;
@@ -885,7 +901,56 @@ namespace CentralizedApps.Services
                 };
             }
         }
+
+        public async Task<ValidationResponseDto> UpdateStatusCourse(int Id, bool status)
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<Course>()
+                    .FindAsync_Predicate(x => x.Id == Id);
+                if (response == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "No se encontró el curso."
+                    };
+                }
+                response.IsActive = status;
+                _unitOfWork.genericRepository<Course>().Update(response);
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0 && response != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = "Estado del curso actualizado correctamente. " + rows + " filas afectadas."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al actualizar el estado del curso."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al actualizar el estado del curso: {ex.Message}"
+                };
+            }
     }
-}
+    }
+    }
+
 
 

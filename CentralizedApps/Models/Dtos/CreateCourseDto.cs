@@ -8,5 +8,6 @@ namespace CentralizedApps.Models.Dtos
         public string? Get { get; set; }
 
         public string? Post { get; set; }
+        public bool? IsActive { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? DataPrivacy { get; set; }
         public string? DataProcessingPrivacy { get; set; }
         public BankDto? Bank { get; set; }
-        public ShieldMunicipalityDto? Shield { get; set; }
+        public ShieldMunicipalityDto? IdShield { get; set; }
         public DepartmentDto? Department { get; set; }
         public ThemeDto? Theme { get; set; }
         public List<CourseDto>? Courses { get; set; }
@@ -84,8 +84,8 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 
     public class SportsFacilitiesDto
     {
+        public int Id { get; set; }
         public string? Name { get; set; }
-
         public string? Get { get; set; }
 
         public string? CalendaryPost { get; set; }
@@ -97,13 +97,10 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     public class CourseDto
     {
         public int Id { get; set; }
-
         public string? Name { get; set; }
-
         public string? Get { get; set; }
-
         public string? Post { get; set; }
-
+        public bool? IsActive { get; set; }
     }
 
     public class MunicipalityProcedureDto
@@ -112,7 +109,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string IntegrationType { get; set; }
         public bool? IsActive { get; set; }
         public ProcedureDto? Procedures { get; set; }
-        public JustMunicipalitysDto? Municipality { get;set; }
+        public JustMunicipalitysDto? Municipality { get; set; }
 
     }
 
