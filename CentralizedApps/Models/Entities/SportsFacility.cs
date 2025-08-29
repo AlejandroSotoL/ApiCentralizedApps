@@ -17,5 +17,7 @@ public partial class SportsFacility
 
     public int? MunicipalityId { get; set; }
 
+    public bool? IsActive { get; set; }
+
     public virtual Municipality? Municipality { get; set; }
 }

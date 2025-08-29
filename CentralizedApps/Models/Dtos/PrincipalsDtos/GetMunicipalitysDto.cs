@@ -87,9 +87,8 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Get { get; set; }
-
+        public bool? IsActive { get; set; }
         public string? CalendaryPost { get; set; }
-
         public string? ReservationPost { get; set; }
 
     }

@@ -232,6 +232,7 @@ namespace CentralizedApps.Services
                 Name = createCourseDto.Name,
                 Post = createCourseDto.Post,
                 Get = createCourseDto.Get,
+                IsActive = createCourseDto.IsActive
             };
             await _unitOfWork.genericRepository<Course>().AddAsync(course);
             await _unitOfWork.SaveChangesAsync();
@@ -248,6 +249,7 @@ namespace CentralizedApps.Services
                 Get = createSportsFacilityDto.Get,
                 CalendaryPost = createSportsFacilityDto.CalendaryPost,
                 ReservationPost = createSportsFacilityDto.ReservationPost,
+                IsActive = createSportsFacilityDto.IsActive
             };
             await _unitOfWork.genericRepository<SportsFacility>().AddAsync(sportsFacility);
             await _unitOfWork.SaveChangesAsync();
@@ -393,6 +395,7 @@ namespace CentralizedApps.Services
             SportsFacility.Get = updateSportsFacilityDto.Get;
             SportsFacility.ReservationPost = updateSportsFacilityDto.ReservationPost;
             SportsFacility.CalendaryPost = updateSportsFacilityDto.CalendaryPost;
+            SportsFacility.IsActive = updateSportsFacilityDto.IsActive;
             _unitOfWork.genericRepository<SportsFacility>().Update(SportsFacility);
             await _unitOfWork.SaveChangesAsync();
 
@@ -948,9 +951,57 @@ namespace CentralizedApps.Services
                     SentencesError = $"Error al actualizar el estado del curso: {ex.Message}"
                 };
             }
+        }
+
+        public async Task<ValidationResponseDto> UpdateStatusSportFacilietes(int id, bool status)
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<SportsFacility>()
+                    .FindAsync_Predicate(x => x.Id == id);
+                if (response == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "No se encontró el Sport."
+                    };
+                }
+                response.IsActive = status;
+                _unitOfWork.genericRepository<SportsFacility>().Update(response);
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0 && response != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = "Estado del Spot actualizado correctamente. " + rows + " filas afectadas."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al actualizar el estado del Sport."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al actualizar el estado del Sport: {ex.Message}"
+                };
+            }
+        }
     }
-    }
-    }
+}
 
 
 
