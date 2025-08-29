@@ -31,7 +31,7 @@ namespace CentralizedApps.Services
 
                 var response = await _unitOfWork.genericRepository<Bank>()
                     .FindAsync_Predicate(x => x.NameBank == bankAccountDto.NameBank);
-
+                    
                 if (response != null)
                 {
                     return new ValidationResponseDto

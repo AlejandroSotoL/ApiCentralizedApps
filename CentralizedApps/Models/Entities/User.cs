@@ -34,4 +34,6 @@ public partial class User
     public virtual DocumentType? DocumentType { get; set; }
 
     public virtual ICollection<PaymentHistory> PaymentHistories { get; set; } = new List<PaymentHistory>();
+
+    public virtual ICollection<Reminder> Reminders { get; set; } = new List<Reminder>();
 }

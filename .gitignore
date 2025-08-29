@@ -1,2 +1,10 @@
-.vs/AppCentralizacion/FileContentIndex/3ec46e44-828a-467b-83ac-cc5d35df585c.vsidx
-.vs/AppCentralizacion/FileContentIndex/5f503b47-4a6e-4c22-8e35-5b717e1dbca6.vsidx
+
+
+.vs/
+*.user
+*.suo
+
+bin/
+obj/
+
+node_modules/

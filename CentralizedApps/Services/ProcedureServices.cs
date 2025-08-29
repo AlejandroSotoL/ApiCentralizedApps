@@ -48,7 +48,9 @@ namespace CentralizedApps.Services
             QueryField queryField = new QueryField
             {
                 MunicipalityId = queryFieldDto.MunicipalityId,
-                FieldName = queryFieldDto.FieldName
+                FieldName = queryFieldDto.FieldName,
+                QueryFieldType = queryFieldDto.QueryFieldType
+            
             };
             await _unitOfWork.genericRepository<QueryField>().AddAsync(queryField);
             await _unitOfWork.SaveChangesAsync();
@@ -844,7 +846,6 @@ namespace CentralizedApps.Services
                     };
                 }
 
-                // Verificamos si ya existe un escudo con ese nombre de municipio
                 var existingShield = await _unitOfWork.genericRepository<ShieldMunicipality>()
                     .FindAsync_Predicate(x => x.NameOfMunicipality == createShieldDto.NameOfMunicipality);
 

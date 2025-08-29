@@ -7,11 +7,13 @@ namespace CentralizedApps.Repositories.Interfaces
     public interface IGenericRepository<T> where T : class
     {
         Task<T?> GetByIdAsync(int id);
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<List<T>> GetAllAsync();
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
         Task<User?> GetByEmailUserByAuthenticate(string email);
+        Task<List<T>> GetAllWithFilterAsync(Expression<Func<T, bool>> filter);
+        void DeleteRange(IEnumerable<T> entities);
 
         //Predication
         Task<T?> FindAsync_Predicate(Expression<Func<T, bool>> predicate);

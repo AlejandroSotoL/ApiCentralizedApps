@@ -1,4 +1,6 @@
-﻿using CentralizedApps.Models.Entities;
+﻿using System;
+using System.Collections.Generic;
+using CentralizedApps.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CentralizedApps.Data;
@@ -40,6 +42,8 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<QueryField> QueryFields { get; set; }
 
+    public virtual DbSet<Reminder> Reminders { get; set; }
+
     public virtual DbSet<ShieldMunicipality> ShieldMunicipalities { get; set; }
 
     public virtual DbSet<SocialMediaType> SocialMediaTypes { get; set; }
@@ -50,8 +54,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
-
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Availibity>(entity =>
@@ -272,11 +275,37 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.Property(e => e.FieldName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.QueryFieldType)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("QueryField_Type");
 
             entity.HasOne(d => d.Municipality).WithMany(p => p.QueryFields)
                 .HasForeignKey(d => d.MunicipalityId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_QueryField_ToMunicipality");
+        });
+
+        modelBuilder.Entity<Reminder>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC071AECE808");
+
+            entity.Property(e => e.IdProcedureMunicipality).HasColumnName("Id_Procedure_Municipality");
+            entity.Property(e => e.IdUser).HasColumnName("Id_User");
+            entity.Property(e => e.ReminderType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.VigenciaDate)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.IdProcedureMunicipalityNavigation).WithMany(p => p.Reminders)
+                .HasForeignKey(d => d.IdProcedureMunicipality)
+                .HasConstraintName("FK_RemidersToMunicipalityProcedure");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Reminders)
+                .HasForeignKey(d => d.IdUser)
+                .HasConstraintName("FK_RemindersToUsers");
         });
 
         modelBuilder.Entity<ShieldMunicipality>(entity =>

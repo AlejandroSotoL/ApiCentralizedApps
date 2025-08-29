@@ -41,6 +41,8 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
     {
         public int Id { get; set; }
         public string? FieldName { get; set; }
+        public string? QueryFieldType { get; set; }
+
     }
 
     public class NewsByMunicipalityDto
@@ -55,10 +57,10 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? Name { get; set; }
     }
 
-    public class UserDto
+    public class UserDto_Munucipality
     {
         public string FirstName { get; set; }
-        public string MiddleName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class ThemeDto
@@ -110,6 +112,8 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string IntegrationType { get; set; }
         public bool? IsActive { get; set; }
         public ProcedureDto? Procedures { get; set; }
+        public JustMunicipalitysDto? Municipality { get;set; }
+
     }
 
     public class ProcedureDto
@@ -124,7 +128,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? Url { get; set; }
         public bool? IsActive { get; set; }
         public SocialMediaTypeDto? SocialMediaType { get; set; }
-        public JustMunicipalitysDto? Municipality { get; set; }
     }
 
     public class SocialMediaTypeDto

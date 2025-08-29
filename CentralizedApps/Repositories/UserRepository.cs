@@ -7,7 +7,7 @@ namespace CentralizedApps.Repositories
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
         public UserRepository(CentralizedAppsDbContext Context) : base(Context)
-        {
+        { 
         }
     }
 }

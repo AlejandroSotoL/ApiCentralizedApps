@@ -173,9 +173,6 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                         DataProcessingPrivacy = dto.DataProcessingPrivacy
                     };
 
-                    
-                    
-
                     var municipioRepo = _unitOfWork.genericRepository<Municipality>();
                     await municipioRepo.AddAsync(municipality);
                     await _unitOfWork.CompleteAsync();

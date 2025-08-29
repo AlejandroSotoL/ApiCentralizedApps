@@ -22,6 +22,7 @@ namespace CentralizedApps.Controllers
             _BankService = BankService;
         }
 
+
         [HttpPost("Create/Shield")]
         public async Task<ValidationResponseDto> CreateShield([FromBody] ShieldMunicipalityDto createShieldDto)
         {
@@ -47,9 +48,10 @@ namespace CentralizedApps.Controllers
         }
 
         [HttpPost("Create/Bank")]
-        public async Task<ValidationResponseDto> CreateBank([FromBody] CreateBankDto createBankDto) {
+        public async Task<ValidationResponseDto> CreateBank([FromBody] CreateBankDto createBankDto)
+        {
             try
-            {                
+            {
                 var response = await _BankService.CreateBank(createBankDto);
                 return new ValidationResponseDto
                 {
@@ -96,7 +98,7 @@ namespace CentralizedApps.Controllers
         }
 
         [HttpPost("Create/NewNotice")]
-        public async Task<ValidationResponseDto> CreateNewNotice( NewsByMunicipalityDto newsByMunicipalityDto)
+        public async Task<ValidationResponseDto> CreateNewNotice(NewsByMunicipalityDto newsByMunicipalityDto)
         {
             try
             {
@@ -108,7 +110,7 @@ namespace CentralizedApps.Controllers
                         BooleanStatus = false,
                         SentencesError = "NewsByMunicipalityDto no puede ser nulo."
                     };
-                    
+
                 }
                 var response = await _ProcedureServices.createNewNotice(newsByMunicipalityDto);
                 return new ValidationResponseDto

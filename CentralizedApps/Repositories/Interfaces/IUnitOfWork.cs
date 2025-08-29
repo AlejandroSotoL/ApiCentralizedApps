@@ -15,6 +15,7 @@ namespace CentralizedApps.Repositories.Interfaces
         IConfigurationEmail configurationEmail { get; }
 
         IGenericRepository<T> genericRepository<T>() where T : class;
+        
         Task<int> SaveChangesAsync();
         IExecutionStrategy GetExecutionStrategy();
         Task<IDbContextTransaction> BeginTransactionAsync();

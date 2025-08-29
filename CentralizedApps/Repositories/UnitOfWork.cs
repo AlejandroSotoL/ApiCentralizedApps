@@ -24,7 +24,7 @@ namespace CentralizedApps.Repositories
 
         public IPaymentHistoryRepository paymentHistoryRepository => _paymentHistoryRepository ??= new PaymentHistoryRepository(_context);
 
-        public IConfigurationEmail configurationEmail => _configurationEmail ??= new ConfigurationEmail(_context);
+        public IConfigurationEmail configurationEmail => _configurationEmail ??= new ConfigurationEmail(_context, this);
 
         public IGenericRepository<T> genericRepository<T>() where T : class
         {
