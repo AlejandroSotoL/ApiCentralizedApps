@@ -262,9 +262,10 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                 var transformedEntities = entities
                     .Select(e =>
                     {
-                        if (!string.IsNullOrEmpty(e.PasswordFintech))
+                        if (!string.IsNullOrEmpty(e.PasswordFintech) && !string.IsNullOrEmpty(e.UserFintech))
                         {
                             e.PasswordFintech = _passwordService.Decrypt(e.PasswordFintech);
+                            e.UserFintech = _passwordService.Decrypt(e.UserFintech);
                         }
                         return e;
                     })
@@ -303,10 +304,12 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                 {
                     return null;
                 }
-                 //   decrypt 
-                if (!string.IsNullOrEmpty(entity.PasswordFintech))
+                //   decrypt 
+                if (!string.IsNullOrEmpty(entity.PasswordFintech) && !string.IsNullOrEmpty(entity.UserFintech))
                 {
                     entity.PasswordFintech = _passwordService.Decrypt(entity.PasswordFintech);
+                    entity.UserFintech = _passwordService.Decrypt(entity.UserFintech);
+                    
                 }
                 return _mapper.Map<GetMunicipalitysDto>(entity);
             }

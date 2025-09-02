@@ -14,11 +14,13 @@ namespace CentralizedApps.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<MunicipalityServices> _logger;
-        public ProcedureServices(ILogger<MunicipalityServices> logger, IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IPasswordService _passwordService;
+        public ProcedureServices(ILogger<MunicipalityServices> logger, IPasswordService passwordService, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
+            _passwordService = passwordService;
         }
 
 
@@ -580,8 +582,8 @@ namespace CentralizedApps.Services
                 existingMunicipality.EntityCode = municipalityDto.EntityCode;
                 existingMunicipality.IsActive = municipalityDto.IsActive;
                 existingMunicipality.Domain = municipalityDto.Domain;
-                existingMunicipality.UserFintech = BCrypt.Net.BCrypt.HashPassword(municipalityDto.UserFintech);
-                existingMunicipality.PasswordFintech = BCrypt.Net.BCrypt.HashPassword(municipalityDto.PasswordFintech);
+                existingMunicipality.UserFintech = _passwordService.Encrypt(municipalityDto.UserFintech);
+                existingMunicipality.PasswordFintech = _passwordService.Encrypt(municipalityDto.PasswordFintech);
 
 
                 if (departmentEntity != null)
