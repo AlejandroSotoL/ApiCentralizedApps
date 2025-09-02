@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\models\\entities\\documenttype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\models\\entities\\documenttype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|c:\\users\\personal\\desktop\\apicentralizedapps\\centralizedapps\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{37FB5AD6-9242-7884-07B6-59BD72207443}|CentralizedApps\\CentralizedApps.csproj|solutionrelative:centralizedapps\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
@@ -14,11 +18,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "DocumentType.cs",
+              "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Models\\Entities\\DocumentType.cs",
+              "RelativeDocumentMoniker": "CentralizedApps\\Models\\Entities\\DocumentType.cs",
+              "ToolTip": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\Models\\Entities\\DocumentType.cs",
+              "RelativeToolTip": "CentralizedApps\\Models\\Entities\\DocumentType.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-29T20:48:12.698Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\PERSONAL\\Desktop\\ApiCentralizedApps\\CentralizedApps\\appsettings.json",
               "RelativeDocumentMoniker": "CentralizedApps\\appsettings.json",
@@ -28,10 +49,6 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-08-29T19:53:02.476Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
