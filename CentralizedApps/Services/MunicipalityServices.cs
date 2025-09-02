@@ -274,7 +274,7 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
             }
             catch (Exception ex)
             {
-                throw new ApplicationException($"Ocurrió un error inesperado al obtener los municipios: {ex.Message}", ex);
+                throw new ApplicationException($"Ocurrió un error inesperado al obtener loss municipios: {ex.Message}", ex);
             }
         }
 
