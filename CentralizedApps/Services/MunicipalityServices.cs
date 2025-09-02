@@ -14,11 +14,13 @@ namespace CentralizedApps.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<MunicipalityServices> _logger;
-        public MunicipalityServices(ILogger<MunicipalityServices> logger, IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IPasswordService _passwordService;
+        public MunicipalityServices(ILogger<MunicipalityServices> logger, IPasswordService passwordService, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
+            _passwordService = passwordService;
         }
 
 public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipalityDto dto)
@@ -164,8 +166,8 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                         DepartmentId = departament.Id,
                         ThemeId = tema.Id,
                         Domain = dto.Domain,
-                        UserFintech = BCrypt.Net.BCrypt.HashPassword(dto.UserFintech),
-                        PasswordFintech = BCrypt.Net.BCrypt.HashPassword(dto.PasswordFintech),
+                        UserFintech = _passwordService.Encrypt(dto.UserFintech),
+                        PasswordFintech = _passwordService.Encrypt(dto.PasswordFintech),
                         IsActive = dto.IsActive,
                         IdBank = bank.Id,
                         IdShield = shield.Id,
@@ -256,6 +258,17 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                 {
                     return null;
                 }
+                //   decrypt 
+                var transformedEntities = entities
+                    .Select(e =>
+                    {
+                        if (!string.IsNullOrEmpty(e.PasswordFintech))
+                        {
+                            e.PasswordFintech = _passwordService.Decrypt(e.PasswordFintech);
+                        }
+                        return e;
+                    })
+                    .ToList();
                 return _mapper.Map<List<GetMunicipalitysDto>>(entities);
             }
             catch (Exception ex)
@@ -289,6 +302,11 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                 if (entity == null)
                 {
                     return null;
+                }
+                 //   decrypt 
+                if (!string.IsNullOrEmpty(entity.PasswordFintech))
+                {
+                    entity.PasswordFintech = _passwordService.Decrypt(entity.PasswordFintech);
                 }
                 return _mapper.Map<GetMunicipalitysDto>(entity);
             }
