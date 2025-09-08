@@ -94,42 +94,84 @@ public class UserService : IUserService
 
 
     }
-public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePasswordRequestDto updatePasswordRequestDto)
-{
-    try
+    public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePasswordRequestDto updatePasswordRequestDto)
     {
-        var currentlyUser = await _unitOfWork.genericRepository<User>().GetByIdAsync(userId);
-        if (currentlyUser == null)
+        try
+        {
+            var currentlyUser = await _unitOfWork.genericRepository<User>().GetByIdAsync(userId);
+            if (currentlyUser == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Usuario no encontrado"
+                };
+            }
+
+            bool isValid = BCrypt.Net.BCrypt.Verify(currentlyUser.Password, updatePasswordRequestDto.CurrentPassword);
+            if (!isValid) {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    SentencesError = "Contraseña actual es incorrecta"
+                };
+            }
+
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(updatePasswordRequestDto.NewPassword);
+            currentlyUser.Password = hashedPassword;
+            _unitOfWork.genericRepository<User>().Update(currentlyUser);
+            var rows = await _unitOfWork.SaveChangesAsync();
+            if (rows > 0)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = true,
+                    CodeStatus = 200,
+                    SentencesError = "Contraseña actualizada correctamente"
+                };
+            }
+            else
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Error al actualizar la contraseña"
+                };
+            }
+        }
+        catch (Exception e)
         {
             return new ValidationResponseDto
             {
                 BooleanStatus = false,
-                CodeStatus = 400,
-                SentencesError = "Usuario no encontrado"
+                CodeStatus = 600,
+                SentencesError = "Error al actualizar la contraseña: Error -> " + e.Message
             };
         }
+    }
 
-        //  Verificamos la contraseña actual usando el servicio de cifrado
-        bool isPasswordValid = _passwordService.Decrypt(currentlyUser.Password) == updatePasswordRequestDto.CurrentPassword;
-
-        if (!isPasswordValid)
+    public async Task<ValidationResponseDto> UpdatePasswordByForget(int userId, UpdatePasswordByForget request)
+    {
+        try
         {
-            return new ValidationResponseDto
+            var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(userId);
+            if (user == null)
             {
-                BooleanStatus = false,
-                CodeStatus = 400,
-                SentencesError = "La contraseña actual es incorrecta"
-            };
-        }
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "Usuario no encontrado"
+                };
+            }
 
-        //  Ciframos la nueva contraseña
-        currentlyUser.Password = _passwordService.Encrypt(updatePasswordRequestDto.NewPassword);
 
-        _unitOfWork.genericRepository<User>().Update(currentlyUser);
-        var rows = await _unitOfWork.SaveChangesAsync();
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            _unitOfWork.genericRepository<User>().Update(user);
+            await _unitOfWork.SaveChangesAsync();
 
-        if (rows > 0)
-        {
             return new ValidationResponseDto
             {
                 BooleanStatus = true,
@@ -137,65 +179,16 @@ public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePa
                 SentencesError = "Contraseña actualizada correctamente"
             };
         }
-        else
+        catch (Exception e)
         {
             return new ValidationResponseDto
             {
                 BooleanStatus = false,
-                CodeStatus = 400,
-                SentencesError = "Error al actualizar la contraseña"
+                CodeStatus = 500,
+                SentencesError = "Error al actualizar la contraseña: " + e.Message
             };
         }
     }
-    catch (Exception e)
-    {
-        return new ValidationResponseDto
-        {
-            BooleanStatus = false,
-            CodeStatus = 600,
-            SentencesError = "Error al actualizar la contraseña: Error -> " + e.Message
-        };
-    }
-}
-
-    public async Task<ValidationResponseDto> UpdatePasswordByForget(int userId, UpdatePasswordByForget request)
-{
-    try
-    {
-        var user = await _unitOfWork.genericRepository<User>().GetByIdAsync(userId);
-        if (user == null)
-        {
-            return new ValidationResponseDto
-            {
-                BooleanStatus = false,
-                CodeStatus = 400,
-                SentencesError = "Usuario no encontrado"
-            };
-        }
-
-        //  Ciframos la nueva contraseña usando el servicio centralizado
-        user.Password = _passwordService.Encrypt(request.NewPassword);
-
-        _unitOfWork.genericRepository<User>().Update(user);
-        await _unitOfWork.SaveChangesAsync();
-
-        return new ValidationResponseDto
-        {
-            BooleanStatus = true,
-            CodeStatus = 200,
-            SentencesError = "Contraseña actualizada correctamente"
-        };
-    }
-    catch (Exception e)
-    {
-        return new ValidationResponseDto
-        {
-            BooleanStatus = false,
-            CodeStatus = 500,
-            SentencesError = "Error al actualizar la contraseña: " + e.Message
-        };
-    }
-}
 
     public async Task<ValidationResponseDto> UpdateUserAsync(int id, UserDto updateUserDto)
     {
@@ -217,7 +210,7 @@ public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePa
         user.DocumentTypeId = updateUserDto.DocumentTypeId;
         user.Email = updateUserDto.Email;
         user.BirthDate = updateUserDto.BirthDate;
-        user.Password = _passwordService.Encrypt(updateUserDto.Password);
+        user.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDto.Password);
         user.PhoneNumber = updateUserDto.PhoneNumber;
         user.Address = updateUserDto.Address;
         user.LoginStatus = false;
@@ -251,7 +244,7 @@ public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePa
             try
             {
                 var reminders = await _unitOfWork.genericRepository<Reminder>()
-                    .GetAllWithFilterAsync(r => r.IdUser == id); 
+                    .GetAllWithFilterAsync(r => r.IdUser == id);
                 if (reminders.Any())
                     _unitOfWork.genericRepository<Reminder>().DeleteRange(reminders);
             }
@@ -270,7 +263,7 @@ public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePa
             try
             {
                 var payments = await _unitOfWork.paymentHistoryRepository
-                    .GetAllWithFilterAsync(p => p.UserId == id); 
+                    .GetAllWithFilterAsync(p => p.UserId == id);
                 if (payments.Any())
                     _unitOfWork.paymentHistoryRepository.DeleteRange(payments);
             }
@@ -291,7 +284,7 @@ public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePa
             }
             catch (Exception exUser)
             {
-                await transaction.RollbackAsync(); 
+                await transaction.RollbackAsync();
                 return new ValidationResponseDto
                 {
                     BooleanStatus = false,
@@ -321,6 +314,4 @@ public async Task<ValidationResponseDto> UpdatePasswordUser(int userId, UpdatePa
             };
         }
     }
-
-
 }

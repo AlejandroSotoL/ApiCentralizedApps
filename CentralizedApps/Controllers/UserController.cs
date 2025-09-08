@@ -61,7 +61,6 @@ namespace CentralizedApps.Contollers
                     CodeStatus = 400,       
                     SentencesError = $"Error: not found"
                 });
-            user.Password = _passwordService.Decrypt(user.Password);
             return Ok(user);
         }
 
@@ -185,7 +184,6 @@ namespace CentralizedApps.Contollers
                     SentencesError = "Usuario no encontrado"
                 });
             }
-            response.Password = _passwordService.Decrypt(response.Password);
             return Ok(response);
         }
 

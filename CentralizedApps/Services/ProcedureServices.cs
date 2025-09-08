@@ -594,7 +594,7 @@ namespace CentralizedApps.Services
                     };
                 }
 
-                // ======= Actualizar datos del municipio =======
+
                 existingMunicipality.Name = municipalityDto.Name;
                 existingMunicipality.IdShield = response.Id;
                 existingMunicipality.DataPrivacy = municipalityDto.DataPrivacy;

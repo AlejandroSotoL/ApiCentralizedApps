@@ -21,7 +21,7 @@ namespace CentralizedApps.FluentValidation
                 .NotEmpty();
 
             RuleFor(x => x.DocumentTypeId)
-                .NotEmpty();s
+                .NotEmpty();
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("El Email es obligatorio")
