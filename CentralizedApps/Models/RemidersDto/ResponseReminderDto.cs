@@ -9,10 +9,11 @@ namespace CentralizedApps.Models.RemidersDto
 {
     public class ResponseReminderDto
     {
+        public int? Id { get; set; }
         public DateOnly? ExpirationDate { get; set; }
         public string? VigenciaDate { get; set; }
         public string? ReminderType { get; set; }
         public MunicipalityProcedureDto? IdProcedureMunicipalityNavigation { get; set; }
         public UserDto_Munucipality? IdUserNavigation { get; set; }
     }
-}
+} 

@@ -27,6 +27,28 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
+        [HttpPut("Update/Status/Municipality/Id")]
+        public async Task<ValidationResponseDto> UpdateStatusMunicipality(int id , bool status)
+        {
+            try
+            {
+                var response = await _ProcedureServices.UpdateStatusMunicipality(id, status);
+                return new ValidationResponseDto
+                {
+                    SentencesError = response.SentencesError,
+                    BooleanStatus = response.BooleanStatus,
+                    CodeStatus = response.CodeStatus
+                };
+            } catch (Exception ex) {
+                return new ValidationResponseDto
+                {
+                    SentencesError = $"Tenemos problemas -> ${ex.Message}",
+                    BooleanStatus = false,
+                    CodeStatus = 500
+                };
+            }
+        }
+
 
         [HttpPut("Update/Status/Course/{id}")]
         public async Task<ValidationResponseDto> UpdateStatusCourse(int id, bool status)

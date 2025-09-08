@@ -45,8 +45,6 @@ public partial class Municipality
 
     public virtual ICollection<NewsByMunicipality> NewsByMunicipalities { get; set; } = new List<NewsByMunicipality>();
 
-    public virtual ICollection<PaymentHistory> PaymentHistories { get; set; } = new List<PaymentHistory>();
-
     public virtual ICollection<QueryField> QueryFields { get; set; } = new List<QueryField>();
 
     public virtual ICollection<SportsFacility> SportsFacilities { get; set; } = new List<SportsFacility>();
