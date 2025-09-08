@@ -602,8 +602,8 @@ namespace CentralizedApps.Services
                 existingMunicipality.EntityCode = municipalityDto.EntityCode;
                 existingMunicipality.IsActive = municipalityDto.IsActive;
                 existingMunicipality.Domain = municipalityDto.Domain;
-                existingMunicipality.UserFintech = _passwordService.Encrypt(municipalityDto.UserFintech);
-                existingMunicipality.PasswordFintech = _passwordService.Encrypt(municipalityDto.PasswordFintech);
+                existingMunicipality.UserFintech = municipalityDto.UserFintech;
+                existingMunicipality.PasswordFintech = municipalityDto.PasswordFintech;
 
                 if (departmentEntity != null)
                     existingMunicipality.Department = departmentEntity;

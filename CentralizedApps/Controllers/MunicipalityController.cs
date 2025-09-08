@@ -142,9 +142,5 @@ namespace CentralizedApps.Controllers
             }
             return Ok(response);
         }
-
-       
-
-
     }
 }

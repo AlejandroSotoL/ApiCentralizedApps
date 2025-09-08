@@ -166,8 +166,8 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                         DepartmentId = departament.Id,
                         ThemeId = tema.Id,
                         Domain = dto.Domain,
-                        UserFintech = _passwordService.Encrypt(dto.UserFintech),
-                        PasswordFintech = _passwordService.Encrypt(dto.PasswordFintech),
+                        UserFintech = dto.UserFintech,
+                        PasswordFintech = dto.PasswordFintech,
                         IsActive = dto.IsActive,
                         IdBank = bank.Id,
                         IdShield = shield.Id,
@@ -264,8 +264,8 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                     {
                         if (!string.IsNullOrEmpty(e.PasswordFintech) && !string.IsNullOrEmpty(e.UserFintech))
                         {
-                            e.PasswordFintech = _passwordService.Decrypt(e.PasswordFintech);
-                            e.UserFintech = _passwordService.Decrypt(e.UserFintech);
+                            e.PasswordFintech = e.PasswordFintech;
+                            e.UserFintech = e.UserFintech;
                         }
                         return e;
                     })
@@ -307,8 +307,8 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                 //   decrypt 
                 if (!string.IsNullOrEmpty(entity.PasswordFintech) && !string.IsNullOrEmpty(entity.UserFintech))
                 {
-                    entity.PasswordFintech = _passwordService.Decrypt(entity.PasswordFintech);
-                    entity.UserFintech = _passwordService.Decrypt(entity.UserFintech);
+                    entity.PasswordFintech = entity.PasswordFintech;
+                    entity.UserFintech = entity.UserFintech;
                     
                 }
                 return _mapper.Map<GetMunicipalitysDto>(entity);

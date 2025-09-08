@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.DtosFintech;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
@@ -26,27 +27,69 @@ namespace CentralizedApps.Controllers
         [HttpPost("transactionFintech/{id}")]
         public async Task<IActionResult> transactionFintech([FromBody] TransactionFintech transactionFintech, int id)
         {
-            var mucipality = await _unitOfWork.genericRepository<Municipality>().GetByIdAsync(id);
-            if (mucipality == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound(" municipio no encontrado");
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = string.Join(" | ", errors)
+                });
             }
 
-            var request = new authenticationRequestFintechDto
+            try
             {
-                Username = "MercadoLibreDivisas",
-                Password = "Gobernacion_9013387663_1Cero12023$/*-"
-            };
+                var municipality = await _unitOfWork
+                    .genericRepository<Municipality>()
+                    .GetByIdAsync(id);
 
-            var responseauthentication = await _fintechService.AuthenticateFintechAsyn(request);
-            if (responseauthentication == null)
-            {
-                return BadRequest("no se pudo autenticar");
+                if (municipality == null)
+                {
+                    return NotFound(new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "Error: municipio no encontrado"
+                    });
+                }
+
+                var request = new authenticationRequestFintechDto
+                {
+                    Username = municipality.UserFintech,
+                    Password = municipality.PasswordFintech
+                };
+
+                var responseAuthentication = await _fintechService.AuthenticateFintechAsyn(request);
+
+                if (responseAuthentication == null || !responseAuthentication.isSuccess)
+                {
+                    return BadRequest(responseAuthentication);
+                }
+                var responseTransaction = await _fintechService.transactionFintech(
+                    transactionFintech,
+                    responseAuthentication.result
+                );
+
+                if (responseTransaction == null || !responseTransaction.isSuccess)
+                {
+                    return BadRequest(responseTransaction);
+                }
+                return Ok(responseTransaction);
             }
-            Console.WriteLine(responseauthentication.result);
-            var responseTransaction = await _fintechService.transactionFintech(transactionFintech, responseauthentication.result);
-
-            return Ok(responseTransaction);
+            catch (Exception ex)
+            {
+                return BadRequest(new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error interno: {ex.Message}"
+                });
+            }
         }
 
     }
