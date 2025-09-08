@@ -21,15 +21,17 @@ namespace CentralizedApps.FluentValidation
                 .NotEmpty();
 
             RuleFor(x => x.DocumentTypeId)
-                .NotEmpty();
+                .NotEmpty();s
 
             RuleFor(x => x.Email)
-                .EmailAddress().WithMessage("No es una dirección de correo")
-                .NotEmpty().WithMessage("El Email es Obligatorio");
+                .NotEmpty().WithMessage("El Email es obligatorio")
+                .Must(email => email.Contains("@"))
+                .WithMessage("el campo debe tener formato mail");
+                
 
             RuleFor(x => x.Password)
-                .MaximumLength(8)
-                .NotEmpty();
+                .NotEmpty().WithMessage("La contraseña no puede estar vacía")
+                .MinimumLength(8).WithMessage("La contraseña debe tener al menos 8 caracteres");
 
             RuleFor(x => x.PhoneNumber)
             .NotNull().WithMessage("El teléfono es obligatorio")

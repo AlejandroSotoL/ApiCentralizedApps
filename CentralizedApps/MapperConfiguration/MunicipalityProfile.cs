@@ -14,10 +14,11 @@ namespace CentralizedApps.Profile_AutoMapper
             // Municipios
             CreateMap<Municipality, GetMunicipalitysDto>()
                 .ForMember(dest => dest.Bank, opt => opt.MapFrom(src => src.IdBankNavigation))
-                .ForMember(dest => dest.Shield, opt => opt.MapFrom(src => src.IdShieldNavigation))
+                .ForMember(dest => dest.IdShield, opt => opt.MapFrom(src => src.IdShieldNavigation))
                 .ReverseMap();
+            
 
-            CreateMap<User , UserDto_Munucipality>().ReverseMap();
+            CreateMap<User, UserDto_Munucipality>().ReverseMap();
 
             // Remiders
             CreateMap<Reminder, ResponseReminderDto>().ReverseMap();

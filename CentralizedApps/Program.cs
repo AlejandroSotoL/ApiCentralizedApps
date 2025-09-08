@@ -1,6 +1,7 @@
 
 using CentralizedApps.Data;
 using CentralizedApps.FluentValidation;
+using CentralizedApps.HttpClients;
 using CentralizedApps.Middelware;
 using CentralizedApps.Profile_AutoMapper;
 using CentralizedApps.Repositories;
@@ -52,6 +53,12 @@ builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
         sqlOptions => sqlOptions.CommandTimeout(180)
     ));
 
+// HttpClient Fintech
+builder.Services.AddHttpClient<FintechApiClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ExternalApis:FintechApi:BaseUrl"]);
+});
+
 // Repositorios y servicios
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -63,7 +70,11 @@ builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
 builder.Services.AddScoped<IRemidersService, RemidersService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
 builder.Services.AddScoped<IBank, BankService>();
+builder.Services.AddSingleton<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IFintechService, FintechService>();
 
+
+builder.Services.AddDataProtection();
 // Claims / Autenticación
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

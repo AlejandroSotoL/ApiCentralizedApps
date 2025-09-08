@@ -9,7 +9,7 @@ public partial class DocumentType
     public int Id { get; set; }
 
     public string? NameDocument { get; set; }
-
-    [JsonIgnore]
+    
+    [JsonIgnore] 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

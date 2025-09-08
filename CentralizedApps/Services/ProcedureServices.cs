@@ -14,11 +14,13 @@ namespace CentralizedApps.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<MunicipalityServices> _logger;
-        public ProcedureServices(ILogger<MunicipalityServices> logger, IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IPasswordService _passwordService;
+        public ProcedureServices(ILogger<MunicipalityServices> logger, IPasswordService passwordService, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
+            _passwordService = passwordService;
         }
 
 
@@ -50,7 +52,7 @@ namespace CentralizedApps.Services
                 MunicipalityId = queryFieldDto.MunicipalityId,
                 FieldName = queryFieldDto.FieldName,
                 QueryFieldType = queryFieldDto.QueryFieldType
-            
+
             };
             await _unitOfWork.genericRepository<QueryField>().AddAsync(queryField);
             await _unitOfWork.SaveChangesAsync();
@@ -232,6 +234,7 @@ namespace CentralizedApps.Services
                 Name = createCourseDto.Name,
                 Post = createCourseDto.Post,
                 Get = createCourseDto.Get,
+                IsActive = createCourseDto.IsActive
             };
             await _unitOfWork.genericRepository<Course>().AddAsync(course);
             await _unitOfWork.SaveChangesAsync();
@@ -248,6 +251,7 @@ namespace CentralizedApps.Services
                 Get = createSportsFacilityDto.Get,
                 CalendaryPost = createSportsFacilityDto.CalendaryPost,
                 ReservationPost = createSportsFacilityDto.ReservationPost,
+                IsActive = createSportsFacilityDto.IsActive
             };
             await _unitOfWork.genericRepository<SportsFacility>().AddAsync(sportsFacility);
             await _unitOfWork.SaveChangesAsync();
@@ -307,6 +311,7 @@ namespace CentralizedApps.Services
 
             queryField.MunicipalityId = queryField.MunicipalityId;
             queryField.FieldName = updatequeryFieldDto.FieldName;
+            queryField.QueryFieldType = updatequeryFieldDto.QueryFieldType;
             _unitOfWork.genericRepository<QueryFieldDto>().Update(queryField);
             await _unitOfWork.SaveChangesAsync();
 
@@ -392,6 +397,7 @@ namespace CentralizedApps.Services
             SportsFacility.Get = updateSportsFacilityDto.Get;
             SportsFacility.ReservationPost = updateSportsFacilityDto.ReservationPost;
             SportsFacility.CalendaryPost = updateSportsFacilityDto.CalendaryPost;
+            SportsFacility.IsActive = updateSportsFacilityDto.IsActive;
             _unitOfWork.genericRepository<SportsFacility>().Update(SportsFacility);
             await _unitOfWork.SaveChangesAsync();
 
@@ -575,14 +581,29 @@ namespace CentralizedApps.Services
                     }
                 }
 
+                var response = await _unitOfWork.genericRepository<ShieldMunicipality>()
+                .FindAsync_Predicate(x => x.NameOfMunicipality == municipalityDto.NameEscudo);
+
+                if (response == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "Debe de ir a crear el shield en Create/ShieldMuniciaplity"
+                    };
+                }
+
                 // ======= Actualizar datos del municipio =======
                 existingMunicipality.Name = municipalityDto.Name;
+                existingMunicipality.IdShield = response.Id;
+                existingMunicipality.DataPrivacy = municipalityDto.DataPrivacy;
+                existingMunicipality.DataProcessingPrivacy = municipalityDto.DataProcessingPrivacy;
                 existingMunicipality.EntityCode = municipalityDto.EntityCode;
                 existingMunicipality.IsActive = municipalityDto.IsActive;
                 existingMunicipality.Domain = municipalityDto.Domain;
-                existingMunicipality.UserFintech = BCrypt.Net.BCrypt.HashPassword(municipalityDto.UserFintech);
-                existingMunicipality.PasswordFintech = BCrypt.Net.BCrypt.HashPassword(municipalityDto.PasswordFintech);
-
+                existingMunicipality.UserFintech = municipalityDto.UserFintech;
+                existingMunicipality.PasswordFintech = municipalityDto.PasswordFintech;
 
                 if (departmentEntity != null)
                     existingMunicipality.Department = departmentEntity;
@@ -885,7 +906,104 @@ namespace CentralizedApps.Services
                 };
             }
         }
+
+        public async Task<ValidationResponseDto> UpdateStatusCourse(int Id, bool status)
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<Course>()
+                    .FindAsync_Predicate(x => x.Id == Id);
+                if (response == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "No se encontró el curso."
+                    };
+                }
+                response.IsActive = status;
+                _unitOfWork.genericRepository<Course>().Update(response);
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0 && response != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = "Estado del curso actualizado correctamente. " + rows + " filas afectadas."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al actualizar el estado del curso."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al actualizar el estado del curso: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ValidationResponseDto> UpdateStatusSportFacilietes(int id, bool status)
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<SportsFacility>()
+                    .FindAsync_Predicate(x => x.Id == id);
+                if (response == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "No se encontró el Sport."
+                    };
+                }
+                response.IsActive = status;
+                _unitOfWork.genericRepository<SportsFacility>().Update(response);
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0 && response != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = "Estado del Spot actualizado correctamente. " + rows + " filas afectadas."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al actualizar el estado del Sport."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al actualizar el estado del Sport: {ex.Message}"
+                };
+            }
+        }
     }
 }
+
 
 

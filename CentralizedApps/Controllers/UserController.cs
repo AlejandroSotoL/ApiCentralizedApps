@@ -19,13 +19,15 @@ namespace CentralizedApps.Contollers
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly CentralizedAppsDbContext _context;
+        private readonly IPasswordService _passwordService;
 
-        public UserController(IUserService userService, IUnitOfWork unitOfWork, CentralizedAppsDbContext context, IRemidersService remidersService)
+        public UserController(IPasswordService passwordService, IUserService userService, IUnitOfWork unitOfWork, CentralizedAppsDbContext context, IRemidersService remidersService)
         {
             _userService = userService;
             _unitOfWork = unitOfWork;
             _context = context;
             _remidersService = remidersService;
+            _passwordService = passwordService;
         }
 
         [HttpGet]
@@ -56,10 +58,10 @@ namespace CentralizedApps.Contollers
                 return NotFound(new ValidationResponseDto
                 {
                     BooleanStatus = false,
-                    CodeStatus = 400,
+                    CodeStatus = 400,       
                     SentencesError = $"Error: not found"
                 });
-
+            user.Password = _passwordService.Decrypt(user.Password);
             return Ok(user);
         }
 
@@ -183,7 +185,7 @@ namespace CentralizedApps.Contollers
                     SentencesError = "Usuario no encontrado"
                 });
             }
-
+            response.Password = _passwordService.Decrypt(response.Password);
             return Ok(response);
         }
 

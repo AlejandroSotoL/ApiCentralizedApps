@@ -27,6 +27,78 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
+
+        [HttpPut("Update/Status/Course/{id}")]
+        public async Task<ValidationResponseDto> UpdateStatusCourse(int id, bool status)
+        {
+            try
+            {
+                var result = await _ProcedureServices.UpdateStatusCourse(id, status);
+                if (!result.BooleanStatus)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = "Error al actualizar el estado del curso: " + result.SentencesError
+                    };
+                }
+
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = result.BooleanStatus,
+                    CodeStatus = result.CodeStatus,
+                    SentencesError = "Actualizado " + result.SentencesError
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = "Error al actualizar el estado del curso: " + ex.Message
+                };
+            }
+        }
+
+        
+        [HttpPut("Update/Status/SportFacilietes/{id}")]
+        public async Task<ValidationResponseDto> UpdateStatusSportFacilietes(int id, bool status)
+        {
+            try
+            {
+                var result = await _ProcedureServices.UpdateStatusSportFacilietes(id, status);
+                if (!result.BooleanStatus)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = result.BooleanStatus,
+                        CodeStatus = result.CodeStatus,
+                        SentencesError = "Error al actualizar el estado del sport: " + result.SentencesError
+                    };
+                }
+
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = result.BooleanStatus,
+                    CodeStatus = result.CodeStatus,
+                    SentencesError = "Actualizado " + result.SentencesError
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = "Error al actualizar el estado del sport: " + ex.Message
+                };
+            }
+        }
+
         // PUT
         [HttpPut("Update/NewTheme/{id}")]
         public async Task<ValidationResponseDto> UpdateTheme(int id, ThemeDto procedureDto)

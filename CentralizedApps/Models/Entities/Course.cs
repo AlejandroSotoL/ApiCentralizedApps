@@ -15,5 +15,7 @@ public partial class Course
 
     public int? MunicipalityId { get; set; }
 
+    public bool? IsActive { get; set; }
+
     public virtual Municipality? Municipality { get; set; }
 }

@@ -83,6 +83,7 @@ namespace CentralizedApps.Controllers
                         SentencesError = "No se encontraron municipios con relaciones."
                     });
                 }
+                
                 return Ok(response);
             }
             catch (Exception ex)
@@ -112,6 +113,7 @@ namespace CentralizedApps.Controllers
                         SentencesError = "No se encontraron municipios con relaciones."
                     });
                 }
+                
                 return Ok(relations);
             }
             catch (Exception ex)
@@ -140,9 +142,5 @@ namespace CentralizedApps.Controllers
             }
             return Ok(response);
         }
-
-       
-
-
     }
 }
