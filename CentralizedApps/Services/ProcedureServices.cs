@@ -1000,6 +1000,53 @@ namespace CentralizedApps.Services
                 };
             }
         }
+
+        public async Task<ValidationResponseDto> UpdateStatusMunicipality(int id, bool status)
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<Municipality>()
+                    .FindAsync_Predicate(x => x.Id == id);
+                if (response == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        SentencesError = "El Municipio no existe",
+                        BooleanStatus = false
+                    };
+                }
+                response.IsActive = status;
+                _unitOfWork.genericRepository<Municipality>().Update(response);
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0 && response != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = $"Estado del Municipio ${response.Name} esta Actualizado correctamente. " + rows + " filas afectadas."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = $"Error al actualizar el Municipio ${response?.Name}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al actualizar el estado del Sport: {ex.Message}"
+                };
+            }
+        }
     }
 }
 

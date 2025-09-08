@@ -139,8 +139,8 @@ namespace CentralizedApps.Controllers
             }
         }
 
-[HttpDelete("User/{idUser}/History/{idHistory}")]
-        public async Task<ValidationResponseDto> deletePaymentHistory(int idUser , int  idHistory )
+        [HttpDelete("User/{idUser}/History/{idHistory}")]
+        public async Task<ValidationResponseDto> deletePaymentHistory(int idUser, int idHistory)
         {
             try
             {
@@ -155,7 +155,7 @@ namespace CentralizedApps.Controllers
                 }
 
 
-                var result = await _paymentHistoryService.DeletePaymentHistory(idUser , idHistory);
+                var result = await _paymentHistoryService.DeletePaymentHistory(idUser, idHistory);
                 if (!result.BooleanStatus)
                 {
                     return new ValidationResponseDto
@@ -185,6 +185,6 @@ namespace CentralizedApps.Controllers
                 };
             }
         }
-    
+
     }
 }

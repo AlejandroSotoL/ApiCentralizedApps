@@ -6,8 +6,6 @@ namespace CentralizedApps.Models.Dtos
 {
     public class CreatePaymentHistoryDto
     {
-        
-
         public int? UserId { get; set; }
 
         public decimal? Amount { get; set; }
