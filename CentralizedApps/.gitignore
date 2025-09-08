@@ -1,63 +1,27 @@
-# Compilación .NET
-/bin/
-/obj/
-
-# Configuración IDE
-.vscode/
-.idea/
-
-# Archivos temporales
-*.user
+# Visual Studio
+.vs/
 *.suo
+*.user
+*.userosscache
+*.dbmdl
+*.bak
 *.log
-*.tmp
-*.cache
-# Compilados
-bin/
-obj/
+
+# Build results
+[Bb]in/
+[Oo]bj/
 *.dll
 *.exe
-*.pdb
-
-# Configuración de usuario de Visual Studio
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Archivos de depuración y cache
-*.log
 *.cache
-*.csproj.FileListAbsolute.txt
-*.dbmdl
+*.pdb
+*.mdb
 
-# Archivos generados
-*.apphost.exe
-*.sourceinfo
-*.swagger.json
-*.swagger.yaml
-
-# DotCover, ReSharper
-_ReSharper*/
-*.DotSettings.user
-
-# Archivos de publicación
-.publish/
-
-# Paquetes NuGet
+# NuGet
 *.nupkg
 *.snupkg
-.nuget/
+*.nuspec
+*.nuget.props
+*.nuget.targets
 
-# Config de Rider
-.idea/
-
-# VS Code
-.vscode/
-
-# Logs
-*.log
-
-# Otros temporales
-*.tmp
-*.temp
+# Publish profiles (opcional, si no quieres versionarlos)
+CentralizedApps/Properties/PublishProfiles/*.pubxml
