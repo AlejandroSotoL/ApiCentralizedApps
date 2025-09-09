@@ -81,7 +81,7 @@ public class UserService : IUserService
             NationalId = dto.NationalId,
             DocumentTypeId = dto.DocumentTypeId,
             Email = dto.Email,
-            Password = _passwordService.Encrypt(dto.Password),
+            Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             BirthDate = dto.BirthDate,
             PhoneNumber = dto.PhoneNumber,
             Address = dto.Address,
