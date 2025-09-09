@@ -13,12 +13,10 @@ public class UserService : IUserService
     private readonly IUnitOfWork _unitOfWork;
     private readonly CentralizedAppsDbContext _context;
 
-    private readonly IPasswordService _passwordService;
-    public UserService(IPasswordService passwordService, IUnitOfWork unitOfWork, CentralizedAppsDbContext context)
+    public UserService( IUnitOfWork unitOfWork, CentralizedAppsDbContext context)
     {
         _unitOfWork = unitOfWork;
         _context = context;
-        _passwordService = passwordService;
     }
 
     public async Task<ValidationResponseDto> ChangeStatusUser(int userId, bool? status)
@@ -109,20 +107,23 @@ public class UserService : IUserService
                 };
             }
 
-            bool isValid = BCrypt.Net.BCrypt.Verify(currentlyUser.Password, updatePasswordRequestDto.CurrentPassword);
-            if (!isValid) {
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(updatePasswordRequestDto.CurrentPassword, currentlyUser.Password);
+            if (!isPasswordValid) {
                 return new ValidationResponseDto
                 {
                     BooleanStatus = false,
-                    SentencesError = "Contraseña actual es incorrecta"
+                    CodeStatus = 400,
+                    SentencesError = $"La Contraseña actual es incorrecta"
                 };
             }
 
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(updatePasswordRequestDto.NewPassword);
-            currentlyUser.Password = hashedPassword;
+            var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(updatePasswordRequestDto.NewPassword);
+
+        
+            currentlyUser.Password = hashedNewPassword;
             _unitOfWork.genericRepository<User>().Update(currentlyUser);
             var rows = await _unitOfWork.SaveChangesAsync();
-            if (rows > 0)
+            if (rows > 0 && isPasswordValid)
             {
                 return new ValidationResponseDto
                 {

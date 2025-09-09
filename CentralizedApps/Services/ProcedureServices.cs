@@ -14,13 +14,11 @@ namespace CentralizedApps.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<MunicipalityServices> _logger;
-        private readonly IPasswordService _passwordService;
-        public ProcedureServices(ILogger<MunicipalityServices> logger, IPasswordService passwordService, IUnitOfWork unitOfWork, IMapper mapper)
+        public ProcedureServices(ILogger<MunicipalityServices> logger, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
-            _passwordService = passwordService;
         }
 
 

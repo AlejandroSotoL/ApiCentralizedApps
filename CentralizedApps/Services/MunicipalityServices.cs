@@ -14,13 +14,11 @@ namespace CentralizedApps.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<MunicipalityServices> _logger;
-        private readonly IPasswordService _passwordService;
-        public MunicipalityServices(ILogger<MunicipalityServices> logger, IPasswordService passwordService, IUnitOfWork unitOfWork, IMapper mapper)
+        public MunicipalityServices(ILogger<MunicipalityServices> logger, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
-            _passwordService = passwordService;
         }
 
 public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipalityDto dto)
@@ -258,18 +256,6 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                 {
                     return null;
                 }
-                //   decrypt 
-                var transformedEntities = entities
-                    .Select(e =>
-                    {
-                        if (!string.IsNullOrEmpty(e.PasswordFintech) && !string.IsNullOrEmpty(e.UserFintech))
-                        {
-                            e.PasswordFintech = e.PasswordFintech;
-                            e.UserFintech = e.UserFintech;
-                        }
-                        return e;
-                    })
-                    .ToList();
                 return _mapper.Map<List<GetMunicipalitysDto>>(entities);
             }
             catch (Exception ex)
@@ -304,13 +290,7 @@ public async Task<ValidationResponseDto> AddMunicipalityAsync(CompleteMunicipali
                 {
                     return null;
                 }
-                //   decrypt 
-                if (!string.IsNullOrEmpty(entity.PasswordFintech) && !string.IsNullOrEmpty(entity.UserFintech))
-                {
-                    entity.PasswordFintech = entity.PasswordFintech;
-                    entity.UserFintech = entity.UserFintech;
-                    
-                }
+                
                 return _mapper.Map<GetMunicipalitysDto>(entity);
             }
             catch (Exception ex)

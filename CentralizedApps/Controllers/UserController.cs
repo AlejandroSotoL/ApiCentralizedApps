@@ -19,15 +19,13 @@ namespace CentralizedApps.Contollers
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly CentralizedAppsDbContext _context;
-        private readonly IPasswordService _passwordService;
 
-        public UserController(IPasswordService passwordService, IUserService userService, IUnitOfWork unitOfWork, CentralizedAppsDbContext context, IRemidersService remidersService)
+        public UserController(IUserService userService, IUnitOfWork unitOfWork, CentralizedAppsDbContext context, IRemidersService remidersService)
         {
             _userService = userService;
             _unitOfWork = unitOfWork;
             _context = context;
             _remidersService = remidersService;
-            _passwordService = passwordService;
         }
 
         [HttpGet]
