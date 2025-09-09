@@ -25,7 +25,6 @@ namespace CentralizedApps.Repositories
             var listpaymentHistoryUser = await _context.PaymentHistories
                 .Where(filtro)
                 .Include(pa => pa.User)
-                .Include(pa => pa.Municipality)
                 .Include(pa => pa.StatusTypeNavigation)
                 .Include(pa => pa.MunicipalityProcedures)
                     .ThenInclude(mp => mp.Procedures)
@@ -36,7 +35,6 @@ namespace CentralizedApps.Repositories
                     Status = pa.Status,
                     PaymentDate = pa.PaymentDate,
                     UserFirtName = pa.User!.FirstName,
-                    MunicipalityName = pa.Municipality!.Name,
                     StatusType = pa.StatusTypeNavigation!.TypeStatus,
                     ProcedureName = pa.MunicipalityProcedures!.Procedures!.Name
                 })
@@ -49,7 +47,6 @@ namespace CentralizedApps.Repositories
         {
             var paymentHistoryUser = await _context.PaymentHistories
             .Include(p => p.User)
-            .Include(p => p.Municipality)
             .Include(p => p.StatusTypeNavigation)
             .Include(p => p.MunicipalityProcedures)
                 .ThenInclude(mp => mp.Procedures)

@@ -70,11 +70,9 @@ builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
 builder.Services.AddScoped<IRemidersService, RemidersService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
 builder.Services.AddScoped<IBank, BankService>();
-builder.Services.AddSingleton<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IFintechService, FintechService>();
 
 
-builder.Services.AddDataProtection();
 // Claims / Autenticación
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

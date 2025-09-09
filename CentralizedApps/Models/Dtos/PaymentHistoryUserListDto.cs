@@ -13,8 +13,6 @@ namespace CentralizedApps.Models.Dtos
 
         public bool? Status { get; set; }
 
-        public String? MunicipalityName { get; set; }
-
         public String? ProcedureName { get; set; }
 
         public String? StatusType { get; set; }

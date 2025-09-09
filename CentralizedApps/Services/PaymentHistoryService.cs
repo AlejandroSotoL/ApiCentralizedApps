@@ -29,7 +29,6 @@ namespace CentralizedApps.Services
                 Amount = paymentHistoryDto.Amount,
                 PaymentDate = paymentHistoryDto.PaymentDate,
                 Status = paymentHistoryDto.Status,
-                MunicipalityId = paymentHistoryDto.MunicipalityId,
                 StatusType = paymentHistoryDto.StatusType,
                 MunicipalityProceduresId = paymentHistoryDto.MunicipalityProceduresId
             

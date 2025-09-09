@@ -2,8 +2,8 @@
 <!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Users\PERSONAL\Desktop\API-CENTRALIZATE</_PublishTargetUrl>
-    <History>True|2025-07-21T20:45:16.8860032Z||;True|2025-07-21T11:23:01.9894245-06:00||;</History>
+    <_PublishTargetUrl>C:\Users\PERSONAL\Desktop\101-SOFTWARE\TryDespliegues\Centralizated\API</_PublishTargetUrl>
+    <History>True|2025-09-08T22:34:44.8347335Z||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

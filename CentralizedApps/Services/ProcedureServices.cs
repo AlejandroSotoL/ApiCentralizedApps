@@ -14,13 +14,11 @@ namespace CentralizedApps.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<MunicipalityServices> _logger;
-        private readonly IPasswordService _passwordService;
-        public ProcedureServices(ILogger<MunicipalityServices> logger, IPasswordService passwordService, IUnitOfWork unitOfWork, IMapper mapper)
+        public ProcedureServices(ILogger<MunicipalityServices> logger, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
-            _passwordService = passwordService;
         }
 
 
@@ -594,7 +592,7 @@ namespace CentralizedApps.Services
                     };
                 }
 
-                // ======= Actualizar datos del municipio =======
+
                 existingMunicipality.Name = municipalityDto.Name;
                 existingMunicipality.IdShield = response.Id;
                 existingMunicipality.DataPrivacy = municipalityDto.DataPrivacy;
@@ -989,6 +987,53 @@ namespace CentralizedApps.Services
                         BooleanStatus = false,
                         CodeStatus = 500,
                         SentencesError = "Error al actualizar el estado del Sport."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al actualizar el estado del Sport: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ValidationResponseDto> UpdateStatusMunicipality(int id, bool status)
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<Municipality>()
+                    .FindAsync_Predicate(x => x.Id == id);
+                if (response == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        SentencesError = "El Municipio no existe",
+                        BooleanStatus = false
+                    };
+                }
+                response.IsActive = status;
+                _unitOfWork.genericRepository<Municipality>().Update(response);
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0 && response != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = $"Estado del Municipio ${response.Name} esta Actualizado correctamente. " + rows + " filas afectadas."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = $"Error al actualizar el Municipio ${response?.Name}"
                     };
                 }
             }

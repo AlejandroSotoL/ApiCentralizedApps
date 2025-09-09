@@ -65,11 +65,11 @@ namespace CentralizedApps.Controllers
                 };
 
                 var responseAuthentication = await _fintechService.AuthenticateFintechAsyn(request);
-
                 if (responseAuthentication == null || !responseAuthentication.isSuccess)
                 {
                     return BadRequest(responseAuthentication);
                 }
+
                 var responseTransaction = await _fintechService.transactionFintech(
                     transactionFintech,
                     responseAuthentication.result

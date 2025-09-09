@@ -54,12 +54,11 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Availibity>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Availibi__3214EC0769E16E7A");
+            entity.HasKey(e => e.Id).HasName("PK__Availibi__3214EC079EA7351B");
 
             entity.ToTable("Availibity");
 
@@ -70,7 +69,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<Bank>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Banks__3214EC07FFE9D6AE");
+            entity.HasKey(e => e.Id).HasName("PK__Banks__3214EC076E2351C2");
 
             entity.Property(e => e.NameBank)
                 .HasMaxLength(100)
@@ -79,7 +78,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<ConfiguracionEmail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Configur__3214EC075FE051B3");
+            entity.HasKey(e => e.Id).HasName("PK__Configur__3214EC071746A4A8");
 
             entity.HasIndex(e => e.Recurso, "IX_ConfiguracionEmails_Recurso");
 
@@ -93,7 +92,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<Course>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Courses__3214EC078E6DAF47");
+            entity.HasKey(e => e.Id).HasName("PK__Courses__3214EC0745626093");
 
             entity.Property(e => e.Get)
                 .HasMaxLength(200)
@@ -112,7 +111,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<Department>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Departme__3214EC078392F4F6");
+            entity.HasKey(e => e.Id).HasName("PK__Departme__3214EC077E127F4D");
 
             entity.ToTable("Department");
 
@@ -123,7 +122,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<DocumentType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Document__3214EC07EE8D0B90");
+            entity.HasKey(e => e.Id).HasName("PK__Document__3214EC0726D04F76");
 
             entity.ToTable("DocumentType");
 
@@ -134,7 +133,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<Municipality>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Municipa__3214EC07D1CB81CE");
+            entity.HasKey(e => e.Id).HasName("PK__Municipa__3214EC071DD7A1B5");
 
             entity.ToTable("Municipality");
 
@@ -151,12 +150,8 @@ public partial class CentralizedAppsDbContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.PasswordFintech)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.UserFintech)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            entity.Property(e => e.PasswordFintech).IsUnicode(false);
+            entity.Property(e => e.UserFintech).IsUnicode(false);
 
             entity.HasOne(d => d.Department).WithMany(p => p.Municipalities)
                 .HasForeignKey(d => d.DepartmentId)
@@ -177,7 +172,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<MunicipalityProcedure>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Municipa__3214EC07A2CEECA9");
+            entity.HasKey(e => e.Id).HasName("PK__Municipa__3214EC076C24F272");
 
             entity.ToTable("Municipality_Procedures");
 
@@ -195,7 +190,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<MunicipalitySocialMedium>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Municipa__3214EC0709387C37");
+            entity.HasKey(e => e.Id).HasName("PK__Municipa__3214EC07E96DD4D8");
 
             entity.ToTable("Municipality_SocialMedia");
 
@@ -216,7 +211,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<NewsByMunicipality>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__NewsByMu__3214EC0722834A37");
+            entity.HasKey(e => e.Id).HasName("PK__NewsByMu__3214EC0739F52F8D");
 
             entity.ToTable("NewsByMunicipality");
 
@@ -233,15 +228,11 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<PaymentHistory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PaymentH__3214EC07136307CD");
+            entity.HasKey(e => e.Id).HasName("PK__PaymentH__3214EC075FA5E01E");
 
             entity.ToTable("PaymentHistory");
 
             entity.Property(e => e.Amount).HasColumnType("decimal(10, 3)");
-
-            entity.HasOne(d => d.Municipality).WithMany(p => p.PaymentHistories)
-                .HasForeignKey(d => d.MunicipalityId)
-                .HasConstraintName("FK_PaymentHistory_ToMunicipality");
 
             entity.HasOne(d => d.MunicipalityProcedures).WithMany(p => p.PaymentHistories)
                 .HasForeignKey(d => d.MunicipalityProceduresId)
@@ -259,7 +250,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<Procedure>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Procedur__3214EC0731F76909");
+            entity.HasKey(e => e.Id).HasName("PK__Procedur__3214EC0730A3AA44");
 
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
@@ -268,7 +259,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<QueryField>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__QueryFie__3214EC0784B181D2");
+            entity.HasKey(e => e.Id).HasName("PK__QueryFie__3214EC07EAD80CA7");
 
             entity.ToTable("QueryField");
 
@@ -288,7 +279,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<Reminder>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC071AECE808");
+            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC071C6C06DC");
 
             entity.Property(e => e.IdProcedureMunicipality).HasColumnName("Id_Procedure_Municipality");
             entity.Property(e => e.IdUser).HasColumnName("Id_User");
@@ -310,7 +301,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<ShieldMunicipality>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Shield_M__3214EC0771B5A892");
+            entity.HasKey(e => e.Id).HasName("PK__Shield_M__3214EC07D9AF921B");
 
             entity.ToTable("Shield_Municipality");
 
@@ -322,7 +313,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<SocialMediaType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SocialMe__3214EC07645744B3");
+            entity.HasKey(e => e.Id).HasName("PK__SocialMe__3214EC070AD863DD");
 
             entity.ToTable("SocialMediaType");
 
@@ -333,7 +324,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<SportsFacility>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SportsFa__3214EC0755B442C9");
+            entity.HasKey(e => e.Id).HasName("PK__SportsFa__3214EC07E8D291ED");
 
             entity.Property(e => e.CalendaryPost)
                 .HasMaxLength(200)
@@ -355,7 +346,7 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<Theme>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Theme__3214EC07D2DB093C");
+            entity.HasKey(e => e.Id).HasName("PK__Theme__3214EC07A0471F31");
 
             entity.ToTable("Theme");
 
@@ -384,7 +375,11 @@ public partial class CentralizedAppsDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC0797A80A61");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07F1C5A2AE");
+
+            entity.HasIndex(e => e.NationalId, "UQ_Users_Cedula").IsUnique();
+
+            entity.HasIndex(e => e.Email, "UQ_Users_Email").IsUnique();
 
             entity.Property(e => e.Address)
                 .HasMaxLength(222)

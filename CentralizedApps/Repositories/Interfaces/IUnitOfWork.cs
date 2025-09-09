@@ -10,7 +10,6 @@ namespace CentralizedApps.Repositories.Interfaces
         IAuthRepository AuthRepositoryUnitOfWork { get; }
         IUserRepository UserRepository { get; }
         IPaymentHistoryRepository paymentHistoryRepository{ get; }
-
         //Email
         IConfigurationEmail configurationEmail { get; }
 
