@@ -19,6 +19,12 @@ public partial class PaymentHistory
 
     public int? StatusType { get; set; }
 
+    public string? Idimpuesto { get; set; }
+
+    public string? Factura { get; set; }
+
+    public string? CodigoEntidad { get; set; }
+
     public virtual MunicipalityProcedure? MunicipalityProcedures { get; set; }
 
     public virtual Availibity? StatusTypeNavigation { get; set; }

@@ -151,9 +151,9 @@ namespace CentralizedApps.Controllers
             return result;
         }
         [HttpPut("Update/ProcedureStatus/{id}")]
-        public async Task<ValidationResponseDto> UpdateProcedureStatus(int id, [FromQuery] bool ?status)
+        public async Task<ValidationResponseDto> UpdateProcedureStatus(int id, [FromQuery] bool ?status , [FromQuery] string IntegrationType)
         {
-            if (id <= 0 || status == null)
+            if (id <= 0 || status == null || IntegrationType == null)
             {
                 return new ValidationResponseDto
                 {
@@ -165,7 +165,7 @@ namespace CentralizedApps.Controllers
 
             try
             {
-                var result = await _ProcedureServices.UpdateProcedureStatus(id, status.Value);
+                var result = await _ProcedureServices.UpdateProcedureStatus(id, status.Value, IntegrationType);
                 return new ValidationResponseDto
                 {
                     BooleanStatus = result.BooleanStatus,

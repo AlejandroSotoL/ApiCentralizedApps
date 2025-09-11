@@ -30,8 +30,10 @@ namespace CentralizedApps.Services
                 PaymentDate = paymentHistoryDto.PaymentDate,
                 Status = paymentHistoryDto.Status,
                 StatusType = paymentHistoryDto.StatusType,
-                MunicipalityProceduresId = paymentHistoryDto.MunicipalityProceduresId
-            
+                MunicipalityProceduresId = paymentHistoryDto.MunicipalityProceduresId,
+                Idimpuesto = paymentHistoryDto.Idimpuesto,
+                Factura = paymentHistoryDto.Factura,
+                CodigoEntidad = paymentHistoryDto.CodigoEntidad
 
             };
             await _unitOfWork.paymentHistoryRepository.AddAsync(paymentHistory);

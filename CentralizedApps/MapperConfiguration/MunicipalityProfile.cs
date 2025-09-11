@@ -16,10 +16,8 @@ namespace CentralizedApps.Profile_AutoMapper
                 .ForMember(dest => dest.Bank, opt => opt.MapFrom(src => src.IdBankNavigation))
                 .ForMember(dest => dest.IdShield, opt => opt.MapFrom(src => src.IdShieldNavigation))
                 .ReverseMap();
-            
-
-            CreateMap<User, UserDto_Munucipality>().ReverseMap();
-
+                
+            CreateMap<CreatePeopleInvitated, PeopleInvitated>().ReverseMap();
             // Remiders
             CreateMap<Reminder, ResponseReminderDto>().ReverseMap();
             CreateMap<Reminder, CreateReminderDto>().ReverseMap();

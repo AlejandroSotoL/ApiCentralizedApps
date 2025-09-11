@@ -24,8 +24,6 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenAnyIP(7081, listenOptions => listenOptions.UseHttps());
 });
 
-
-
 // FluentValidation
 builder.Services
     .AddFluentValidationAutoValidation()
@@ -66,6 +64,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMunicipalityServices, MunicipalityServices>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IPeopleInvitated, PeopleInvitated>();
 builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
 builder.Services.AddScoped<IRemidersService, RemidersService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();

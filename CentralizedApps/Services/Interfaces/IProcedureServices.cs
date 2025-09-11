@@ -30,7 +30,7 @@ namespace CentralizedApps.Services.Interfaces
         Task<ValidationResponseDto> UpdateStatusMunicipality(int id, bool status);
         Task<ValidationResponseDto> UpdateStatusSportFacilietes(int id , bool status);
         Task<ValidationResponseDto> UpdateStatusCourse(int Id, bool status);
-        Task<ValidationResponseDto> UpdateProcedureStatus(int Id , bool status);
+        Task<ValidationResponseDto> UpdateProcedureStatus(int Id , bool status , string IntegrationType);
         Task<ValidationResponseDto> updateNews(int id, NewsByMunicipalityDto newsByMunicipalityDto);
         Task<ValidationResponseDto> UpdateMunicipality(int Id , CompleteMunicipalityDto MunicipalityDTO);
         Task<ValidationResponseDto> UpdateTheme(int Id, ThemeDto procedureDto);
