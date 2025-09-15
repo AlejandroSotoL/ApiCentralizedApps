@@ -66,7 +66,7 @@ builder.Services.AddScoped<IMunicipalityServices, MunicipalityServices>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPeopleInvitated, PeopleInvitated>();
 builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
-builder.Services.AddScoped<IRemidersService, RemidersService>();
+builder.Services.AddScoped<IRemidersService, RemindersService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
 builder.Services.AddScoped<IBank, BankService>();
 builder.Services.AddScoped<IFintechService, FintechService>();

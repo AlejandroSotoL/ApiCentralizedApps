@@ -3,7 +3,6 @@ using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Models.RemidersDto;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace CentralizedApps.Profile_AutoMapper
 {
@@ -11,16 +10,25 @@ namespace CentralizedApps.Profile_AutoMapper
     {
         public MunicipalityProfile()
         {
+
+            //Avilibity
+            CreateMap<Availibity, AvailibityDto>().ReverseMap();
             // Municipios
             CreateMap<Municipality, GetMunicipalitysDto>()
                 .ForMember(dest => dest.Bank, opt => opt.MapFrom(src => src.IdBankNavigation))
                 .ForMember(dest => dest.IdShield, opt => opt.MapFrom(src => src.IdShieldNavigation))
                 .ReverseMap();
-                
+            CreateMap<Procedure, ProcedureDto>().ReverseMap();
             CreateMap<CreatePeopleInvitated, PeopleInvitated>().ReverseMap();
-            // Remiders
+
+            // Reminders
             CreateMap<Reminder, ResponseReminderDto>().ReverseMap();
             CreateMap<Reminder, CreateReminderDto>().ReverseMap();
+
+            // 🔹 Faltaban estos
+            CreateMap<User, UserDto_Munucipality>().ReverseMap();
+            CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>().ReverseMap();
+            CreateMap<MunicipalityProcedure, MunicipalityProcedureDto_Reminders>().ReverseMap();
 
             CreateMap<Municipality, JustMunicipalitysDto>().ReverseMap();
 
@@ -44,13 +52,11 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Course, CourseDto>().ReverseMap();
 
             // Trámites
-            CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>().ReverseMap();
-            CreateMap<Procedure, ProcedureDto>().ReverseMap();
             CreateMap<MunicipalityProcedureAddDto, MunicipalityProcedure>();
 
             // Redes sociales
             CreateMap<MunicipalitySocialMedium, MunicipalitySocialMediaDto>().ReverseMap();
-            CreateMap<MunicipalitySocialMedium, MunicipalitySocialMeditaDto_Response>().ReverseMap(); // revisar si el nombre es correcto
+            CreateMap<MunicipalitySocialMedium, MunicipalitySocialMeditaDto_Response>().ReverseMap();
             CreateMap<SocialMediaType, SocialMediaTypeDto>().ReverseMap();
 
             // Disponibilidad

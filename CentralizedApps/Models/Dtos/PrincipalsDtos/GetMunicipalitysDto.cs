@@ -108,7 +108,6 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string IntegrationType { get; set; }
         public bool? IsActive { get; set; }
         public ProcedureDto? Procedures { get; set; }
-
     }
 
     public class ProcedureDto

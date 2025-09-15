@@ -12,18 +12,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CentralizedApps.Services
 {
-    public class RemidersService : IRemidersService
+    public class RemindersService : IRemidersService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<MunicipalityServices> _logger;
-        public RemidersService(ILogger<MunicipalityServices> logger, IUnitOfWork unitOfWork, IMapper mapper)
+
+        public RemindersService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _logger = logger;
             _mapper = mapper;
         }
-
 
         public async Task<ValidationResponseDto> createReminders(CreateReminderDto createReminderDto)
         {
@@ -42,6 +40,9 @@ namespace CentralizedApps.Services
             }
             catch (Exception ex)
             {
+                // loguear error
+                Console.WriteLine($"[ERROR] CreateReminders: {ex}");
+
                 return new ValidationResponseDto
                 {
                     BooleanStatus = false,
@@ -55,22 +56,22 @@ namespace CentralizedApps.Services
         {
             try
             {
+                var entities = await _unitOfWork.genericRepository<Reminder>()
+                    .GetAllWithNestedIncludesAsync(query =>
+                        query.Include(r => r.IdProcedureMunicipalityNavigation)
+                                .ThenInclude(pm => pm.Procedures)
+                             .Include(r => r.IdProcedureMunicipalityNavigation)
+                                .ThenInclude(pm => pm.Municipality)
+                             .Include(r => r.IdUserNavigation)
+                    );
 
-                var entities = await _unitOfWork.genericRepository<Reminder>().GetAllWithNestedIncludesAsync(query =>
-                    query
-                        .Include(r => r.IdProcedureMunicipalityNavigation)!
-                            .ThenInclude(pm => pm.Procedures)!
-                        .Include(r => r.IdUserNavigation)!
-                        .Include(r => r.IdProcedureMunicipalityNavigation)
-                            .ThenInclude(pm => pm.Municipality)
-                );
-
-                if (entities == null || !entities.Any())
-                    return new List<ResponseReminderDto>();
-                return _mapper.Map<List<ResponseReminderDto>>(entities);
+                return entities.Any()
+                    ? _mapper.Map<List<ResponseReminderDto>>(entities)
+                    : new List<ResponseReminderDto>();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"[ERROR] GetReminders: {ex}");
                 return new List<ResponseReminderDto>();
             }
         }
@@ -79,23 +80,24 @@ namespace CentralizedApps.Services
         {
             try
             {
-                var entities = await _unitOfWork.genericRepository<Reminder>().GetAllWithNestedIncludesAsync(query =>
-                    query
-                                .Where(r => r.IdUser == userId)
-                                .Include(r => r.IdProcedureMunicipalityNavigation)
-                                    .ThenInclude(pm => pm.Procedures)
-                                .Include(r => r.IdProcedureMunicipalityNavigation)
-                                    .ThenInclude(pm => pm.Municipality)
-                                .Include(r => r.IdUserNavigation)
-                        );
+                var entities = await _unitOfWork.genericRepository<Reminder>()
+                    .GetAllWithNestedIncludesAsync(query =>
+                        query
+                        .Where(r => r.IdUser == userId)
+                             .Include(r => r.IdProcedureMunicipalityNavigation)
+                                .ThenInclude(pm => pm.Procedures)
+                             .Include(r => r.IdProcedureMunicipalityNavigation)
+                                .ThenInclude(pm => pm.Municipality)
+                             .Include(r => r.IdUserNavigation)
+                    );
 
-                if (entities == null || !entities.Any())
-                    return new List<ResponseReminderDto>();
-
-                return _mapper.Map<List<ResponseReminderDto>>(entities);
+                return entities.Any()
+                    ? _mapper.Map<List<ResponseReminderDto>>(entities)
+                    : new List<ResponseReminderDto>();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"[ERROR] GetRemindersByUserId: {ex}");
                 return new List<ResponseReminderDto>();
             }
         }
