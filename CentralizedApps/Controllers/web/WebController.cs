@@ -17,10 +17,25 @@ namespace CentralizedApps.Controllers.web
             _unitOfWork = unitOfWork;
         }
 
-        // Mostrar el formulario
         [HttpGet]
+        public async Task<List<ShieldMunicipality>> GetShieldMunicipalities()
+        {
+            var response = await _unitOfWork.genericRepository<ShieldMunicipality>().GetAllAsync();
+            if (response != null)
+            {
+                return response.ToList();
+            }
+            else
+            {
+                return new List<ShieldMunicipality>();
+
+            }
+        }
+
+
         [HttpPost]
-        public async Task<IActionResult> SubirImagen(string municipio, [FromForm] IFormFile archivo)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddImage(string municipio, [FromForm] IFormFile archivo)
         {
             if (HttpContext.Request.Method == "GET")
             {
@@ -33,19 +48,16 @@ namespace CentralizedApps.Controllers.web
                 return View();
             }
 
-            // Sanitizar municipio
             municipio = municipio.Trim();
             foreach (var c in Path.GetInvalidFileNameChars())
                 municipio = municipio.Replace(c, '_');
 
-            // Carpeta base fuera de wwwroot
             string carpetaBase = Path.Combine(_env.WebRootPath, "Uploads");
             string pathCarpeta = Path.Combine(carpetaBase, municipio);
 
             if (!Directory.Exists(pathCarpeta))
                 Directory.CreateDirectory(pathCarpeta);
 
-            // Validar extensión
             var extension = Path.GetExtension(archivo.FileName).ToLower();
             string[] permitidos = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
 
@@ -55,20 +67,16 @@ namespace CentralizedApps.Controllers.web
                 return View();
             }
 
-            // Nombre único
             string nombreBase = Path.GetFileNameWithoutExtension(archivo.FileName);
             string nombreArchivo = $"{nombreBase}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}";
             string pathArchivo = Path.Combine(pathCarpeta, nombreArchivo);
             var remoteIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            // Guardar en disco
             using (var stream = new FileStream(pathArchivo, FileMode.Create))
                 await archivo.CopyToAsync(stream);
 
-            // La URL la manejas tú (si decides exponerla)
             string url = $"{Request.Scheme}://{Request.Host}/uploads/{municipio}/{nombreArchivo}";
 
-            // Guardar en DB
             var shieldMunicipality = new ShieldMunicipality
             {
                 NameOfMunicipality = municipio,
@@ -81,9 +89,14 @@ namespace CentralizedApps.Controllers.web
             ViewBag.Mensaje = $"Imagen subida correctamente curretly url ${remoteIpAddress}";
             ViewBag.Url = url;
 
-            return View();
+            return View(GetShieldMunicipalities());
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SubirImagen()
+        {
+            return View(GetShieldMunicipalities().Result);
+        }
     }
 }
 
