@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html data-theme="light">
+<html data-theme="light" lang="es">
 
 <head>
     <meta charset="utf-8" />
@@ -8,35 +8,46 @@
     <link rel="stylesheet" href="~/css/output.css" />
 </head>
 
-<body>
-    <button id="toggle-theme" class="btn btn-primary">Cambiar tema</button>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Inicio</a></li>
-                <li><a href="/Dashboard">Dashboard</a></li>
-                <li><a href="/Home/Index">Vista 1</a></li>
-                <li><a href="/Web/SubirImagen">Subir Imagen</a></li>
-            </ul>
-        </nav>
-    </header>
+<body class="bg-base-200 text-base-content min-h-screen">
+    <div class="drawer drawer-end lg:drawer-open">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col">
+            <header class="navbar bg-base-100 shadow-md">
+                <div class="flex-1 text-center">
+                    <h1 class="text-lg font-bold">Administración</h1>
+                </div>
+                <div class="flex flex-col border-4">
+                    <button id="toggle-theme" class="btn btn-ghost">Cambiar tema</button>
+                    <details class="dropdown">
+                        <summary class="btn m-1">Opciones Administrativas</summary>
+                        <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                            <li><a href="/Web/SubirImagen">Escudos Alcaldia</a></li>
+                            <li><a href="/Web/EnDesarrollo">En Desarrollo</a></li>
+                        </ul>
+                    </details>
+                </div>
+            </header>
 
-    <main>
-        @RenderBody()
-    </main>
+            <main class="flex-1 p-6">
+                @RenderBody()
+            </main>
 
-    <footer>
-        <p>&copy; 2025 - 1cero1 Software - CENTRALIZATED</p>
-    </footer>
+            <footer class="footer footer-center bg-base-300 text-base-content p-4 text-center">
+                <div>
+                    <p>&copy; 2025 - 1cero1 Software - CENTRALIZACION</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
     <script src="/_framework/aspnetcore-browser-refresh.js"></script>
-
     <script>
-        const button = document.getElementById('toggle-theme');
-        button.addEventListener('click', () => {
+        const themeButton = document.getElementById('toggle-theme');
+        themeButton.addEventListener('click', () => {
             const html = document.documentElement;
-            html.dataset.theme = html.dataset.theme === 'light' ? 'dark' : 'light';
+            const currentTheme = html.getAttribute('data-theme');
+            html.setAttribute('data-theme', currentTheme === 'light' ? 'dark' : 'light');
         });
     </script>
 </body>
-
 </html>
