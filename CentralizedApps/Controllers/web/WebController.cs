@@ -65,7 +65,7 @@ namespace CentralizedApps.Controllers.web
             using (var stream = new FileStream(pathArchivo, FileMode.Create))
                 await archivo.CopyToAsync(stream);
 
-            // La URL la manejas tú (si decides exponerla)
+            //  URL 
             string url = $"{Request.Scheme}://{Request.Host}/uploads/{municipio}/{nombreArchivo}";
 
             // Guardar en DB
