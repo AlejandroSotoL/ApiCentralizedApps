@@ -31,7 +31,6 @@ builder.Services
 builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 
 // MVC y API
-builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
 // Swagger
@@ -56,6 +55,18 @@ builder.Services.AddHttpClient<FintechApiClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ExternalApis:FintechApi:BaseUrl"]);
 });
+
+// MVC y API
+builder.Services.AddControllersWithViews(options =>
+{
+    // Todas las acciones requieren autenticación por defecto
+    var policy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter(policy));
+});
+builder.Services.AddControllers();
+
 
 // Repositorios y servicios
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
