@@ -3,27 +3,35 @@
 }
 
 <div class="hero bg-base-200 min-h-screen">
-    <div class="hero-content flex-col lg:flex-row-reverse justify-center w-full px-4 lg:px-20">
-        <div class="card bg-base-100 w-full max-w-md lg:max-w-lg shadow-2xl">
+    <div class="hero-content w-full flex-col justify-center px-4 lg:flex-row-reverse lg:px-20">
+        <div class="card bg-base-100 w-full max-w-md shadow-2xl lg:max-w-lg">
             <div class="card-body p-8">
-                <h2 class="text-3xl font-bold text-center mb-6">Iniciar Sesión</h2>
-                <form asp-action="Index" asp-controller="Home" method="get">
-                <fieldset class="space-y-4">
-                    <div>
-                        <label class="label font-semibold">Email</label>
-                        <input type="email" class="input input-bordered w-full text-lg" placeholder="Email" />
-                    </div>
-                    <div>
-                        <label class="label font-semibold">Password</label>
-                        <input type="password" class="input input-bordered w-full text-lg" placeholder="Password" />
-                    </div>
-                    <div class="text-right">
-                        <a class="link link-hover text-sm">Forgot password?</a>
-                    </div>
-                    <button type="submit" class="btn btn-neutral w-full mt-4 py-3 text-lg">Inicia Sesión</button>
-                </fieldset>
+                <h2 class="mb-6 text-center text-3xl font-bold">Iniciar Sesión</h2>
+                <form asp-action="Login" asp-controller="Account" method="post">
+                    <fieldset class="space-y-4">
+                        <div>
+                            <label class="label font-semibold">Nombre de Usuario</label>
+                            <input  name="UserName" class="input input-bordered w-full text-lg"
+                                placeholder="Nombre de Usuario" />
+                        </div>
+                        <div>
+                            <label class="label font-semibold">Contraseña</label>
+                            <input type="password" name="Password" class="input input-bordered w-full text-lg"
+                                placeholder="Contraseña" />
+                        </div>
+                        <button type="submit" class="btn btn-neutral mt-4 w-full py-3 text-lg">Inicia Sesión</button>
+                    </fieldset>
                 </form>
-            </div>
+            </div> 
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div style="color:red">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
         </div>
     </div>
 </div>

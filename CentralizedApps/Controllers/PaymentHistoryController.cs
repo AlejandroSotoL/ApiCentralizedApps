@@ -1,4 +1,6 @@
 using CentralizedApps.Models.Dtos;
+using CentralizedApps.Models.Dtos.PrincipalsDtos;
+using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +21,18 @@ namespace CentralizedApps.Controllers
             _unitOfWork = unitOfWork;
         }
 
-
+        [HttpGet("Availibity")]
+        public async Task<List<AvailibityDto>> getAllAvailibity()
+        {
+            try
+            {
+                return await _paymentHistoryService.getAllAvailibity();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         [HttpGet("User/{id}")]
         public async Task<IActionResult> getAllPaymentHistory(int id)

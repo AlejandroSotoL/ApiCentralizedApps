@@ -50,11 +50,7 @@ namespace CentralizedApps.Controllers
             try
             {
                 var response = await _RemidersService.GetReminders();
-                if (!response.Any())
-                {
-                    return NotFound("No hay recordatorios registrados.");
-                }
-                return Ok(response);
+                return response;
             }
             catch (Exception ex)
             {
@@ -68,11 +64,8 @@ namespace CentralizedApps.Controllers
             try
             { 
                 var response = await _RemidersService.GetRemindersByUserId(userId);
-                if (!response.Any())
-                {
-                    return NotFound("No hay recordatorios registrados.");
-                }
-                return Ok(response);
+
+                return response;
             }
             catch (Exception ex)
             {

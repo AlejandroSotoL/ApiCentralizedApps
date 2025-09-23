@@ -24,8 +24,6 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenAnyIP(7081, listenOptions => listenOptions.UseHttps());
 });
 
-
-
 // FluentValidation
 builder.Services
     .AddFluentValidationAutoValidation()
@@ -33,7 +31,6 @@ builder.Services
 builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 
 // MVC y API
-builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
 // Swagger
@@ -59,6 +56,18 @@ builder.Services.AddHttpClient<FintechApiClient>(client =>
     client.BaseAddress = new Uri(builder.Configuration["ExternalApis:FintechApi:BaseUrl"]);
 });
 
+// MVC y API
+builder.Services.AddControllersWithViews(options =>
+{
+    // Todas las acciones requieren autenticación por defecto
+    var policy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter(policy));
+});
+builder.Services.AddControllers();
+
+
 // Repositorios y servicios
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -66,8 +75,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMunicipalityServices, MunicipalityServices>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IPeopleInvitated, PeopleInvitated>();
 builder.Services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
-builder.Services.AddScoped<IRemidersService, RemidersService>();
+builder.Services.AddScoped<IRemidersService, RemindersService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
 builder.Services.AddScoped<IBank, BankService>();
 builder.Services.AddScoped<IFintechService, FintechService>();

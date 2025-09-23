@@ -801,7 +801,7 @@ namespace CentralizedApps.Services
             }
         }
 
-        public async Task<ValidationResponseDto> UpdateProcedureStatus(int Id, bool status)
+        public async Task<ValidationResponseDto> UpdateProcedureStatus(int Id, bool status, string IntegrationType)
         {
             try
             {
@@ -818,6 +818,8 @@ namespace CentralizedApps.Services
                 }
 
                 find.IsActive = status;
+                find.IntegrationType = IntegrationType;
+                
                 _unitOfWork.genericRepository<MunicipalityProcedure>().Update(find);
                 var rows = await _unitOfWork.SaveChangesAsync();
                 if (rows > 0 && find != null)

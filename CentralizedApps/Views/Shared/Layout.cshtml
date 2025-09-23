@@ -1,42 +1,82 @@
 ﻿<!DOCTYPE html>
-<html data-theme="light">
-
+<html data-theme="light" lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Mi Proyecto</title>
     <link rel="stylesheet" href="~/css/output.css" />
 </head>
+<body class="bg-base-200 text-base-content min-h-screen">
 
-<body>
-    <button id="toggle-theme" class="btn btn-primary">Cambiar tema</button>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Inicio</a></li>
-                <li><a href="/Dashboard">Dashboard</a></li>
-                <li><a href="/Home/Index">Vista 1</a></li>
-                <li><a href="/Web/SubirImagen">Subir Imagen</a></li>
+    <div class="drawer">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+
+        <div class="drawer-content flex flex-col">
+            <header class="navbar bg-base-100 shadow-md">
+                <div class="lg:hidden">
+                    <label for="my-drawer" class="btn btn-square btn-ghost">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </label>
+                </div>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="flex items-center gap-4 navbar-start">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwr_zZjgvmu4BccwDNIHic8K5dyehw7cSYA&s"
+                            alt="Logo" class="h-16" />
+                        <h2 class="text-lg font-bold">Bienvenido @User?.Identity?.Name</h2>
+                    </div>
+                }
+
+                <div class="flex-1 text-center">
+                    <h1 class="text-lg font-bold">Administración</h1>
+                </div>
+
+                <div class="hidden lg:flex items-center gap-4">
+                    <button id="toggle-theme" class="btn btn-ghost">Cambiar tema</button>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <ul class="menu menu-horizontal bg-base-100 rounded-box">
+                            <li><a href="/Web/SubirImagen">Escudos Alcaldía</a></li>
+                            <li><a href="/Home/Index">Administración Centralización</a></li>
+                            <li><a href="/Account/Logout">Cerrar Sesión</a></li>
+                        </ul>
+                    }
+                </div>
+            </header>
+
+            <main class="flex-1 p-6">
+                @RenderBody()
+            </main>
+
+            <footer class="footer footer-center bg-base-300 text-base-content p-4 text-center">
+                <p>&copy; 2025 - 1cero1 Software - CENTRALIZACION</p>
+            </footer>
+        </div>
+
+        <div class="drawer-side lg:hidden">
+            <label for="my-drawer" class="drawer-overlay"></label>
+            <ul class="menu p-4 w-64 min-h-full bg-base-100 text-base-content">
+                <li><a href="/Web/SubirImagen">Escudos Alcaldía</a></li>
+                <li><a href="/Home/Index">Administración Centralización</a></li>
+                <li><a href="/Account/Logout">Cerrar Sesión</a></li>
             </ul>
-        </nav>
-    </header>
+        </div>
+    </div>
 
-    <main>
-        @RenderBody()
-    </main>
-
-    <footer>
-        <p>&copy; 2025 - 1cero1 Software - CENTRALIZATED</p>
-    </footer>
+    <!-- Script para tema -->
     <script src="/_framework/aspnetcore-browser-refresh.js"></script>
-
     <script>
-        const button = document.getElementById('toggle-theme');
-        button.addEventListener('click', () => {
+        const themeButton = document.getElementById('toggle-theme');
+        themeButton.addEventListener('click', () => {
             const html = document.documentElement;
-            html.dataset.theme = html.dataset.theme === 'light' ? 'dark' : 'light';
+            const currentTheme = html.getAttribute('data-theme');
+            html.setAttribute('data-theme', currentTheme === 'light' ? 'dark' : 'light');
         });
     </script>
 </body>
-
 </html>

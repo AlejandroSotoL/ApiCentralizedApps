@@ -1,4 +1,6 @@
+using AutoMapper;
 using CentralizedApps.Models.Dtos;
+using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
@@ -8,10 +10,12 @@ namespace CentralizedApps.Services
     public class PaymentHistoryService : IPaymentHistoryService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public PaymentHistoryService(IUnitOfWork unitOfWork)
+        public PaymentHistoryService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<PaymentHistoryUserListDto>> getAllPaymentHistoryByIdAsync(int id)
@@ -30,8 +34,10 @@ namespace CentralizedApps.Services
                 PaymentDate = paymentHistoryDto.PaymentDate,
                 Status = paymentHistoryDto.Status,
                 StatusType = paymentHistoryDto.StatusType,
-                MunicipalityProceduresId = paymentHistoryDto.MunicipalityProceduresId
-            
+                MunicipalityProceduresId = paymentHistoryDto.MunicipalityProceduresId,
+                Idimpuesto = paymentHistoryDto.Idimpuesto,
+                Factura = paymentHistoryDto.Factura,
+                CodigoEntidad = paymentHistoryDto.CodigoEntidad
 
             };
             await _unitOfWork.paymentHistoryRepository.AddAsync(paymentHistory);
@@ -60,11 +66,11 @@ namespace CentralizedApps.Services
 
             await _unitOfWork.SaveChangesAsync();
             return new ValidationResponseDto
-                {
-                    CodeStatus = 200,
-                    BooleanStatus = true,
-                    SentencesError = "succesfully"
-                };
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
 
         }
 
@@ -101,6 +107,19 @@ namespace CentralizedApps.Services
                     BooleanStatus = false,
                     SentencesError = ex.Message
                 };
+            }
+        }
+
+        public async Task<List<AvailibityDto>> getAllAvailibity()
+        {
+            try
+            {
+                var availibityList = await _unitOfWork.genericRepository<Availibity>().GetAllAsync();
+                return _mapper.Map<List<AvailibityDto>>(availibityList);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

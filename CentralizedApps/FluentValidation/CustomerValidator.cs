@@ -14,9 +14,6 @@ namespace CentralizedApps.FluentValidation
             RuleFor(x => x.LastName)
                 .NotEmpty().WithMessage("El primer apellido es obligatorio");
 
-            RuleFor(x => x.SecondLastName)
-                .NotEmpty().WithMessage("El segundo apellido es obligatorio");
-
             RuleFor(x => x.NationalId)
                 .NotEmpty();
 

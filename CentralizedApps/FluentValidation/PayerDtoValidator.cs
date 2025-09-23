@@ -19,11 +19,7 @@ namespace CentralizedApps.FluentValidation
             RuleFor(p => p.TipoDocumento)
                 .NotEmpty().WithMessage("El tipo de documento es obligatorio")
                 .GreaterThan(0).WithMessage("El tipo de documento debe ser mayor que 0");
-
-            RuleFor(p => p.Nombre_Completo)
-                .NotEmpty().WithMessage("El nombre completo es obligatorio")
-                .MaximumLength(100).WithMessage("El nombre completo no puede exceder los 100 caracteres");
-
+                
             RuleFor(p => p.Dv)
                 .GreaterThanOrEqualTo(0).WithMessage("El dígito de verificación no puede ser negativo")
                 .LessThan(100).WithMessage("El dígito de verificación no puede tener más de dos dígitos");
@@ -35,12 +31,6 @@ namespace CentralizedApps.FluentValidation
             RuleFor(p => p.PRIMERAPELLIDO)
                 .NotEmpty().WithMessage("El primer apellido es obligatorio")
                 .MaximumLength(50).WithMessage("El primer apellido no puede exceder los 50 caracteres");
-
-            RuleFor(p => p.SEGUNDONOMBRE)
-                .MaximumLength(50).WithMessage("El segundo nombre no puede exceder los 50 caracteres");
-
-            RuleFor(p => p.SEGUNDOAPELLIDO)
-                .MaximumLength(50).WithMessage("El segundo apellido no puede exceder los 50 caracteres");
 
             RuleFor(p => p.Telefono)
                 .NotEmpty().WithMessage("El teléfono es obligatorio")
