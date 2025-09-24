@@ -1,0 +1,69 @@
+## Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+## VS Code / Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Compiled binaries
+*.dll
+*.exe
+*.app
+*.so
+*.dylib
+*.pdb
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+*.nuget.props
+*.nuget.targets
+*.nuget.cache
+*.ncrunchsolution
+
+## Generated files
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Test results
+*.VisualState.xml
+TestResult.xml
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+## Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## Rider
+.idea/
+
+## Others
+*.log
+*.tmp
+*.cache
+*.swp
+*.bak
+*.dbmdl
+*.jfm
+
+# Auto-generated VS files
+GeneratedMSBuildEditorConfig.editorconfig
