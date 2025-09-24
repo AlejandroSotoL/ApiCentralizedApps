@@ -15,12 +15,16 @@ namespace CentralizedApps.Controllers.Web
             _unitOfWork = unitOfWork;
         }
 
+        public IActionResult EnDesarrollo()
+        {
+            return View();
+        }
+
         private async Task<List<ShieldMunicipality>> GetShieldMunicipalitiesAsync()
         {
             var response = await _unitOfWork
                 .genericRepository<ShieldMunicipality>()
                 .GetAllAsync();
-
             return response?.ToList() ?? new List<ShieldMunicipality>();
         }
 
