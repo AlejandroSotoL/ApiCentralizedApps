@@ -1,4 +1,2 @@
 ﻿@import "tailwindcss";
-/* Configuración de DaisyUI */
-@plugin "daisyui" {
-}
+@plugin "daisyui" 
