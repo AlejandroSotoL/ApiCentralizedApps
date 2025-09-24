@@ -1,54 +1,35 @@
 ﻿<!DOCTYPE html>
 <html data-theme="light" lang="es">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Mi Proyecto</title>
     <link rel="stylesheet" href="~/css/output.css" />
 </head>
-<body class="bg-base-200 text-base-content min-h-screen">
 
+<body class="bg-base-200 text-base-content min-h-screen">
     <div class="drawer">
         <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-
         <div class="drawer-content flex flex-col">
             <header class="navbar bg-base-100 shadow-md">
-                <div class="lg:hidden">
-                    <label for="my-drawer" class="btn btn-square btn-ghost">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </label>
-                </div>
-
-                @if (User.IsInRole("Admin"))
-                {
-                    <div class="flex items-center gap-4 navbar-start">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwr_zZjgvmu4BccwDNIHic8K5dyehw7cSYA&s"
-                            alt="Logo" class="h-16" />
-                        <h2 class="text-lg font-bold">Bienvenido @User?.Identity?.Name</h2>
-                    </div>
-                }
+                <label for="my-drawer" class="btn btn-square btn-ghost">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </label>
 
                 <div class="flex-1 text-center">
                     <h1 class="text-lg font-bold">Administración</h1>
                 </div>
 
-                <div class="hidden lg:flex items-center gap-4">
+                <div class="flex items-center gap-4">
                     <button id="toggle-theme" class="btn btn-ghost">Cambiar tema</button>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <ul class="menu menu-horizontal bg-base-100 rounded-box">
-                            <li><a href="/Web/SubirImagen">Escudos Alcaldía</a></li>
-                            <li><a href="/Home/Index">Administración Centralización</a></li>
-                            <li><a href="/Account/Logout">Cerrar Sesión</a></li>
-                        </ul>
-                    }
                 </div>
             </header>
-
+            @RenderSection("Scripts", required: false)
             <main class="flex-1 p-6">
                 @RenderBody()
             </main>
@@ -58,17 +39,24 @@
             </footer>
         </div>
 
-        <div class="drawer-side lg:hidden">
-            <label for="my-drawer" class="drawer-overlay"></label>
-            <ul class="menu p-4 w-64 min-h-full bg-base-100 text-base-content">
-                <li><a href="/Web/SubirImagen">Escudos Alcaldía</a></li>
-                <li><a href="/Home/Index">Administración Centralización</a></li>
-                <li><a href="/Account/Logout">Cerrar Sesión</a></li>
-            </ul>
-        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="drawer-side">
+                <label for="my-drawer" class="drawer-overlay"></label>
+                <div class="flex items-center gap-4 navbar-start p-4">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwr_zZjgvmu4BccwDNIHic8K5dyehw7cSYA&s"
+                        alt="Logo" class="h-16" />
+                    <h2 class="text-lg font-bold">Bienvenido @User?.Identity?.Name</h2>
+                </div>
+                <ul class="menu p-4 w-64 min-h-full bg-base-100 text-base-content">
+                    <li><a href="/Web/SubirImagen">Escudos Alcaldía</a></li>
+                    <li><a href="/Home/Index">Administración Centralización</a></li>
+                    <li><a href="/Account/Logout">Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        }
     </div>
 
-    <!-- Script para tema -->
     <script src="/_framework/aspnetcore-browser-refresh.js"></script>
     <script>
         const themeButton = document.getElementById('toggle-theme');
@@ -79,4 +67,5 @@
         });
     </script>
 </body>
+
 </html>

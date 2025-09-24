@@ -1,11 +1,9 @@
-
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CentralizedApps.Controllers.web
+namespace CentralizedApps.Controllers.Web
 {
-
     public class WebController : Controller
     {
         private readonly IWebHostEnvironment _env;
@@ -17,35 +15,69 @@ namespace CentralizedApps.Controllers.web
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
-        public async Task<List<ShieldMunicipality>> GetShieldMunicipalities()
+        private async Task<List<ShieldMunicipality>> GetShieldMunicipalitiesAsync()
         {
-            var response = await _unitOfWork.genericRepository<ShieldMunicipality>().GetAllAsync();
-            if (response != null)
-            {
-                return response.ToList();
-            }
-            else
-            {
-                return new List<ShieldMunicipality>();
+            var response = await _unitOfWork
+                .genericRepository<ShieldMunicipality>()
+                .GetAllAsync();
 
+            return response?.ToList() ?? new List<ShieldMunicipality>();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SubirImagen()
+        {
+            var municipios = await GetShieldMunicipalitiesAsync();
+            return View(municipios);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProcesarSeleccionados(List<int> selectedIds)
+        {
+            if (selectedIds == null || !selectedIds.Any())
+            {
+                ViewBag.Error = "No seleccionaste ningún registro.";
+                return View("SubirImagen");
             }
+
+            // Ejemplo: eliminar seleccionados
+            foreach (var id in selectedIds)
+            {
+                var entity = await _unitOfWork
+                    .genericRepository<ShieldMunicipality>()
+                    .GetByIdAsync(id);
+
+                if (entity != null)
+                {
+                    _unitOfWork.genericRepository<ShieldMunicipality>().Delete(entity);
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            ViewBag.Mensaje = $"{selectedIds.Count} registros procesados correctamente.";
+            return View("SubirImagen");
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddImage(string municipio, [FromForm] IFormFile archivo)
+        public async Task<IActionResult> SubirImagen(string municipio, IFormFile archivo)
         {
-            if (HttpContext.Request.Method == "GET")
+            if (string.IsNullOrWhiteSpace(municipio))
             {
-                return View();
+                ModelState.AddModelError("municipio", "El nombre del municipio es obligatorio.");
             }
 
             if (archivo == null || archivo.Length == 0)
             {
-                ViewBag.Error = "No se subió ninguna imagen";
-                return View();
+                ModelState.AddModelError("archivo", "Debes seleccionar una imagen.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var municipios = await GetShieldMunicipalitiesAsync();
+                return View(municipios);
             }
 
             municipio = municipio.Trim();
@@ -58,19 +90,19 @@ namespace CentralizedApps.Controllers.web
             if (!Directory.Exists(pathCarpeta))
                 Directory.CreateDirectory(pathCarpeta);
 
-            var extension = Path.GetExtension(archivo.FileName).ToLower();
+            var extension = Path.GetExtension(archivo.FileName).ToLowerInvariant();
             string[] permitidos = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
 
             if (!permitidos.Contains(extension))
             {
-                ViewBag.Error = "Tipo de archivo no permitido";
-                return View();
+                ModelState.AddModelError("archivo", "Tipo de archivo no permitido.");
+                var municipios = await GetShieldMunicipalitiesAsync();
+                return View(municipios);
             }
 
             string nombreBase = Path.GetFileNameWithoutExtension(archivo.FileName);
             string nombreArchivo = $"{nombreBase}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}";
             string pathArchivo = Path.Combine(pathCarpeta, nombreArchivo);
-            var remoteIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             using (var stream = new FileStream(pathArchivo, FileMode.Create))
                 await archivo.CopyToAsync(stream);
@@ -86,17 +118,10 @@ namespace CentralizedApps.Controllers.web
             await _unitOfWork.genericRepository<ShieldMunicipality>().AddAsync(shieldMunicipality);
             await _unitOfWork.SaveChangesAsync();
 
-            ViewBag.Mensaje = $"Imagen subida correctamente curretly url ${remoteIpAddress}";
-            ViewBag.Url = url;
+            TempData["Mensaje"] = "Imagen subida correctamente.";
+            TempData["Url"] = url;
 
-            return View(GetShieldMunicipalities());
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> SubirImagen()
-        {
-            return View(GetShieldMunicipalities().Result);
+            return RedirectToAction(nameof(SubirImagen));
         }
     }
 }
-

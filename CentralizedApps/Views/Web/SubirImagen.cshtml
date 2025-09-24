@@ -6,8 +6,23 @@
 }
 
 <div class="bg-base-200 min-h-screen p-4">
+
+    @if (ViewBag.Mensaje != null)
+    {
+        <div class="alert alert-success shadow-lg mb-4">
+            <span>@ViewBag.Mensaje</span>
+        </div>
+    }
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-error shadow-lg mb-4">
+            <span>@ViewBag.Error</span>
+        </div>
+    }
+
     <section class="bg-base-100 rounded-lg shadow-md">
-        <div class="flex justify-end p-4 border-b border-base-300">
+        <div class="flex justify-between items-center p-4 border-b border-base-300">
+            <h2 class="text-xl font-bold">Gestión de escudos de las Alcaldías</h2>
             <button class="btn btn-primary" onclick="document.getElementById('upload_modal').showModal()">
                 Nueva Imagen
             </button>
@@ -39,12 +54,15 @@
                                         </div>
                                         <div>
                                             <div class="font-bold">@item?.NameOfMunicipality</div>
-                                            <div class="text-sm opacity-50">@item?.Url</div>
+                                            <div class="text-sm opacity-50 truncate max-w-[200px]">@item?.Url</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <button class="btn btn-ghost btn-xs">Detalles</button>
+                                    <a href="@item?.Url" target="_blank" class="btn btn-ghost btn-xs">Ver</a>
+                                </td>
+                                <td>
+                                    <button class="btn btn-error btn-xs">Desactivar</button>
                                 </td>
                             </tr>
                         }
@@ -63,7 +81,6 @@
     </section>
 </div>
 
-<!-- Modal -->
 <dialog id="upload_modal" class="modal justify-center">
     <div class="modal-box bg-base-100 rounded-lg shadow-lg max-w-lg w-full">
         <h3 class="font-bold text-lg mb-4">Subir Imagen</h3>
@@ -71,18 +88,18 @@
         <form asp-action="SubirImagen" asp-controller="Web" method="post" enctype="multipart/form-data">
             <div class="mb-4">
                 <label class="label">
-                    <span class="label-text">Nombre</span>
+                    <span class="label-text">Nombre del municipio</span>
                 </label>
-                <input type="text" name="municipio" placeholder="Escribe un nombre" class="input input-bordered w-full"
-                    required />
+                <input type="text" name="municipio" placeholder="Escribe un nombre" 
+                       class="input input-bordered w-full" required />
             </div>
 
             <div class="mb-4">
                 <label class="label">
                     <span class="label-text">Seleccionar archivo</span>
                 </label>
-                <input type="file" name="archivo" accept="image/*" class="file-input file-input-bordered w-full"
-                    required />
+                <input type="file" name="archivo" accept="image/*" 
+                       class="file-input file-input-bordered w-full" required />
             </div>
 
             <div class="modal-action">
@@ -92,20 +109,21 @@
                 <button type="submit" class="btn btn-success">Guardar</button>
             </div>
         </form>
-
-        @if (ViewBag.Mensaje != null)
-        {
-            <p class="mt-4 text-green-600 font-semibold text-center">@ViewBag.Mensaje</p>
-            <p class="text-blue-600 text-center">
-                <a href="@ViewBag.Url" target="_blank">@ViewBag.Url</a>
-            </p>
-        }
-        @if (ViewBag.Error != null)
-        {
-            <p class="mt-4 text-red-600 font-semibold text-center">@ViewBag.Error</p>
-        }
     </div>
     <form method="dialog" class="modal-backdrop">
         <button>close</button>
     </form>
 </dialog>
+
+@section Scripts {
+    <script>
+        @if (ViewBag.Mensaje != null)
+        {
+            <text>
+                document.addEventListener("DOMContentLoaded", function () {
+                    document.getElementById('upload_modal')?.close();
+                });
+            </text>
+        }
+    </script>
+}
