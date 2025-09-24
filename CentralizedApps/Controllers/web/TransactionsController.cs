@@ -15,14 +15,9 @@ namespace CentralizedApps.Controllers.web
         [HttpGet]
         public async Task<List<PaymentHistoryUserListDto>> Details()
         {
-            try
-            {
 
-            }
-            catch (Exception e)
-            {
-                return new List<PaymentHistoryUserListDto>();
-            }
+            return new List<PaymentHistoryUserListDto>();
+
         }
     }
 }
