@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html data-theme="light" lang="es">
 <head>
     <meta charset="utf-8" />
@@ -11,8 +11,11 @@
     <div class="drawer">
         <input id="my-drawer" type="checkbox" class="drawer-toggle" />
 
+        <!-- Contenido principal -->
         <div class="drawer-content flex flex-col">
+            <!-- Navbar -->
             <header class="navbar bg-base-100 shadow-md">
+                <!-- Botón hamburguesa SIEMPRE disponible -->
                 <label for="my-drawer" class="btn btn-square btn-ghost">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                          viewBox="0 0 24 24" stroke="currentColor">
@@ -46,12 +49,14 @@
             <div class="drawer-side">
                 <label for="my-drawer" class="drawer-overlay"></label>
                 <div class="bg-base-100 text-base-content min-h-full w-64 p-4">
+                    <!-- Bienvenida -->
                     <div class="mb-4 flex items-center gap-4">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwr_zZjgvmu4BccwDNIHic8K5dyehw7cSYA&s"
                              alt="Logo" class="h-16" />
                         <h2 class="text-lg font-bold">Bienvenido @User?.Identity?.Name</h2>
                     </div>
 
+                    <!-- Menú -->
                     <ul class="menu">
                         <li><a href="/Web/EnDesarrollo">Administración Centralización</a></li>
                         <li><a href="/Account/Logout">Cerrar Sesión</a></li>
