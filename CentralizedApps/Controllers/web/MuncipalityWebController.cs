@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace CentralizedApps.Controllers.web
 {
@@ -31,7 +25,7 @@ namespace CentralizedApps.Controllers.web
                         SentencesError = "No se encontraron municipios con relaciones."
                     });
                 }
-                
+
                 return View(response);
             }
             catch (Exception ex)

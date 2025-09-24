@@ -1,17 +1,16 @@
-@model List<CentralizedApps.Models.Dtos.PrincipalsDtos.GetMunicipalitysDto>;
+﻿@model List<CentralizedApps.Models.Dtos.PrincipalsDtos.GetMunicipalitysDto>;
 
 @{
     ViewData["Title"] = "Index HOLA r";
     Layout = "Layout";
 }
 
-<div class=" flex flex-col P-10 ">
+<div class="P-10 flex flex-col">
 
-    <div class="flex flex-col md:flex-row p-4 gap-4  justify-between">
+    <div class="flex flex-col justify-between gap-4 p-4 md:flex-row">
 
-        <!-- SELECT -->
-        <div class=" w-full md:w-full flex justify-center items-center self-center">
-            <select class="select select-ghost w-full md:w-1/3 bg-white">
+        <div class="flex w-full items-center justify-center self-center md:w-full">
+            <select class="select select-ghost w-full bg-white md:w-1/3">
                 <option disabled selected>Seleciona</option>
                 <option>Antioquia</option>
                 <option>Medellín</option>
@@ -19,8 +18,7 @@
             </select>
         </div>
 
-        <!-- BOTONES -->
-        <div class="w-full md:w-3/4 flex flex-wrap justify-evenly md:justify-evenly gap-2 p-2 self-end">
+        <div class="flex w-full flex-wrap justify-evenly gap-2 self-end p-2 md:w-3/4 md:justify-evenly">
             <button class="btn btn-outline btn-accent">BUSCAR</button>
             <button class="btn btn-outline btn-accent">CREAR</button>
             <button class="btn btn-outline btn-warning">EDITAR</button>
@@ -30,9 +28,8 @@
 
     <br>
     <div>
-        <div class="overflow-x-auto mt-4">
+        <div class="mt-4 overflow-x-auto">
             <table class="table">
-                <!-- head -->
                 <thead class="bg-gray-200">
                     <tr>
                         <th>

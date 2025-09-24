@@ -1,3 +1,4 @@
+using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,6 @@ namespace CentralizedApps.Controllers.Web
                 return View("SubirImagen");
             }
 
-            // Ejemplo: eliminar seleccionados
             foreach (var id in selectedIds)
             {
                 var entity = await _unitOfWork
@@ -65,67 +65,76 @@ namespace CentralizedApps.Controllers.Web
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubirImagen(string municipio, IFormFile archivo)
+        public async Task<IActionResult> AddImage(string municipio, IFormFile archivo)
         {
-            if (string.IsNullOrWhiteSpace(municipio))
+            try
             {
-                ModelState.AddModelError("municipio", "El nombre del municipio es obligatorio.");
+                if (string.IsNullOrWhiteSpace(municipio))
+                {
+                    ModelState.AddModelError("municipio", "El nombre del municipio es obligatorio.");
+                }
+
+                if (archivo == null || archivo.Length == 0)
+                {
+                    ModelState.AddModelError("archivo", "Debes seleccionar una imagen.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    var municipios = await GetShieldMunicipalitiesAsync();
+                    return View(municipios);
+                }
+
+                municipio = municipio.Trim();
+                foreach (var c in Path.GetInvalidFileNameChars())
+                    municipio = municipio.Replace(c, '_');
+
+                string carpetaBase = Path.Combine(_env.WebRootPath, "Uploads");
+                string pathCarpeta = Path.Combine(carpetaBase, municipio);
+
+                if (!Directory.Exists(pathCarpeta))
+                    Directory.CreateDirectory(pathCarpeta);
+
+                var extension = Path.GetExtension(archivo.FileName).ToLowerInvariant();
+                string[] permitidos = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+
+                if (!permitidos.Contains(extension))
+                {
+                    ModelState.AddModelError("archivo", "Tipo de archivo no permitido.");
+                    var municipios = await GetShieldMunicipalitiesAsync();
+                    return View(municipios);
+                }
+
+                string nombreBase = Path.GetFileNameWithoutExtension(archivo.FileName);
+                string nombreArchivo = $"{nombreBase}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}";
+                string pathArchivo = Path.Combine(pathCarpeta, nombreArchivo);
+
+                using (var stream = new FileStream(pathArchivo, FileMode.Create))
+                    await archivo.CopyToAsync(stream);
+
+                string url = $"{Request.Scheme}://{Request.Host}/uploads/{municipio}/{nombreArchivo}";
+
+                var shieldMunicipality = new ShieldMunicipality
+                {
+                    NameOfMunicipality = municipio,
+                    Url = url,
+                };
+
+                await _unitOfWork.genericRepository<ShieldMunicipality>().AddAsync(shieldMunicipality);
+                await _unitOfWork.SaveChangesAsync();
+
+                TempData["Mensaje"] = "Imagen subida correctamente.";
+                TempData["Url"] = url;
+
+                return RedirectToAction(nameof(SubirImagen));
             }
-
-            if (archivo == null || archivo.Length == 0)
+            catch (Exception e)
             {
-                ModelState.AddModelError("archivo", "Debes seleccionar una imagen.");
+                return BadRequest(new ValidationResponseDto
+                {
+                    SentencesError = $"Tenemos problemas para almacenar la imagen ${e.Message}"
+                });
             }
-
-            if (!ModelState.IsValid)
-            {
-                var municipios = await GetShieldMunicipalitiesAsync();
-                return View(municipios);
-            }
-
-            municipio = municipio.Trim();
-            foreach (var c in Path.GetInvalidFileNameChars())
-                municipio = municipio.Replace(c, '_');
-
-            string carpetaBase = Path.Combine(_env.WebRootPath, "Uploads");
-            string pathCarpeta = Path.Combine(carpetaBase, municipio);
-
-            if (!Directory.Exists(pathCarpeta))
-                Directory.CreateDirectory(pathCarpeta);
-
-            var extension = Path.GetExtension(archivo.FileName).ToLowerInvariant();
-            string[] permitidos = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
-
-            if (!permitidos.Contains(extension))
-            {
-                ModelState.AddModelError("archivo", "Tipo de archivo no permitido.");
-                var municipios = await GetShieldMunicipalitiesAsync();
-                return View(municipios);
-            }
-
-            string nombreBase = Path.GetFileNameWithoutExtension(archivo.FileName);
-            string nombreArchivo = $"{nombreBase}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}";
-            string pathArchivo = Path.Combine(pathCarpeta, nombreArchivo);
-
-            using (var stream = new FileStream(pathArchivo, FileMode.Create))
-                await archivo.CopyToAsync(stream);
-
-            string url = $"{Request.Scheme}://{Request.Host}/uploads/{municipio}/{nombreArchivo}";
-
-            var shieldMunicipality = new ShieldMunicipality
-            {
-                NameOfMunicipality = municipio,
-                Url = url,
-            };
-
-            await _unitOfWork.genericRepository<ShieldMunicipality>().AddAsync(shieldMunicipality);
-            await _unitOfWork.SaveChangesAsync();
-
-            TempData["Mensaje"] = "Imagen subida correctamente.";
-            TempData["Url"] = url;
-
-            return RedirectToAction(nameof(SubirImagen));
         }
     }
 }
