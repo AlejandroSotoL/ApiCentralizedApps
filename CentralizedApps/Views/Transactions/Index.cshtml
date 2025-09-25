@@ -1,19 +1,326 @@
-﻿@{
-    ViewData["Title"] = "Subir Imagen";
+﻿@model List<CentralizedApps.Models.Dtos.CompletePaymentDto>
+
+@{
+    ViewData["Title"] = "Dashboard de Pagos";
     Layout = "Layout";
+
+    var totalPagos = Model?.Count() ?? 0;
+    var aprobados = Model?.Count(x => x.StatusType?.Id == 1) ?? 0;
+    var enProceso = Model?.Count(x => x.StatusType?.Id == 2) ?? 0;
+    var denegados = Model?.Count(x => x.StatusType?.Id == 3) ?? 0;
+    var TotalPayments = ViewBag.TotalPayments ?? 0;
+
+    var pagosPorFecha = Model?
+    .GroupBy(x => x.PaymentDate)
+    .OrderBy(x => x.Key)
+    .ToDictionary(
+    g => g.Key?.ToString("dd/MM") ?? "",
+    g => g.Count()
+    ) ?? new Dictionary<string, int>();
 }
 
-<section class="bg-base-100 rounded-lg shadow-md">
-    <div class="border-base-300 flex items-center justify-between border-b p-4">
-        <h2 class="text-xl font-bold">Gestión de escudos de las Alcaldías</h2>
+<section class="bg-base-100 rounded-xl shadow-md">
+    <header class="border-b border-base-300 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 class="text-xl font-bold">Estado de los Pagos</h1>
 
-        <div class="flex items-center gap-2">
-            <label for="filtro-id" class="text-sm font-medium">Filtrar por Identificación</label>
-            <input id="filtro-id"
-                   type="number"
-                   placeholder="0000000"
-                   class="w-32 rounded-md border border-red-600 p-2 text-center focus:ring-2 focus:ring-red-400 focus:outline-none" />
+        <div class="flex items-center gap-4">
+            <button class="btn btn-sm btn-primary" href="/Web/EnDesarrollo">➕ Nuevo Pago</button>
+            <button class="btn btn-sm btn-outline">⬇️ Exportar</button>
+
+            <div class="stat p-0">
+                <div class="stat-value text-primary flex items-center gap-2">
+                    <span class="text-primary font-bold text-xl">@TotalPayments</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current text-success"
+                        viewBox="0 0 24 24">
+                        <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.59 5.58L20 12l-8-8-8 8z" />
+                    </svg>
+                </div>
+                <div class="stat-desc text-success text-sm">
+                    Pagos completados
+                </div>
+            </div>
         </div>
+    </header>
 
+
+    <div class="p-7 space-y-15">
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6">
+            <article class="bg-blue-500 rounded-lg p-6 text-white shadow-md flex flex-col gap-2">
+                <h2 class="text-sm uppercase tracking-wide">Pagos Totales</h2>
+                <p class="text-2xl font-bold">@totalPagos</p>
+                <span class="text-xs opacity-80">Registro actual</span>
+            </article>
+
+            <article class="bg-green-500 rounded-lg p-6 text-white shadow-md flex flex-col gap-2">
+                <h2 class="text-sm uppercase tracking-wide">Aprobados</h2>
+                <p class="text-2xl font-bold">@aprobados</p>
+                <span class="text-xs opacity-80">✔ Confirmados</span>
+            </article>
+
+            <article class="bg-yellow-500 rounded-lg p-6 text-white shadow-md flex flex-col gap-2">
+                <h2 class="text-sm uppercase tracking-wide">En Proceso</h2>
+                <p class="text-2xl font-bold">@enProceso</p>
+                <span class="text-xs opacity-80">⌛ Pendientes</span>
+            </article>
+
+            <article class="bg-red-500 rounded-lg p-6 text-white shadow-md flex flex-col gap-2">
+                <h2 class="text-sm uppercase tracking-wide">Denegados</h2>
+                <p class="text-2xl font-bold">@denegados</p>
+                <span class="text-xs opacity-80">❌ Rechazados</span>
+            </article>
+
+            <article class="bg-emerald-700 rounded-lg p-6 text-black shadow-md flex flex-col gap-2">
+                <h2 class="text-sm uppercase tracking-wide">Total Recaudado</h2>
+                <p class="text-2xl font-bold">@TotalPayments</p>
+                <span class="text-xs opacity-80">Total recaudado</span>
+            </article>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-base-100 rounded-lg p-6 shadow-md w-full">
+                <h3 class="text-md font-bold mb-4">📊 Distribución por Estado</h3>
+                <canvas id="graficaPagos" width="80%" height="80"></canvas>
+            </div>
+
+            <div class="bg-base-100 rounded-lg p-6 shadow-md">
+                <h3 class="text-md font-bold mb-4">📈 Pagos en el Tiempo</h3>
+                <canvas id="graficaLineal" width="80%" height="80"></canvas>
+            </div>
+        </section>
+
+        <section class="bg-base-100 rounded-lg p-6 shadow-md">
+            <h3 class="font-bold mb-4">🔎 Filtros</h3>
+            <form asp-action="ReturnByValidatorDni" asp-controller="Transactions" method="post"
+                class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label for="FilterDni" class="text-sm font-medium">Por Identificación</label>
+                    <input id="FilterDni" name="FilterDni" type="text" placeholder="0000000"
+                        class="w-full rounded-md border p-2 text-center focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                    <label for="FilterDate" class="text-sm font-medium">Por Fecha</label>
+                    <input id="FilterDate" name="FilterDate" type="date"
+                        class="w-full rounded-md border p-2 focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="btn btn-primary w-full">Aplicar</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="rounded-lg shadow-md p-4 border border-gray-200">
+            <h3 class="font-bold mb-4 text-base">📑 Historial de Pagos</h3>
+            <div class="overflow-x-auto">
+                <table class="table table-zebra w-full text-sm">
+                    <thead class="bg-gray-100 text-gray-700">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Monto</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="">
+                                        @{
+                                            var fullName = $"{item?.User?.UserFirtName} {item?.User?.UserLastName}".Trim();
+                                        }
+                                @(string.IsNullOrWhiteSpace(fullName)
+                                            ? "Usuario Anonimo"
+                                            : fullName)
+                                    </td>
+
+                                    <td>$@item?.Amount</td>
+                                    <td>@item?.PaymentDate?.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <span
+                                            class="badge capitalize @(item?.StatusType?.TypeStatus == "APROBADA" ? "badge-success" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        : item?.StatusType?.TypeStatus == "COMENZADA" ? "badge-warning" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        : item?.StatusType?.TypeStatus == "FALLIDA" ? "badge-error" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        : "badge-outline")">
+                                            @item?.StatusType?.TypeStatus
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" onclick="openPaymentModal(this)" data-id="@item?.Id"
+                                            data-amount="@item?.Amount" data-date="@item?.PaymentDate?.ToString("dd/MM/yyyy")"
+                                            data-statusid="@item?.StatusType?.Id" data-status="@item?.StatusType?.TypeStatus"
+                                            data-userid="@item?.User?.Id"
+                                            data-user="@($"{item?.User?.UserFirtName} {item?.User?.UserLastName}".Trim())"
+                                            data-email="@item?.User?.Email" data-nationalid="@item?.User?.NationalId"
+                                            data-municipalityid="@item?.MunicipalityProcedure?.Municipality?.Id"
+                                            data-municipality="@item?.MunicipalityProcedure?.Municipality?.Name"
+                                            data-procedureid="@item?.MunicipalityProcedure?.Procedure?.Id"
+                                            data-procedure="@item?.MunicipalityProcedure?.Procedure?.Name"
+                                            data-integration="@item?.MunicipalityProcedure?.IntegrationType"
+                                            data-isactive="@item?.MunicipalityProcedure?.IsActive">
+                                            Observar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-gray-500 py-4">
+                                    No hay datos disponibles
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const ctx1 = document.getElementById('graficaPagos');
+        if (ctx1) {
+            new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Aprobados', 'En Proceso', 'Denegados'],
+                    datasets: [{
+                        label: 'Estado de Pagos',
+                        data: [@aprobados, @enProceso, @denegados],
+                        backgroundColor: ['#22c55e', '#facc15', '#ef4444'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        const ctx2 = document.getElementById('graficaLineal');
+        if (ctx2) {
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(pagosPorFecha.Keys)),
+                    datasets: [{
+                        label: 'Pagos realizados',
+                        data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(pagosPorFecha.Values)),
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+<dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box w-full max-w-3xl">
+        <h3 class="text-xl font-bold mb-6">Detalle Completo del Pago</h3>
+
+        <div class="space-y-4">
+
+            <div class="border rounded-lg p-4">
+                <h4 class="font-semibold mb-2">Información del Pago</h4>
+                <ul class="space-y-1 text-sm">
+                    <li><span class="font-medium">ID Pago:</span> <span id="modalId">-</span></li>
+                    <li><span class="font-medium">Monto:</span> $<span id="modalAmount">-</span></li>
+                    <li><span class="font-medium">Fecha:</span> <span id="modalDate">-</span></li>
+                </ul>
+            </div>
+
+            <div class="border rounded-lg p-4">
+                <h4 class="font-semibold mb-2">Estado</h4>
+                <ul class="space-y-1 text-sm">
+                    <li><span class="font-medium">Estado:</span> <span id="modalStatus">-</span></li>
+                    <li><span class="font-medium">ID Estado:</span> <span id="modalStatusId">-</span></li>
+                </ul>
+            </div>
+
+            <div class="border rounded-lg p-4">
+                <h4 class="font-semibold mb-2">Usuario</h4>
+                <ul class="space-y-1 text-sm">
+                    <li><span class="font-medium">ID Usuario:</span> <span id="modalUserId">-</span></li>
+                    <li><span class="font-medium">Nombre:</span> <span id="modalUser">-</span></li>
+                    <li><span class="font-medium">Email:</span> <span id="modalEmail">-</span></li>
+                    <li><span class="font-medium">Identificación:</span> <span id="modalNationalId">-</span></li>
+                </ul>
+            </div>
+
+            <div class="border rounded-lg p-4">
+                <h4 class="font-semibold mb-2">Municipio y Procedimiento</h4>
+                <ul class="space-y-1 text-sm">
+                    <li><span class="font-medium">ID Municipio:</span> <span id="modalMunicipalityId">-</span></li>
+                    <li><span class="font-medium">Municipio:</span> <span id="modalMunicipality">-</span></li>
+                    <li><span class="font-medium">ID Procedimiento:</span> <span id="modalProcedureId">-</span></li>
+                    <li><span class="font-medium">Procedimiento:</span> <span id="modalProcedure">-</span></li>
+                    <li><span class="font-medium">Integration Type:</span> <span id="modalIntegration">-</span></li>
+                    <li><span class="font-medium">Activo:</span> <span id="modalIsActive">-</span></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="modal-action mt-6">
+            <form method="dialog">
+                <button class="btn">Cerrar</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+
+
+<script>
+    function openPaymentModal(button) {
+        const map = {
+            modalId: button.dataset.id,
+            modalAmount: button.dataset.amount,
+            modalDate: button.dataset.date,
+            modalStatus: button.dataset.status,
+            modalStatusId: button.dataset.statusid,
+            modalUser: button.dataset.user || "El usuario hizo el pago sin cuenta",
+            modalUserId: button.dataset.userid,
+            modalEmail: button.dataset.email,
+            modalNationalId: button.dataset.nationalid,
+            modalMunicipality: button.dataset.municipality,
+            modalMunicipalityId: button.dataset.municipalityid,
+            modalProcedure: button.dataset.procedure,
+            modalProcedureId: button.dataset.procedureid,
+            modalIntegration: button.dataset.integration,
+            modalIsActive: button.dataset.isactive
+        };
+
+        for (const id in map) {
+            document.getElementById(id).textContent = map[id] || "-";
+        }
+
+        const badge = document.getElementById("modalStatus");
+        badge.className = "badge";
+        const status = (button.dataset.status || "").toUpperCase();
+
+        if (status === "APROBADO") badge.classList.add("badge-success");
+        else if (status === "EN PROCESO") badge.classList.add("badge-warning");
+        else if (status === "DENEGADO") badge.classList.add("badge-error");
+        else badge.classList.add("badge-outline");
+
+        document.getElementById("my_modal_5").showModal();
+    }
+</script>
