@@ -38,7 +38,7 @@ public class GlobalExceptionMiddleware
                 mensaje = sqlEx.Number switch
                 {
                     4060 => "No se puede abrir la base de datos. Verifique si existe o si tiene permisos.",
-                    // 18456 => "Fallo de inicio de sesión. Verifique credenciales.",
+                    18456 => "Fallo de inicio de sesión. Verifique credenciales.",
                     -1 => "Conexión fallida: No se puede establecer conexión con el servidor SQL.",
                     2 => "Servidor SQL no encontrado o inaccesible.",
                     53 => "No se puede encontrar la instancia del servidor SQL.",

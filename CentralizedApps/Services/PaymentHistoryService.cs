@@ -4,6 +4,7 @@ using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CentralizedApps.Services
 {
@@ -38,7 +39,6 @@ namespace CentralizedApps.Services
                 Idimpuesto = paymentHistoryDto.Idimpuesto,
                 Factura = paymentHistoryDto.Factura,
                 CodigoEntidad = paymentHistoryDto.CodigoEntidad
-
             };
             await _unitOfWork.paymentHistoryRepository.AddAsync(paymentHistory);
             await _unitOfWork.SaveChangesAsync();
@@ -61,7 +61,6 @@ namespace CentralizedApps.Services
             }
 
             paymentHistory.StatusType = idStatusType;
-
             _unitOfWork.paymentHistoryRepository.Update(paymentHistory);
 
             await _unitOfWork.SaveChangesAsync();
@@ -122,5 +121,64 @@ namespace CentralizedApps.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<List<CompletePaymentDto>> getAllPaymentHistory()
+        {
+            try
+            {
+                var response = _unitOfWork.genericRepository<PaymentHistory>();
+                var entities = await response.GetAllWithNestedIncludesAsync(query =>
+                    query.Include(ph => ph.User)
+                            .Include(ph => ph.StatusTypeNavigation)
+                            .Include(ph => ph.MunicipalityProcedures)
+                                .ThenInclude(mp => mp.Municipality)
+                            .Include(ph => ph.MunicipalityProcedures)
+                                .ThenInclude(mp => mp.Procedures) 
+                );
+
+                var result = entities.Select(ph => new CompletePaymentDto
+                {
+                    Id = ph.Id,
+                    Amount = ph.Amount,
+                    PaymentDate = ph.PaymentDate?.ToDateTime(TimeOnly.MinValue),
+                    User = ph.User == null ? null : new UserDtoHistory
+                    {
+                        Id = ph.User.Id,
+                        UserFirtName = ph.User.FirstName,
+                        UserLastName = ph.User.LastName,
+                        Email = ph.User.Email,
+                        NationalId = ph.User.NationalId,
+                    },
+                    StatusType = ph.StatusTypeNavigation == null ? null : new AvailibityDto
+                    {
+                        Id = ph.StatusTypeNavigation.Id,
+                        TypeStatus = ph.StatusTypeNavigation.TypeStatus,
+                    },
+                    MunicipalityProcedure = ph.MunicipalityProcedures == null ? null : new MunicipalityProcedureDtoPayment
+                    {
+                        Id = ph.MunicipalityProcedures.Id,
+                        IntegrationType = ph.MunicipalityProcedures.IntegrationType,
+                        IsActive = ph.MunicipalityProcedures.IsActive,
+                        Municipality = ph.MunicipalityProcedures.Municipality == null ? null : new JustMunicipalitysDto
+                        {
+                            Id = ph.MunicipalityProcedures.Municipality.Id,
+                            Name = ph.MunicipalityProcedures.Municipality.Name,
+                        },
+                        Procedure = ph.MunicipalityProcedures.Procedures == null ? null : new ProcedureDto
+                        {
+                            Id = ph.MunicipalityProcedures.Procedures.Id,
+                            Name = ph.MunicipalityProcedures.Procedures.Name,
+                        }
+                    }
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new List<CompletePaymentDto>();
+            }
+        }
     }
 }
+
