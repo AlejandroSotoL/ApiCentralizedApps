@@ -81,7 +81,7 @@ namespace CentralizedApps.Controllers.web
         public async Task<IActionResult> updateMunicipality(int id)
         {
             var response = await _MunicipalityServices.JustGetMunicipalityWithRelations(id);
-            return Json(response);
+            return View(response);
         }
 
 

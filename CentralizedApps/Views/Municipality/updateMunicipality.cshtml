@@ -1,8 +1,301 @@
-
 @{
     ViewData["Title"] = "updateWebMunicipality";
     Layout = "Layout";
 }
+<form asp-action="" asp-controller="" method="post" class="w-full">
+    <div class="flex items-center gap-3 flex-col justify-center w-full p-4">
+        <div class="avatar ">
+            <div class="mask mask-squircle h-20 w-20">
+                <img src="https://apicentralizate.1cero1.com/uploads/Quibdo/escudoquibdó_20250917_111322.png"
+                    alt="escudo municipio" />
+            </div>
+        </div>
+        <div class="text-center">
+            <div class="font-bold">Alcaldia de Quibdó</div>
+            <div class="text-sm opacity-50">Antioquia</div>
+        </div>
+    </div>
+    <div class="flex w-full flex-col">
+        <div class="card bg-base-300 rounded-box grid place-items-center p-4">
+            <div class="font-bold text-3xl text-center m-6">
+                <h1>Información general</h1>
+            </div>
 
-<h1>@ViewBag</h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">Codigo</legend>
+                    <input type="text" class="input" placeholder="Codigo" />
+                </fieldset>
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">Dominio</legend>
+                    <input type="text" class="input" placeholder="Dominio" />
+                </fieldset>
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">Escudo</legend>
+                    <input type="file" class="file-input" />
+                </fieldset>
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">Alcaldia</legend>
+                    <input type="text" class="input" placeholder="Alcaldia" />
+                </fieldset>
 
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">Departamento</legend>
+                    <select class="select">
+                        <option disabled selected>Select</option>
+                        <option>Chrome</option>
+                        <option>FireFox</option>
+                        <option>Safari</option>
+                    </select>
+                </fieldset>
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">Banco</legend>
+                    <select class="select">
+                        <option disabled selected>select</option>
+                        <option>Chrome</option>
+                        <option>FireFox</option>
+                        <option>Safari</option>
+                    </select>
+                </fieldset>
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">userFintech</legend>
+                    <input type="text" class="input" placeholder="userFintech" />
+                </fieldset>
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">passwordFintech</legend>
+                    <input type="text" class="input" placeholder="passwordFintech" />
+                </fieldset>
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">Privacidad y Condiciones</legend>
+                    <input type="text" class="input" placeholder="Privacidad y Condiciones" />
+                </fieldset>
+                <fieldset class="fieldset text-center">
+                    <legend class="fieldset-legend">Terminos y Condiciones</legend>
+                    <input type="text" class="input" placeholder="Terminos y Condiciones" />
+                </fieldset>
+            </div>
+
+
+
+        </div>
+        <div class="divider">o</div>
+        <div class="card rounded-box grid grid-cols-1 justify-items-center text-center bg-base-300 p-4">
+
+            <h2 class="font-bold text-3xl mt-4 mb-10">Configuración</h2>
+            <div class="card rounded-box w-full bg-base-200 grid grid-cols-1 justify-items-center my-4 gap-0 ">
+                <h3 class="font-bold text-3xl mt-4 mb-10">Tramites</h3>
+
+                <div class="w-full bg-base-200 grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+
+                    @{
+                        for (int i = 0; i < 6; i++)
+                        {
+                            <div class="bg-base-300 flex flex-col md:flex-row justify-evenly p-4 rounded-lg">
+
+                                <fieldset class="fieldset text-center w-full md:w-1/3">
+                                    <legend class="fieldset-legend">Tramite</legend>
+                                    <select class="select w-full">
+                                        <option disabled selected>Select</option>
+                                        <option>Chrome</option>
+                                        <option>FireFox</option>
+                                        <option>Safari</option>
+                                    </select>
+                                </fieldset>
+
+                                <fieldset class="fieldset text-center hidden">
+                                    <legend class="fieldset-legend">id</legend>
+                                    <input type="text" class="input" placeholder="id" />
+                                </fieldset>
+
+                                <fieldset class="fieldset text-center w-full md:w-1/3">
+                                    <legend class="fieldset-legend">Integración</legend>
+                                    <input type="text" class="input" placeholder="Integración" />
+                                </fieldset>
+
+                                <fieldset class="fieldset flex flex-col items-center justify-center w-full md:w-1/6">
+                                    <legend class="fieldset-legend">Estado</legend>
+                                    <input type="checkbox" checked="checked" class="toggle toggle-success" />
+                                </fieldset>
+                            </div>
+                        }
+                    }
+                </div>
+
+
+            </div>
+            <div class="grid gap-4 w-full ">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div class="card bg-base-200 rounded-box grid grid-cols-1  p-4">
+                        <h3 class="font-bold text-2xl mt-4 mb-10">Tema y Diseño</h3>
+                        <div class="grid grid-cols-1 justify-items-center w-full my-4">
+                            <fieldset class="fieldset text-center w-full items-center md:max-w-1/2">
+                                <legend class="fieldset-legend">temas</legend>
+                                <select class="select w-full">
+                                    <option disabled selected>Select</option>
+                                    <option>Chrome</option>
+                                    <option>FireFox</option>
+                                    <option>Safari</option>
+                                </select>
+                            </fieldset>
+
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4  w-full">
+                            <fieldset class="fieldset text-center hidden">
+                                <legend class="fieldset-legend">id</legend>
+                                <input type="text" class="input" placeholder="id" />
+                            </fieldset>
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">nameTheme</legend>
+                                <input type="text" class="input" placeholder="nameTheme" />
+                            </fieldset>
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">backGroundColor</legend>
+                                <input type="text" class="input" placeholder="backGroundColor" />
+                            </fieldset>
+
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">primaryColor</legend>
+                                <input type="text" class="input" placeholder="primaryColor" />
+                            </fieldset>
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">secondaryColor</legend>
+                                <input type="text" class="input" placeholder="secondaryColor" />
+                            </fieldset>
+
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">secondaryColorBlack</legend>
+                                <input type="text" class="input" placeholder="secondaryColorBlack" />
+                            </fieldset>
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">onPrimaryColorLight</legend>
+                                <input type="text" class="input" placeholder="onPrimaryColorDark" />
+                            </fieldset>
+
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">secondaryColorBlack</legend>
+                                <input type="text" class="input" placeholder="secondaryColorBlack" />
+                            </fieldset>
+
+                        </div>
+                    </div>
+                    <div class="card bg-base-200 rounded-box grid grid-cols-1 justify-items-center p-4">
+                        <div class="card rounded-b-box w-full bg-base-300 mb-4 p-4">
+                            <h3 class="font-bold text-2xl mt-4">Cursos</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full ">
+                                <fieldset class="fieldset text-center hidden">
+                                    <legend class="fieldset-legend">id</legend>
+                                    <input type="text" class="input" placeholder="id" />
+                                </fieldset>
+                                <fieldset class="fieldset text-center">
+                                    <legend class="fieldset-legend">name</legend>
+                                    <input type="text" class="input" placeholder="name" />
+                                </fieldset>
+
+                                <fieldset class="fieldset text-center">
+                                    <legend class="fieldset-legend">get</legend>
+                                    <input type="text" class="input" placeholder="get" />
+                                </fieldset>
+                            </div>
+                            <div class="flex justify-end">
+                                <fieldset class="fieldset flex flex-col items-center justify-center w-full md:w-1/6">
+                                    <legend class="fieldset-legend">Estado</legend>
+                                    <input type="checkbox" checked="checked" class="toggle toggle-success" />
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class=" card rounded-b-box w-full bg-base-300 p-4">
+
+                            <h3 class="font-bold text-2xl m-0">Eccenarios Deportivos</h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                                <fieldset class="fieldset text-center hidden">
+                                    <legend class="fieldset-legend">id</legend>
+                                    <input type="text" class="input" placeholder="id" />
+                                </fieldset>
+                                <fieldset class="fieldset text-center">
+                                    <legend class="fieldset-legend">name</legend>
+                                    <input type="text" class="input" placeholder="name" />
+                                </fieldset>
+
+                                <fieldset class="fieldset text-center">
+                                    <legend class="fieldset-legend">get</legend>
+                                    <input type="text" class="input" placeholder="get" />
+                                </fieldset>
+                                <fieldset class="fieldset text-center">
+                                    <legend class="fieldset-legend">calendaryPost</legend>
+                                    <input type="text" class="input" placeholder="calendaryPost" />
+                                </fieldset>
+                                <fieldset class="fieldset text-center">
+                                    <legend class="fieldset-legend">reservationPost</legend>
+                                    <input type="text" class="input" placeholder="reservationPost" />
+                                </fieldset>
+
+                            </div>
+                            <div class="flex justify-end">
+                                <fieldset class="fieldset flex flex-col items-center justify-center w-full md:w-1/6">
+                                    <legend class="fieldset-legend">Estado</legend>
+                                    <input type="checkbox" checked="checked" class="toggle toggle-success" />
+                                </fieldset>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="card bg-base-200 rounded-box grid grid-cols-1 place-items-center p-4">
+                        <h3 class="font-bold text-2xl">sportsFacilities</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4  w-full">
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">id</legend>
+                                <input type="text" class="input" placeholder="id" />
+                            </fieldset>
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">name</legend>
+                                <input type="text" class="input" placeholder="name" />
+                            </fieldset>
+
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">get</legend>
+                                <input type="text" class="input" placeholder="get" />
+                            </fieldset>
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">calendaryPost</legend>
+                                <input type="text" class="input" placeholder="calendaryPost" />
+                            </fieldset>
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">reservationPost</legend>
+                                <input type="text" class="input" placeholder="reservationPost" />
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="card bg-base-200 rounded-box grid grid-cols-1 place-items-center p-4">
+                        <h3 class="font-bold text-2xl">Redes Sociales</h3>
+                        <fieldset class="fieldset text-center">
+                            <legend class="fieldset-legend">socialMediaType</legend>
+                            <select class="select">
+                                <option disabled selected>Select</option>
+                                <option>Chrome</option>
+                                <option>FireFox</option>
+                                <option>Safari</option>
+                            </select>
+                        </fieldset>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4  w-full">
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">id</legend>
+                                <input type="text" class="input" placeholder="id" />
+                            </fieldset>
+                            <fieldset class="fieldset text-center">
+                                <legend class="fieldset-legend">url</legend>
+                                <input type="text" class="input" placeholder="url" />
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
