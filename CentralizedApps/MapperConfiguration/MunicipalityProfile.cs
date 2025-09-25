@@ -10,10 +10,14 @@ namespace CentralizedApps.Profile_AutoMapper
     {
         public MunicipalityProfile()
         {
+            CreateMap<PaymentHistory, CompletePaymentDto>()
+                .ForMember(dest => dest.StatusType, opt => opt.MapFrom(src => src.StatusTypeNavigation))
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+                .ForMember(dest => dest.MunicipalityProcedure, opt => opt.MapFrom(src => src.MunicipalityProcedures));
+            CreateMap<User, UserDtoHistory>();
+            CreateMap<MunicipalityProcedure, MunicipalityProcedureDtoPayment>();
 
-            //Avilibity
             CreateMap<Availibity, AvailibityDto>().ReverseMap();
-            // Municipios
             CreateMap<Municipality, GetMunicipalitysDto>()
                 .ForMember(dest => dest.Bank, opt => opt.MapFrom(src => src.IdBankNavigation))
                 .ForMember(dest => dest.IdShield, opt => opt.MapFrom(src => src.IdShieldNavigation))
@@ -21,48 +25,36 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Procedure, ProcedureDto>().ReverseMap();
             CreateMap<CreatePeopleInvitated, PeopleInvitated>().ReverseMap();
 
-            // Reminders
             CreateMap<Reminder, ResponseReminderDto>().ReverseMap();
             CreateMap<Reminder, CreateReminderDto>().ReverseMap();
 
-            // 🔹 Faltaban estos
             CreateMap<User, UserDto_Munucipality>().ReverseMap();
             CreateMap<MunicipalityProcedure, MunicipalityProcedureDto>().ReverseMap();
             CreateMap<MunicipalityProcedure, MunicipalityProcedureDto_Reminders>().ReverseMap();
 
             CreateMap<Municipality, JustMunicipalitysDto>().ReverseMap();
 
-            // Bancos y Escudos 
             CreateMap<Bank, BankDto>().ReverseMap();
             CreateMap<ShieldMunicipality, ShieldMunicipalityDto>().ReverseMap();
 
-            // Noticias
             CreateMap<NewsByMunicipality, NewsByMunicipalityDto>().ReverseMap();
 
-            // Departamentos
             CreateMap<Department, DepartmentDto>().ReverseMap();
 
-            // Temas
             CreateMap<Theme, ThemeDto>().ReverseMap();
 
-            // Instalaciones deportivas
             CreateMap<SportsFacility, SportsFacilitiesDto>().ReverseMap();
 
-            // Cursos
             CreateMap<Course, CourseDto>().ReverseMap();
 
-            // Trámites
             CreateMap<MunicipalityProcedureAddDto, MunicipalityProcedure>();
 
-            // Redes sociales
             CreateMap<MunicipalitySocialMedium, MunicipalitySocialMediaDto>().ReverseMap();
             CreateMap<MunicipalitySocialMedium, MunicipalitySocialMeditaDto_Response>().ReverseMap();
             CreateMap<SocialMediaType, SocialMediaTypeDto>().ReverseMap();
 
-            // Disponibilidad
             CreateMap<Availibity, AvailibityDto>().ReverseMap();
 
-            // QueryFields
             CreateMap<QueryField, QueryFieldDto_Relation>().ReverseMap();
         }
     }

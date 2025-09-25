@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CentralizedApps.Repositories
 {
-    
+
     public class PaymentHistoryRepository : GenericRepository<PaymentHistory>, IPaymentHistoryRepository
     {
 
         private readonly CentralizedAppsDbContext _context;
-    private readonly DbSet<PaymentHistory> _DbSet;
+        private readonly DbSet<PaymentHistory> _DbSet;
         public PaymentHistoryRepository(CentralizedAppsDbContext Context) : base(Context)
         {
             _context = Context;
@@ -61,7 +61,7 @@ namespace CentralizedApps.Repositories
                     .ThenInclude(pa => pa.Municipality)
             .FirstOrDefaultAsync(filtro);
 
-            return paymentHistoryUser?? new PaymentHistory();
+            return paymentHistoryUser ?? new PaymentHistory();
 
         }
     }
