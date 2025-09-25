@@ -89,7 +89,7 @@ namespace CentralizedApps.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new ValidationResponseDto
-                {
+                { 
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = $"Error extraño ${ex.Message}"
