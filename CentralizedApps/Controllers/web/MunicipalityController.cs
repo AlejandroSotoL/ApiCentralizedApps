@@ -78,12 +78,10 @@ namespace CentralizedApps.Controllers.web
         }
 
         [HttpGet]
-        public async Task<IActionResult> updateMunicipality(int id)
+        public async Task<IActionResult> FormMunicipality(int id)
         {
             var response = await _MunicipalityServices.JustGetMunicipalityWithRelations(id);
             return View(response);
         }
-
-
     }
 }
