@@ -3,11 +3,13 @@ using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CentralizedApps.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     public class PaymentHistoryController : ControllerBase
     {

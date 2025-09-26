@@ -5,11 +5,14 @@ using CentralizedApps.Services;
 using CentralizedApps.Services.Interfaces;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CentralizedApps.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
+    
     public class ProcessOfMunicipalitiesController : ControllerBase
     {
 
@@ -151,7 +154,7 @@ namespace CentralizedApps.Controllers
             return result;
         }
         [HttpPut("Update/ProcedureStatus/{id}")]
-        public async Task<ValidationResponseDto> UpdateProcedureStatus(int id, [FromQuery] bool ?status , [FromQuery] string IntegrationType)
+        public async Task<ValidationResponseDto> UpdateProcedureStatus(int id, [FromQuery] bool? status, [FromQuery] string IntegrationType)
         {
             if (id <= 0 || status == null || IntegrationType == null)
             {
