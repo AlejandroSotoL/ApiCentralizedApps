@@ -14,15 +14,17 @@
         </h1>
         <div class=" w-full md:w-1/4 flex justify-center items-center self-center">
 
-        <form asp-action="Index" asp-controller="Municipality" method="get" class="w-full md:w-full flex justify-center">
-            <input type="text" name= "filter" class="input w-full md:1/2 bg-base-100" placeholder="Buscar por Municipio, Departamento o Banco..."/>
-            
-        </form>
-        </div>
+            <form asp-action="Index" asp-controller="Municipality" method="get"
+                class="w-full md:w-full flex justify-center">
+                <input type="text" name="filter" class="input w-full md:1/2 bg-base-100"
+                    placeholder="Buscar por Municipio, Departamento o Banco..." />
+            </form>
 
-        <!-- BOTONES -->
+        </div>
         <div class="w-full md:w-1/4 flex flex-wrap justify-evenly md:justify-evenly gap-2 p-2 self-end">
-            <button class="btn btn-outline btn-accent w-25">CREAR</button>
+            <form asp-controller="Municipality" asp-action="updateMunicipality" method="get">
+                <button type="submit" class="btn btn-outline btn-accent w-25">CREAR</button>
+            </form>
         </div>
     </div>
 
@@ -30,7 +32,6 @@
     <div>
         <div class="overflow-x-auto mt-4">
             <table class="table">
-                <!-- head -->
                 <thead class="bg-base-100 ">
                     <tr class="text-center">
                         <th>Municipio</th>
@@ -87,6 +88,4 @@
             </table>
         </div>
     </div>
-
 </div>
-

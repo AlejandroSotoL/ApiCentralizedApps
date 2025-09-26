@@ -1,4 +1,3 @@
-
 using CentralizedApps.Data;
 using CentralizedApps.FluentValidation;
 using CentralizedApps.HttpClients;
@@ -13,62 +12,60 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de Kestrel
+// ---------------- Kestrel ----------------
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(5107);
     options.ListenAnyIP(7081, listenOptions => listenOptions.UseHttps());
 });
 
-// FluentValidation
+// ---------------- FluentValidation ----------------
 builder.Services
     .AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 
-// MVC y API
+// ---------------- Controllers / API ----------------
+// La API NO exige autenticación global
 builder.Services.AddControllers();
 
-// Swagger
+// ---------------- MVC (Web) ----------------
+// Aquí sí aplicamos autenticación obligatoria
+builder.Services.AddControllersWithViews(options =>
+{
+    var policy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter(policy));
+});
+
+// ---------------- Swagger ----------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "CentralizedApps API", Version = "v1" });
 });
 
-// AutoMapper
+// ---------------- AutoMapper ----------------
 builder.Services.AddAutoMapper(typeof(MunicipalityProfile));
 
-// Base de datos
+// ---------------- Base de datos ----------------
 builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("ConectionDefault"),
         sqlOptions => sqlOptions.CommandTimeout(180)
     ));
 
-// HttpClient Fintech
+// ---------------- HttpClient ----------------
 builder.Services.AddHttpClient<FintechApiClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ExternalApis:FintechApi:BaseUrl"]);
 });
 
-// MVC y API
-builder.Services.AddControllersWithViews(options =>
-{
-    // Todas las acciones requieren autenticación por defecto
-    var policy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
-    options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter(policy));
-});
-builder.Services.AddControllers();
-
-
-// Repositorios y servicios
+// ---------------- Repositorios y servicios ----------------
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -82,15 +79,13 @@ builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
 builder.Services.AddScoped<IBank, BankService>();
 builder.Services.AddScoped<IFintechService, FintechService>();
 
-
-// Claims / Autenticación
+// ---------------- Autenticación / Autorización ----------------
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login";
+        options.LoginPath = "/Account/Login";       // redirección al login si no hay sesión
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
-
 
 builder.Services.AddAuthorization(options =>
 {
@@ -99,20 +94,15 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
-app.MapGet("/", context =>
-{
-    context.Response.Redirect("/Account/Login");
-    return Task.CompletedTask;
-});
 
-// Middleware
+// ---------------- Middleware ----------------
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 // app.UseMiddleware<GlobalExceptionMiddleware>();
 
-// Swagger
+// ---------------- Swagger ----------------
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -120,7 +110,11 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
-// Rutas MVC
+// ---------------- Rutas ----------------
+// API → libre (no necesita login)
+app.MapControllers();
+
+// Web (MVC) → requiere login obligatorio
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

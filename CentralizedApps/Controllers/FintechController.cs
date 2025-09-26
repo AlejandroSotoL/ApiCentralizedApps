@@ -7,12 +7,15 @@ using CentralizedApps.Models.Dtos.DtosFintech;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CentralizedApps.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
+
     public class FintechController : ControllerBase
     {
         private readonly IFintechService _fintechService;
