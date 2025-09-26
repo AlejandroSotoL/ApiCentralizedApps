@@ -8,6 +8,7 @@ using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Services;
 using CentralizedApps.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -16,6 +17,7 @@ namespace CentralizedApps.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class MunicipalityController : ControllerBase
     {
         private readonly IMunicipalityServices _MunicipalityServices;
@@ -83,13 +85,13 @@ namespace CentralizedApps.Controllers
                         SentencesError = "No se encontraron municipios con relaciones."
                     });
                 }
-                
+
                 return Ok(response);
             }
             catch (Exception ex)
             {
                 return BadRequest(new ValidationResponseDto
-                { 
+                {
                     BooleanStatus = false,
                     CodeStatus = 500,
                     SentencesError = $"Error extraño ${ex.Message}"
@@ -113,7 +115,7 @@ namespace CentralizedApps.Controllers
                         SentencesError = "No se encontraron municipios con relaciones."
                     });
                 }
-                
+
                 return Ok(relations);
             }
             catch (Exception ex)

@@ -7,12 +7,15 @@ using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services;
 using CentralizedApps.Services.Interfaces;
 using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CentralizedApps.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
+
     public class PeopleInvitatedController : ControllerBase
     {
         private readonly IPeopleInvitated _peopleInvitated;

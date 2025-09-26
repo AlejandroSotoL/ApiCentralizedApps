@@ -7,11 +7,14 @@ using CentralizedApps.Models.UserDtos;
 using System.ComponentModel.DataAnnotations;
 using CentralizedApps.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CentralizedApps.Contollers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
+    
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -56,7 +59,7 @@ namespace CentralizedApps.Contollers
                 return NotFound(new ValidationResponseDto
                 {
                     BooleanStatus = false,
-                    CodeStatus = 400,       
+                    CodeStatus = 400,
                     SentencesError = $"Error: not found"
                 });
             return Ok(user);

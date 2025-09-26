@@ -5,13 +5,16 @@ using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.EmailDto;
 using CentralizedApps.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CentralizedApps.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     [Route("api/[controller]")]
+    
     public class EmailController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -54,7 +57,7 @@ namespace CentralizedApps.Controllers
                         ExtraData = null
                     };
                 }
-                
+
                 var response = await _unitOfWork.configurationEmail.SendEmailValidationCode(To);
                 return response;
             }
