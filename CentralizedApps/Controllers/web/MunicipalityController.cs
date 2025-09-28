@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
+using CentralizedApps.Models.Dtos.PrincipalsDtos;
+using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using NuGet.Protocol;
+
 
 namespace CentralizedApps.Controllers.web
 {
@@ -16,10 +11,12 @@ namespace CentralizedApps.Controllers.web
     {
         private readonly IMunicipalityServices _MunicipalityServices;
         private readonly IProcedureServices _ProcedureServices;
-        public MunicipalityController(IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices)
+        private readonly IUnitOfWork _unitOfWork;
+        public MunicipalityController(IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork)
         {
             _MunicipalityServices = MunicipalityServices;
             _ProcedureServices = ProcedureServices;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -27,34 +24,16 @@ namespace CentralizedApps.Controllers.web
         {
             try
             {
-                var response = await _MunicipalityServices.GetAllMunicipalityWithRelations();
-                if (!string.IsNullOrEmpty(filter))
-                {
-                    filter.ToLower();
-
-                    response = response.Where(municipio =>
-                    (municipio.Name != null && municipio.Name.ToLower().Contains(filter)) ||
-                    (municipio.Department?.Name != null && municipio.Department.Name.ToLower().Contains(filter)) ||
-                    (municipio.Bank?.NameBank != null && municipio.Bank.NameBank.ToLower().Contains(filter))
-                    ).ToList();
-                }
+                var response = await _MunicipalityServices.GetAllMunicipalityWithRelationsWeb(filter);
                 if (response == null || !response.Any())
                 {
-                    return View(response);
+                    return View(new List<GetMunicipalitysDto>());
                 }
-
-
-
                 return View(response);
             }
             catch (Exception ex)
             {
-                return View(new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 500,
-                    SentencesError = $"Error extraño ${ex.Message}"
-                });
+                return View(new List<GetMunicipalitysDto>());
             }
         }
 
@@ -80,8 +59,22 @@ namespace CentralizedApps.Controllers.web
         [HttpGet]
         public async Task<IActionResult> FormMunicipality(int id)
         {
-            var response = await _MunicipalityServices.JustGetMunicipalityWithRelations(id);
-            return View(response);
+
+            try
+            {
+                var municipality = await _MunicipalityServices.JustGetMunicipalityWithRelationsWeb(id);
+
+                if (municipality == null)
+                {
+                    return View(new MunicipalityDto());
+                }
+
+                return View(municipality);
+            }
+            catch (Exception ex)
+            {
+                return View(new MunicipalityDto());
+            }
         }
     }
 }
