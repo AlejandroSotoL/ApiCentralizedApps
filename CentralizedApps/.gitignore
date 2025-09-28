@@ -65,3 +65,5 @@ _ReSharper*/
 
 # Auto-generated VS files
 GeneratedMSBuildEditorConfig.editorconfig
+bin/
+obj/

@@ -17,7 +17,6 @@ namespace CentralizedApps.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [AllowAnonymous]
-    
     public class ProceduresController : ControllerBase
     {
         private readonly IProcedureServices _ProcedureServices;
