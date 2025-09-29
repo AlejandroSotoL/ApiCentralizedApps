@@ -279,11 +279,11 @@
                 <div class="bg-base-200 p-4 rounded-lg grid grid-cols-3 gap-4 items-center">
                     <select class="select w-full">
                         <option disabled selected>Seleccione red</option>
-                        @foreach (var municipalitySocial in Model?.MunicipalitySocialMedia ?? new
-                                            List<MunicipalitySocialMedium>())
+                        @foreach (var municipalitySocial in Model?.SocialMediaTypes ?? new
+                                            List<SocialMediaType>())
                         {
                             <option value=@municipalitySocial.Id selected="@(municipalitySocial?.Id == municipalitySocial?.Id)">
-                                @municipalitySocial?.SocialMediaType?.Name</option>
+                                @municipalitySocial?.Name</option>
                         }
 
                     </select>
@@ -311,12 +311,12 @@
                 <div class="bg-base-200 p-4 rounded-lg grid grid-cols-3 gap-4 items-center">
                     <select class="select w-full">
                         <option disabled selected>Seleccione trámite</option>
-                        @foreach (var municipalityProcedure in Model?.MunicipalityProcedures ?? new
-                                            List<MunicipalityProcedure>())
+                        @foreach (var municipalityProcedure in Model?.Procedures ?? new
+                                            List<Procedure>())
                         {
-                            <option value="@municipalityProcedure?.Procedures?.Id"
-                                selected="@(municipalityProcedure?.Procedures?.Id == municipalityProcedureDto?.Procedures?.Id)">
-                                @municipalityProcedure?.Procedures?.Name
+                            <option value="@municipalityProcedure?.Id"
+                                selected="@(municipalityProcedure?.Id == municipalityProcedureDto?.Procedures?.Id)">
+                                @municipalityProcedure?.Name
                             </option>
                         }
 
