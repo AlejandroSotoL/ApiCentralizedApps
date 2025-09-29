@@ -376,8 +376,8 @@ namespace CentralizedApps.Services
                 municipalityDto.Banks = await _unitOfWork.genericRepository<Bank>().GetAllAsync();
                 municipalityDto.Departments = await _unitOfWork.genericRepository<Department>().GetAllAsync();
                 municipalityDto.Themes = await _unitOfWork.genericRepository<Theme>().GetAllAsync();
-                municipalityDto.MunicipalityProcedures = await _unitOfWork.genericRepository<MunicipalityProcedure>().GetAllAsync();
-                municipalityDto.MunicipalitySocialMedia = await _unitOfWork.genericRepository<MunicipalitySocialMedium>().GetAllAsync();
+                municipalityDto.Procedures = await _unitOfWork.genericRepository<Procedure>().GetAllAsync();
+                municipalityDto.SocialMediaTypes = await _unitOfWork.genericRepository<SocialMediaType>().GetAllAsync();
                 municipalityDto.QueryFields = await _unitOfWork.genericRepository<QueryField>().GetAllAsync();
                 return municipalityDto;
             }

@@ -16,8 +16,8 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public List<Theme> Themes { get; set; } = new();
         public Course Courses { get; set; } = new();
         public SportsFacility SportsFacilities { get; set; } = new();
-        public List<MunicipalityProcedure> MunicipalityProcedures { get; set; } = new();
-        public List<MunicipalitySocialMedium> MunicipalitySocialMedia { get; set; } = new();
+        public List<Procedure> Procedures { get; set; } = new();
+        public List<SocialMediaType> SocialMediaTypes { get; set; } = new();
         public List<QueryField> QueryFields { get; set; } = new();
         public NewsByMunicipality NewsByMunicipalities { get; set; } = new();
     }

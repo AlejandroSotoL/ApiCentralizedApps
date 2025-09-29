@@ -68,7 +68,6 @@ namespace CentralizedApps.Controllers.web
                 {
                     return View(new MunicipalityDto());
                 }
-
                 return View(municipality);
             }
             catch (Exception ex)

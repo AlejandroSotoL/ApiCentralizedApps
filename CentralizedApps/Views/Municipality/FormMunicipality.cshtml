@@ -207,16 +207,16 @@
             {
                 <div class="bg-base-200 p-4 rounded-lg grid grid-cols-3 gap-4 items-center">
                     <select class="select w-full">
-                        <option disabled selected>Seleccione red</option>
-                        @foreach(var municipalitySocial in Model?.MunicipalitySocialMedia ?? new List<MunicipalitySocialMedium>()){
-                        <option value=@municipalitySocial.Id selected="@(municipalitySocial?.Id == municipalitySocial?.Id)"  >@municipalitySocial?.SocialMediaType?.Name</option>
+                        <option disabled>Seleccione red</option>
+                        @foreach(var municipalitySocial in Model?.SocialMediaTypes ?? new List<SocialMediaType>()){
+                        <option value="@municipalitySocial.Id" selected="@(municipalitySocial?.Id == municipalitySocialMedium?.Id)"  >@municipalitySocial?.Name</option>
                     } 
                     
                     </select>
-                    <input type="text" class="input w-full" placeholder="Enlace integración" value=@municipalitySocialMedium.Url />
+                    <input type="text" class="input w-full" placeholder="Enlace integración" value=@municipalitySocialMedium?.Url />
                     <label class="flex justify-center items-center gap-2">
                         <span>Activo</span>
-                        <input type="checkbox" checked class="toggle toggle-success" value=@municipalitySocialMedium.IsActive />
+                        <input type="checkbox" checked class="toggle toggle-success" value=@municipalitySocialMedium?.IsActive />
                     </label>
                 </div>
             }
@@ -232,10 +232,10 @@
                 <div class="bg-base-200 p-4 rounded-lg grid grid-cols-3 gap-4 items-center">
                     <select class="select w-full">
                         <option disabled selected>Seleccione trámite</option>
-                        @foreach(var municipalityProcedure in Model?.MunicipalityProcedures ?? new List<MunicipalityProcedure>()){
-                        <option value="@municipalityProcedure?.Procedures?.Id" 
-                                selected="@(municipalityProcedure?.Procedures?.Id == municipalityProcedureDto?.Procedures?.Id)">
-                                @municipalityProcedure?.Procedures?.Name
+                        @foreach(var municipalityProcedure in Model?.Procedures ?? new List<Procedure>()){
+                        <option value="@municipalityProcedure?.Id" 
+                                selected="@(municipalityProcedure?.Id == municipalityProcedureDto?.Procedures?.Id)" >
+                                @municipalityProcedure?.Name
                         </option>
                     } 
                     
