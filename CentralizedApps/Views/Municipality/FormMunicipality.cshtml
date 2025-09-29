@@ -1,9 +1,25 @@
+@using CentralizedApps.Models.Dtos.PrincipalsDtos
+@model CentralizedApps.Models.Dtos.PrincipalsDtos.MunicipalityDto
+
 @{
     ViewData["Title"] = "updateWebMunicipality";
     Layout = "Layout";
 }
 
 <div class="card bg-base-200 rounded-box p-6 mb-8">
+
+<div class="flex flex-col items-center justify-center gap-3 w-full p-6">
+        <div class="avatar">
+            <div class="mask mask-squircle h-24 w-24">
+                <img src="@Model.municipality?.IdShield?.Url"
+                    alt="escudo municipio" />
+            </div>
+        </div>
+        <div class="text-center">
+            <h1 class="font-bold text-2xl">@Model.municipality?.Name</h1>
+            <p class="text-sm opacity-70">@Model.municipality?.Department?.Name</p>
+        </div>
+    </div>
     <h2 class="font-bold text-2xl text-center mb-6">
         Tienes que analizár esto.
     </h2>
@@ -19,39 +35,40 @@
                 <legend class="fieldset-legend">Seleccionar tema existente</legend>
                 <select class="select w-full">
                     <option disabled selected>Seleccione un tema</option>
-                    <option>Tema Claro</option>
-                    <option>Tema Oscuro</option>
-                    <option>Tema Corporativo</option>
+                    @foreach(var tema in Model.Themes){
+                        <option value=@tema.Id selected="@(tema.NameTheme== Model?.municipality?.Theme?.NameTheme)">@tema.NameTheme</option>
+                    }
+                    
                 </select>
             </fieldset>
 
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre del tema</legend>
-                <input type="text" class="input w-full" placeholder="Ej: Tema Juvenil" />
+                <input type="text" class="input w-full" placeholder="Ej: Tema Juvenil"  value=@Model?.municipality?.Theme?.NameTheme />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Color de fondo</legend>
-                <input type="color" class="input w-full" />
+                <input type="color" class="input w-full" value="@Model.municipality?.Theme?.BackGroundColor" />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Color primario</legend>
-                <input type="color" class="input w-full" />
+                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.PrimaryColor />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Color secundario</legend>
-                <input type="color" class="input w-full" />
+                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.SecondaryColor />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Color secundario oscuro</legend>
-                <input type="color" class="input w-full" />
+                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.SecondaryColorBlack />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Texto en primario (claro)</legend>
-                <input type="color" class="input w-full" />
+                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.OnPrimaryColorLight />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Texto en primario (oscuro)</legend>
-                <input type="color" class="input w-full" value="" />
+                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.OnPrimaryColorDark />
             </fieldset>
         </div>
         <div class="flex justify-end mt-4">
@@ -66,14 +83,14 @@
                 <legend class="fieldset-legend">Seleccionar departamento existente</legend>
                 <select class="select w-full">
                     <option disabled selected>Seleccione un departamento</option>
-                    <option>Antioquia</option>
-                    <option>Chocó</option>
-                    <option>Valle del Cauca</option>
+                    @foreach(var department in Model.Departments){
+                        <option value=@department.Id selected="@(department.Id == Model.municipality?.Department?.Id)">@department.Name</option>
+                    } 
                 </select>
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre del departamento</legend>
-                <input type="text" class="input w-full" placeholder="Ej: Cundinamarca" />
+                <input type="text" class="input w-full" placeholder="Ej: Cundinamarca" value=@Model.municipality?.Department?.Name />
             </fieldset>
         </div>
         <div class="flex justify-end mt-4">
@@ -88,14 +105,15 @@
                 <legend class="fieldset-legend">Seleccionar banco existente</legend>
                 <select class="select w-full">
                     <option disabled selected>Seleccione un banco</option>
-                    <option>Bancolombia</option>
-                    <option>Banco de Bogotá</option>
-                    <option>Davivienda</option>
+                    @foreach(var bank in Model.Banks){
+                        <option value=@bank.Id  selected="@(bank.NameBank == Model.municipality?.Bank?.NameBank )" >@bank.NameBank</option>
+                    } 
+                    
                 </select>
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre del banco</legend>
-                <input type="text" class="input w-full" placeholder="Ej: BBVA" />
+                <input type="text" class="input w-full" placeholder="Ej: BBVA" value=@Model.municipality?.Bank?.NameBank />
             </fieldset>
         </div>
         <div class="flex justify-end mt-4">
@@ -106,83 +124,42 @@
 
 <form asp-action="" asp-controller="" method="post" class="w-full">
 
-    <div class="flex flex-col items-center justify-center gap-3 w-full p-6">
-        <div class="avatar">
-            <div class="mask mask-squircle h-24 w-24">
-                <img src="https://apicentralizate.1cero1.com/uploads/Quibdo/escudoquibdó_20250917_111322.png"
-                    alt="escudo municipio" />
-            </div>
-        </div>
-        <div class="text-center">
-            <h1 class="font-bold text-2xl">Alcaldía de Quibdó</h1>
-            <p class="text-sm opacity-70">Antioquia</p>
-        </div>
-    </div>
 
     <div class="card bg-base-300 rounded-box p-6 mb-6">
         <h2 class="font-bold text-2xl text-center mb-6">Información General</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Código</legend>
-                <input type="text" class="input w-full" placeholder="Código" />
+                <input type="text" class="input w-full" placeholder="Código" value=@Model.municipality?.EntityCode />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Dominio</legend>
-                <input type="text" class="input w-full" placeholder="Dominio" />
+                <input type="text" class="input w-full" placeholder="Dominio" value=@Model.municipality?.Domain />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Escudo</legend>
-                <input type="file" class="file-input w-full" />
+                <input type="file" class="file-input w-full" value=@Model.municipality?.IdShield?.Url />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre Alcaldía</legend>
-                <input type="text" class="input w-full" placeholder="Alcaldía" />
+                <input type="text" class="input w-full" placeholder="Alcaldía" value=@Model.municipality?.Name />
             </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Departamento</legend>
-                <select class="select w-full">
-                    <option disabled selected>Seleccione un departamento</option>
-                    <option>Antioquia</option>
-                    <option>Chocó</option>
-                    <option>Valle del Cauca</option>
-                    <option>Cundinamarca</option>
-                </select>
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Banco</legend>
-                <select class="select w-full">
-                    <option disabled selected>Seleccione un banco</option>
-                    <option>Bancolombia</option>
-                    <option>Banco de Bogotá</option>
-                    <option>Davivienda</option>
-                    <option>BBVA</option>
-                </select>
-            </fieldset>
+            
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Usuario Fintech</legend>
-                <input type="text" class="input w-full" placeholder="userFintech" />
+                <input type="text" class="input w-full" placeholder="userFintech" value=@Model.municipality?.UserFintech />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Contraseña Fintech</legend>
-                <input type="password" class="input w-full" placeholder="passwordFintech" />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Tema</legend>
-                <select class="select w-full">
-                    <option disabled selected>Seleccione un tema</option>
-                    <option>Claro</option>
-                    <option>Oscuro</option>
-                    <option>Corporativo</option>
-                    <option>Juvenil</option>
-                </select>
+                <input type="password" class="input w-full" placeholder="passwordFintech" value=@Model.municipality?.PasswordFintech/>
             </fieldset>
             <fieldset class="fieldset col-span-3">
                 <legend class="fieldset-legend">Política de Privacidad</legend>
-                <textarea class="textarea w-full" placeholder="Política de privacidad"></textarea>
+                <textarea class="textarea w-full" placeholder="Política de privacidad">@Model.municipality?.DataPrivacy</textarea>
             </fieldset>
             <fieldset class="fieldset col-span-3">
                 <legend class="fieldset-legend">Términos y Condiciones</legend>
-                <textarea class="textarea w-full" placeholder="Términos y condiciones"></textarea>
+                <textarea class="textarea w-full" placeholder="Términos y condiciones">@Model.municipality?.DataProcessingPrivacy</textarea>
             </fieldset>
         </div>
     </div>
@@ -193,8 +170,9 @@
             <div class="card bg-base-200 rounded-box p-6">
                 <h3 class="font-bold text-xl mb-4">Cursos</h3>
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" class="input w-full" placeholder="Nombre curso" />
-                    <input type="text" class="input w-full" placeholder="Enlace API / GET" />
+                    <input type="text" class="input w-full" placeholder="Nombre del curso" value=@Model.Courses.Name />
+                    <input type="text" class="input w-full" placeholder="Enlace API / Post" value=@Model.Courses.Get />
+                    <input type="text" class="input w-full" placeholder="Enlace API / Post" value=@Model.Courses.Post />
                 </div>
                 <div class="flex justify-end mt-4">
                     <label class="flex items-center gap-2">
@@ -207,15 +185,15 @@
             <div class="card bg-base-200 rounded-box p-6">
                 <h3 class="font-bold text-xl mb-4">Escenarios Deportivos</h3>
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" class="input w-full" placeholder="Nombre escenario" />
-                    <input type="text" class="input w-full" placeholder="Enlace GET" />
-                    <input type="text" class="input w-full" placeholder="Calendary POST" />
-                    <input type="text" class="input w-full" placeholder="Reservation POST" />
+                    <input type="text" class="input w-full" placeholder="Nombre escenario" value=@Model.SportsFacilities.Name />
+                    <input type="text" class="input w-full" placeholder="Enlace GET" value=@Model.SportsFacilities.Get />
+                    <input type="text" class="input w-full" placeholder="Calendary POST" value=@Model.SportsFacilities.CalendaryPost />
+                    <input type="text" class="input w-full" placeholder="Reservation POST" value=@Model.SportsFacilities.ReservationPost />
                 </div>
                 <div class="flex justify-end mt-4">
                     <label class="flex items-center gap-2">
                         <span>Activo</span>
-                        <input type="checkbox" checked class="toggle toggle-success" />
+                        <input type="checkbox" checked class="toggle toggle-success" value=@Model.SportsFacilities.IsActive />
                     </label>
                 </div>
             </div>
@@ -225,21 +203,20 @@
     <div class="card bg-base-300 rounded-box p-6 mb-6">
         <h2 class="font-bold text-2xl text-center mb-6">Redes Sociales</h2>
         <div class="grid gap-4">
-            @for (int i = 0; i < 4; i++)
+            @foreach(var  municipalitySocialMedium in Model?.municipality?.MunicipalitySocialMedia ?? new List<MunicipalitySocialMediaDto>())
             {
                 <div class="bg-base-200 p-4 rounded-lg grid grid-cols-3 gap-4 items-center">
                     <select class="select w-full">
                         <option disabled selected>Seleccione red</option>
-                        <option>Facebook</option>
-                        <option>Instagram</option>
-                        <option>Twitter/X</option>
-                        <option>YouTube</option>
-                        <option>WhatsApp</option>
+                        @foreach(var municipalitySocial in Model?.MunicipalitySocialMedia ?? new List<MunicipalitySocialMedium>()){
+                        <option value=@municipalitySocial.Id selected="@(municipalitySocial?.Id == municipalitySocial?.Id)"  >@municipalitySocial?.SocialMediaType?.Name</option>
+                    } 
+                    
                     </select>
-                    <input type="text" class="input w-full" placeholder="Enlace integración" />
+                    <input type="text" class="input w-full" placeholder="Enlace integración" value=@municipalitySocialMedium.Url />
                     <label class="flex justify-center items-center gap-2">
                         <span>Activo</span>
-                        <input type="checkbox" checked class="toggle toggle-success" />
+                        <input type="checkbox" checked class="toggle toggle-success" value=@municipalitySocialMedium.IsActive />
                     </label>
                 </div>
             }
@@ -250,20 +227,23 @@
     <div class="card bg-base-300 rounded-box p-6 mb-6">
         <h2 class="font-bold text-2xl text-center mb-6">Trámites</h2>
         <div class="grid gap-4">
-            @for (int i = 0; i < 4; i++)
+            @foreach(var  municipalityProcedureDto in Model?.municipality?.MunicipalityProcedures ?? new List<MunicipalityProcedureDto>())
             {
                 <div class="bg-base-200 p-4 rounded-lg grid grid-cols-3 gap-4 items-center">
                     <select class="select w-full">
                         <option disabled selected>Seleccione trámite</option>
-                        <option>PQRS</option>
-                        <option>Impuestos</option>
-                        <option>Licencias</option>
-                        <option>Otros</option>
+                        @foreach(var municipalityProcedure in Model?.MunicipalityProcedures ?? new List<MunicipalityProcedure>()){
+                        <option value="@municipalityProcedure?.Procedures?.Id" 
+                                selected="@(municipalityProcedure?.Procedures?.Id == municipalityProcedureDto?.Procedures?.Id)">
+                                @municipalityProcedure?.Procedures?.Name
+                        </option>
+                    } 
+                    
                     </select>
-                    <input type="text" class="input w-full" placeholder="Enlace integración" />
+                    <input type="text" class="input w-full" placeholder="Enlace integración" value=@municipalityProcedureDto?.IntegrationType />
                     <label class="flex justify-center items-center gap-2">
                         <span>Activo</span>
-                        <input type="checkbox" checked class="toggle toggle-success" />
+                        <input type="checkbox" checked class="toggle toggle-success" value=@municipalityProcedureDto?.IsActive />
                     </label>
                 </div>
             }

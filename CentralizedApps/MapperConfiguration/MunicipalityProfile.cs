@@ -1,8 +1,10 @@
+using System.Reflection.Emit;
 using AutoMapper;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Models.RemidersDto;
+using Microsoft.Data.SqlClient;
 
 namespace CentralizedApps.Profile_AutoMapper
 {
@@ -56,6 +58,13 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Availibity, AvailibityDto>().ReverseMap();
 
             CreateMap<QueryField, QueryFieldDto_Relation>().ReverseMap();
+            CreateMap<Municipality, Municipality>().ReverseMap();
+
+            CreateMap<Municipality, MunicipalityDto>()
+            .ForMember(dest => dest.municipality, opt => opt.MapFrom(src => src))
+            .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses.FirstOrDefault(c => c.MunicipalityId == src.Id) ?? new Course()))
+            .ForMember(dest => dest.NewsByMunicipalities,opt => opt.MapFrom(src => src.NewsByMunicipalities.FirstOrDefault(c => c.IdMunicipality == src.Id) ?? new NewsByMunicipality()))
+            .ForMember(dest => dest.SportsFacilities,opt => opt.MapFrom(src => src.SportsFacilities.FirstOrDefault(c => c.MunicipalityId == src.Id) ?? new SportsFacility()));
         }
     }
 }

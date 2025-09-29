@@ -73,7 +73,7 @@
                                             @(municipio?.IsActive == true ? "Activo" : "Desactivado")
                                         </button>
                                     </form>
-                                    <form asp-controller="Municipality" asp-action="updateMunicipality" method="get">
+                                    <form asp-controller="Municipality" asp-action="FormMunicipality" method="get">
                                         <input type="hidden" name="id" value="@municipio?.Id" />
                                         <button type="submit" class="btn btn-outline btn-warning w-25">
                                             Editar
