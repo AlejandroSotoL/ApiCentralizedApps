@@ -2,22 +2,20 @@
 @model CentralizedApps.Models.Dtos.PrincipalsDtos.MunicipalityDto
 
 @{
-    ViewData["Title"] = "updateWebMunicipality";
+    ViewData["Title"] = "Formulario de Municipío";
     Layout = "Layout";
 }
 
 <div class="card bg-base-200 rounded-box p-6 mb-8">
-
-<div class="flex flex-col items-center justify-center gap-3 w-full p-6">
+    <div class="flex flex-col items-center justify-center gap-3 w-full p-6">
         <div class="avatar">
             <div class="mask mask-squircle h-24 w-24">
-                <img src="@Model.municipality?.IdShield?.Url"
-                    alt="escudo municipio" />
+                <img src="@Model?.municipality?.IdShield?.Url" alt="escudo municipio" />
             </div>
         </div>
         <div class="text-center">
-            <h1 class="font-bold text-2xl">@Model.municipality?.Name</h1>
-            <p class="text-sm opacity-70">@Model.municipality?.Department?.Name</p>
+            <h1 class="font-bold text-2xl">@Model?.municipality?.Name</h1>
+            <p class="text-sm opacity-70">@Model?.municipality?.Department?.Name</p>
         </div>
     </div>
     <h2 class="font-bold text-2xl text-center mb-6">
@@ -33,48 +31,100 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Seleccionar tema existente</legend>
-                <select class="select w-full">
+                <select class="select w-full" name="municipality.Theme.Id">
                     <option disabled selected>Seleccione un tema</option>
-                    @foreach(var tema in Model.Themes){
-                        <option value=@tema.Id selected="@(tema.NameTheme== Model?.municipality?.Theme?.NameTheme)">@tema.NameTheme</option>
+                    @foreach (var tema in Model!.Themes)
+                    {
+                        <option value="@tema.Id" selected="@(tema.NameTheme == Model?.municipality?.Theme?.NameTheme)">
+                            @tema.NameTheme
+                        </option>
                     }
-                    
                 </select>
             </fieldset>
 
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Nombre del tema</legend>
-                <input type="text" class="input w-full" placeholder="Ej: Tema Juvenil"  value=@Model?.municipality?.Theme?.NameTheme />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Color de fondo</legend>
-                <input type="color" class="input w-full" value="@Model.municipality?.Theme?.BackGroundColor" />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Color primario</legend>
-                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.PrimaryColor />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Color secundario</legend>
-                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.SecondaryColor />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Color secundario oscuro</legend>
-                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.SecondaryColorBlack />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Texto en primario (claro)</legend>
-                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.OnPrimaryColorLight />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Texto en primario (oscuro)</legend>
-                <input type="color" class="input w-full" value=@Model.municipality?.Theme?.OnPrimaryColorDark />
-            </fieldset>
-        </div>
-        <div class="flex justify-end mt-4">
-            <button type="button" class="btn btn-primary">Crear Tema</button>
-        </div>
+
+<form asp-controller="Municipality" asp-action="CreateTheme" method="post">
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Nombre del tema</legend>
+        <input type="text" class="input w-full" placeholder="Ej: Tema Juvenil"
+               name="NameTheme"
+               value="@Model?.municipality?.Theme?.NameTheme" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Color de fondo</legend>
+        <input type="color" class="input w-full color-input"
+               name="BackGroundColor"
+               value="@Model?.municipality?.Theme?.BackGroundColor?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Color primario</legend>
+        <input type="color" class="input w-full color-input"
+               name="PrimaryColor"
+               value="@Model?.municipality?.Theme?.PrimaryColor?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Color secundario</legend>
+        <input type="color" class="input w-full color-input"
+               name="SecondaryColor"
+               value="@Model?.municipality?.Theme?.SecondaryColor?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Color secundario oscuro</legend>
+        <input type="color" class="input w-full color-input"
+               name="SecondaryColorBlack"
+               value="@Model?.municipality?.Theme?.SecondaryColorBlack?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Texto en primario (claro)</legend>
+        <input type="color" class="input w-full color-input"
+               name="OnPrimaryColorLight"
+               value="@Model?.municipality?.Theme?.OnPrimaryColorLight?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Texto en primario (oscuro)</legend>
+        <input type="color" class="input w-full color-input"
+               name="OnPrimaryColorDark"
+               value="@Model?.municipality?.Theme?.OnPrimaryColorDark?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <div class="flex justify-end mt-4">
+        <button type="submit" class="btn btn-primary">
+            Guardar
+        </button>
     </div>
+</form>
+
+    </div>
+
+    <script>
+        document.querySelectorAll(".color-input").forEach(input => {
+            input.addEventListener("change", () => {
+                const hex = input.value.replace("#", "");
+                const argb = "0xFF" + hex;
+                input.setAttribute("name", input.dataset.name);
+                input.setAttribute("value", argb);
+            });
+        });
+    </script>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success shadow-lg mt-4">
+        <span>@TempData["Success"]</span>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-error shadow-lg mt-4">
+        <span>@TempData["Error"]</span>
+    </div>
+}
 
     <div class="card bg-base-300 rounded-box p-6 mb-6">
         <h3 class="font-bold text-xl mb-4">Departamento</h3>
@@ -83,19 +133,24 @@
                 <legend class="fieldset-legend">Seleccionar departamento existente</legend>
                 <select class="select w-full">
                     <option disabled selected>Seleccione un departamento</option>
-                    @foreach(var department in Model.Departments){
-                        <option value=@department.Id selected="@(department.Id == Model.municipality?.Department?.Id)">@department.Name</option>
-                    } 
+                    @foreach (var department in Model!.Departments)
+                    {
+                        <option value=@department.Id selected="@(department.Id == Model.municipality?.Department?.Id)">
+                            @department.Name</option>
+                    }
                 </select>
             </fieldset>
+        <form asp-controller="Municipality" asp-action="CreateDepartment" method="post">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre del departamento</legend>
-                <input type="text" class="input w-full" placeholder="Ej: Cundinamarca" value=@Model.municipality?.Department?.Name />
+                <input type="text" class="input w-full"
+                        name="Name" placeholder="Ej: Cundinamarca" />
             </fieldset>
-        </div>
-        <div class="flex justify-end mt-4">
-            <button type="button" class="btn btn-primary">Crear Departamento</button>
-        </div>
+
+            <div class="flex justify-end mt-4">
+                <button type="submit" class="btn btn-primary">Crear Departamento</button>
+            </div>
+        </form>
     </div>
 
     <div class="card bg-base-300 rounded-box p-6">
@@ -105,26 +160,28 @@
                 <legend class="fieldset-legend">Seleccionar banco existente</legend>
                 <select class="select w-full">
                     <option disabled selected>Seleccione un banco</option>
-                    @foreach(var bank in Model.Banks){
-                        <option value=@bank.Id  selected="@(bank.NameBank == Model.municipality?.Bank?.NameBank )" >@bank.NameBank</option>
-                    } 
-                    
+                    @foreach (var bank in Model.Banks)
+                    {
+                        <option value=@bank.Id selected="@(bank.NameBank == Model.municipality?.Bank?.NameBank )">
+                            @bank.NameBank</option>
+                    }
+
                 </select>
             </fieldset>
+        <form asp-controller="Municipality" asp-action="CreateBank" method="post">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre del banco</legend>
-                <input type="text" class="input w-full" placeholder="Ej: BBVA" value=@Model.municipality?.Bank?.NameBank />
+                <input type="text" name="NameBank" class="input w-full" placeholder="Ej: Bancolombia" />
             </fieldset>
-        </div>
-        <div class="flex justify-end mt-4">
-            <button type="button" class="btn btn-primary">Crear Banco</button>
-        </div>
+
+            <div class="flex justify-end mt-4">
+                <button type="submit" class="btn btn-primary">Crear Banco</button>
+            </div>
+        </form>
     </div>
 </div>
 
 <form asp-action="" asp-controller="" method="post" class="w-full">
-
-
     <div class="card bg-base-300 rounded-box p-6 mb-6">
         <h2 class="font-bold text-2xl text-center mb-6">Información General</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -135,31 +192,37 @@
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Dominio</legend>
                 <input type="text" class="input w-full" placeholder="Dominio" value=@Model.municipality?.Domain />
+                <a class="btn btn-primary" href="@Model.municipality?.Domain" target="_blank">Observar</a>
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Escudo</legend>
                 <input type="file" class="file-input w-full" value=@Model.municipality?.IdShield?.Url />
+                <a class="btn btn-primary" href="@Model.municipality?.IdShield?.Url" target="_blank">Observar</a>
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre Alcaldía</legend>
                 <input type="text" class="input w-full" placeholder="Alcaldía" value=@Model.municipality?.Name />
             </fieldset>
-            
+
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Usuario Fintech</legend>
-                <input type="text" class="input w-full" placeholder="userFintech" value=@Model.municipality?.UserFintech />
+                <input type="text" class="input w-full" placeholder="userFintech"
+                    value=@Model.municipality?.UserFintech />
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Contraseña Fintech</legend>
-                <input type="password" class="input w-full" placeholder="passwordFintech" value=@Model.municipality?.PasswordFintech/>
+                <input type="password" class="input w-full" placeholder="passwordFintech"
+                    value=@Model.municipality?.PasswordFintech />
             </fieldset>
             <fieldset class="fieldset col-span-3">
                 <legend class="fieldset-legend">Política de Privacidad</legend>
-                <textarea class="textarea w-full" placeholder="Política de privacidad">@Model.municipality?.DataPrivacy</textarea>
+                <textarea class="textarea w-full"
+                    placeholder="Política de privacidad">@Model.municipality?.DataPrivacy</textarea>
             </fieldset>
             <fieldset class="fieldset col-span-3">
                 <legend class="fieldset-legend">Términos y Condiciones</legend>
-                <textarea class="textarea w-full" placeholder="Términos y condiciones">@Model.municipality?.DataProcessingPrivacy</textarea>
+                <textarea class="textarea w-full"
+                    placeholder="Términos y condiciones">@Model.municipality?.DataProcessingPrivacy</textarea>
             </fieldset>
         </div>
     </div>
@@ -177,7 +240,8 @@
                 <div class="flex justify-end mt-4">
                     <label class="flex items-center gap-2">
                         <span>Activo</span>
-                        <input type="checkbox" checked class="toggle toggle-success" />
+                        <input type="checkbox" class="toggle toggle-success" @(Model.Courses.IsActive == true
+                        ? "checked" : "") />
                     </label>
                 </div>
             </div>
@@ -185,15 +249,21 @@
             <div class="card bg-base-200 rounded-box p-6">
                 <h3 class="font-bold text-xl mb-4">Escenarios Deportivos</h3>
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" class="input w-full" placeholder="Nombre escenario" value=@Model.SportsFacilities.Name />
-                    <input type="text" class="input w-full" placeholder="Enlace GET" value=@Model.SportsFacilities.Get />
-                    <input type="text" class="input w-full" placeholder="Calendary POST" value=@Model.SportsFacilities.CalendaryPost />
-                    <input type="text" class="input w-full" placeholder="Reservation POST" value=@Model.SportsFacilities.ReservationPost />
+                    <input type="text" class="input w-full" placeholder="Nombre escenario"
+                        value=@Model.SportsFacilities.Name />
+                    <input type="text" class="input w-full" placeholder="Enlace GET"
+                        value=@Model.SportsFacilities.Get />
+                    <input type="text" class="input w-full" placeholder="Calendary POST"
+                        value=@Model.SportsFacilities.CalendaryPost />
+                    <input type="text" class="input w-full" placeholder="Reservation POST"
+                        value=@Model.SportsFacilities.ReservationPost />
                 </div>
                 <div class="flex justify-end mt-4">
                     <label class="flex items-center gap-2">
                         <span>Activo</span>
-                        <input type="checkbox" checked class="toggle toggle-success" value=@Model.SportsFacilities.IsActive />
+                        <input type="checkbox" class="toggle toggle-success" @(Model.SportsFacilities?.IsActive == true
+                                                                                                    ? "checked" : "") />
+
                     </label>
                 </div>
             </div>
@@ -203,55 +273,87 @@
     <div class="card bg-base-300 rounded-box p-6 mb-6">
         <h2 class="font-bold text-2xl text-center mb-6">Redes Sociales</h2>
         <div class="grid gap-4">
-            @foreach(var  municipalitySocialMedium in Model?.municipality?.MunicipalitySocialMedia ?? new List<MunicipalitySocialMediaDto>())
+            @foreach (var municipalitySocialMedium in Model?.municipality?.MunicipalitySocialMedia ?? new
+                        List<MunicipalitySocialMediaDto>())
             {
                 <div class="bg-base-200 p-4 rounded-lg grid grid-cols-3 gap-4 items-center">
                     <select class="select w-full">
                         <option disabled selected>Seleccione red</option>
-                        @foreach(var municipalitySocial in Model?.MunicipalitySocialMedia ?? new List<MunicipalitySocialMedium>()){
-                        <option value=@municipalitySocial.Id selected="@(municipalitySocial?.Id == municipalitySocial?.Id)"  >@municipalitySocial?.SocialMediaType?.Name</option>
-                    } 
-                    
+                        @foreach (var municipalitySocial in Model?.MunicipalitySocialMedia ?? new
+                                            List<MunicipalitySocialMedium>())
+                        {
+                            <option value=@municipalitySocial.Id selected="@(municipalitySocial?.Id == municipalitySocial?.Id)">
+                                @municipalitySocial?.SocialMediaType?.Name</option>
+                        }
+
                     </select>
-                    <input type="text" class="input w-full" placeholder="Enlace integración" value=@municipalitySocialMedium.Url />
+                    <input type="text" class="input w-full" placeholder="Enlace integración"
+                        value=@municipalitySocialMedium.Url />
                     <label class="flex justify-center items-center gap-2">
                         <span>Activo</span>
-                        <input type="checkbox" checked class="toggle toggle-success" value=@municipalitySocialMedium.IsActive />
+                        <input type="checkbox" class="toggle toggle-success" @(municipalitySocialMedium?.IsActive == true
+                        ? "checked" : "") />
                     </label>
                 </div>
             }
+            <div class="flex justify-center w-full">
+                <button class="btn btn-primary w-full">Crear  Red Social</button>
+            </div>
         </div>
     </div>
 
-    <!-- TRÁMITES -->
     <div class="card bg-base-300 rounded-box p-6 mb-6">
         <h2 class="font-bold text-2xl text-center mb-6">Trámites</h2>
         <div class="grid gap-4">
-            @foreach(var  municipalityProcedureDto in Model?.municipality?.MunicipalityProcedures ?? new List<MunicipalityProcedureDto>())
+            @foreach (var municipalityProcedureDto in Model?.municipality?.MunicipalityProcedures ?? new
+                        List<MunicipalityProcedureDto>())
             {
                 <div class="bg-base-200 p-4 rounded-lg grid grid-cols-3 gap-4 items-center">
                     <select class="select w-full">
                         <option disabled selected>Seleccione trámite</option>
-                        @foreach(var municipalityProcedure in Model?.MunicipalityProcedures ?? new List<MunicipalityProcedure>()){
-                        <option value="@municipalityProcedure?.Procedures?.Id" 
+                        @foreach (var municipalityProcedure in Model?.MunicipalityProcedures ?? new
+                                            List<MunicipalityProcedure>())
+                        {
+                            <option value="@municipalityProcedure?.Procedures?.Id"
                                 selected="@(municipalityProcedure?.Procedures?.Id == municipalityProcedureDto?.Procedures?.Id)">
                                 @municipalityProcedure?.Procedures?.Name
-                        </option>
-                    } 
-                    
+                            </option>
+                        }
+
                     </select>
-                    <input type="text" class="input w-full" placeholder="Enlace integración" value=@municipalityProcedureDto?.IntegrationType />
+                    <input type="text" class="input w-full" placeholder="Enlace integración"
+                        value=@municipalityProcedureDto?.IntegrationType />
                     <label class="flex justify-center items-center gap-2">
                         <span>Activo</span>
-                        <input type="checkbox" checked class="toggle toggle-success" value=@municipalityProcedureDto?.IsActive />
+                        <input type="checkbox" class="toggle toggle-success" @(municipalityProcedureDto?.IsActive == true
+                        ? "checked" : "") />
                     </label>
                 </div>
             }
         </div>
-    </div>
+            <div class="flex justify-center w-full">
+    <button class="btn btn-primary w-full" onclick="my_modal_4.showModal()">Crear  Trámite</button>
 
-    <div class="flex justify-end gap-4 p-6">
-        <button type="reset" class="btn">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
     </div>
+    <div class="pt-20"></div>
+
+<div class="flex flex-col md:flex-row w-full gap-4">
+    <button type="reset" class="btn btn-warning w-full md:w-32">Cancelar</button>
+    <button type="submit" class="btn btn-primary w-full md:flex-1">Guardar</button>
+</div>
 </form>
+
+
+
+<dialog id="my_modal_4" class="modal">
+    <div class="modal-box w-11/12 max-w-5xl">
+        <h3 class="text-lg font-bold">Hello!</h3>
+        <p class="py-4">Click the button below to close</p>
+        <div class="modal-action">
+        <form method="dialog">
+            <button class="btn">Close</button>
+        </form>
+        </div>
+    </div>
+</dialog>

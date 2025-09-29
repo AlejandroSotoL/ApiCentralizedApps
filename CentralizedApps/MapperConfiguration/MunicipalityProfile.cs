@@ -37,11 +37,13 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Municipality, JustMunicipalitysDto>().ReverseMap();
 
             CreateMap<Bank, BankDto>().ReverseMap();
+            CreateMap<Bank, CreateBankDto>().ReverseMap();
             CreateMap<ShieldMunicipality, ShieldMunicipalityDto>().ReverseMap();
 
             CreateMap<NewsByMunicipality, NewsByMunicipalityDto>().ReverseMap();
 
             CreateMap<Department, DepartmentDto>().ReverseMap();
+            CreateMap<CreateDepartmentDto, Department>().ReverseMap();
 
             CreateMap<Theme, ThemeDto>().ReverseMap();
 
@@ -63,8 +65,8 @@ namespace CentralizedApps.Profile_AutoMapper
             CreateMap<Municipality, MunicipalityDto>()
             .ForMember(dest => dest.municipality, opt => opt.MapFrom(src => src))
             .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses.FirstOrDefault(c => c.MunicipalityId == src.Id) ?? new Course()))
-            .ForMember(dest => dest.NewsByMunicipalities,opt => opt.MapFrom(src => src.NewsByMunicipalities.FirstOrDefault(c => c.IdMunicipality == src.Id) ?? new NewsByMunicipality()))
-            .ForMember(dest => dest.SportsFacilities,opt => opt.MapFrom(src => src.SportsFacilities.FirstOrDefault(c => c.MunicipalityId == src.Id) ?? new SportsFacility()));
+            .ForMember(dest => dest.NewsByMunicipalities, opt => opt.MapFrom(src => src.NewsByMunicipalities.FirstOrDefault(c => c.IdMunicipality == src.Id) ?? new NewsByMunicipality()))
+            .ForMember(dest => dest.SportsFacilities, opt => opt.MapFrom(src => src.SportsFacilities.FirstOrDefault(c => c.MunicipalityId == src.Id) ?? new SportsFacility()));
         }
     }
 }
