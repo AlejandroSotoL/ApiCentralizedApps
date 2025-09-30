@@ -1,11 +1,10 @@
 
-using CentralizedApps.Models.Dtos;
-using CentralizedApps.Repositories.Interfaces;
-using CentralizedApps.Models.Entities;
-using CentralizedApps.Services.Interfaces;
 using AutoMapper;
+using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
-using Microsoft.AspNetCore.Http.HttpResults;
+using CentralizedApps.Models.Entities;
+using CentralizedApps.Repositories.Interfaces;
+using CentralizedApps.Services.Interfaces;
 
 namespace CentralizedApps.Services
 {
@@ -819,7 +818,7 @@ namespace CentralizedApps.Services
 
                 find.IsActive = status;
                 find.IntegrationType = IntegrationType;
-                
+
                 _unitOfWork.genericRepository<MunicipalityProcedure>().Update(find);
                 var rows = await _unitOfWork.SaveChangesAsync();
                 if (rows > 0 && find != null)

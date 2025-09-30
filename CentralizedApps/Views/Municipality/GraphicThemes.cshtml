@@ -1,0 +1,138 @@
+﻿@model List<CentralizedApps.Models.Entities.Theme>
+
+@{
+    ViewData["Title"] = "Gestión de Temas";
+    Layout = "Layout";
+}
+
+<div class="grid grid-cols-1 gap-10 md:grid-cols-2">
+    <div class="card w-full p-6 shadow-lg">
+        <div class="w-full">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success mt-4 shadow-lg">
+                    <span>@TempData["Success"]</span>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-error mt-4 shadow-lg">
+                    <span>@TempData["Error"]</span>
+                </div>
+            }
+        </div>
+
+        <h3 class="mb-4 text-center text-xl font-bold">Crear Tema</h3>
+        <form asp-controller="Municipality" asp-action="CreateGraphicThemes" method="post" class="space-y-4">
+            <div>
+                <label class="fieldset-legend">Nombre del tema</label>
+                <input type="text" class="input w-full" placeholder="Ej: Tema Juvenil" name="NameTheme" required />
+            </div>
+
+            <div>
+                <label class="fieldset-legend">Color de fondo</label>
+                <input type="color" class="input color-input w-full" name="BackGroundColor" required />
+            </div>
+
+            <div>
+                <label class="fieldset-legend">Color primario</label>
+                <input type="color" class="input color-input w-full" name="PrimaryColor" required />
+            </div>
+
+            <div>
+                <label class="fieldset-legend">Color secundario</label>
+                <input type="color" class="input color-input w-full" name="SecondaryColor" required />
+            </div>
+
+            <div>
+                <label class="fieldset-legend">Color secundario oscuro</label>
+                <input type="color" class="input color-input w-full" name="SecondaryColorBlack" />
+            </div>
+
+            <div>
+                <label class="fieldset-legend">Texto en primario (claro)</label>
+                <input type="color" class="input color-input w-full" name="OnPrimaryColorLight" />
+            </div>
+
+            <div>
+                <label class="fieldset-legend">Texto en primario (oscuro)</label>
+                <input type="color" class="input color-input w-full" name="OnPrimaryColorDark" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full">Guardar</button>
+        </form>
+    </div>
+
+    <div class="card p-6 shadow-lg">
+        <h3 class="mb-4 text-center text-xl font-bold">Temas existentes</h3>
+
+        <form asp-action="FilterGraphicThemes" asp-controller="Municipality" method="get" class="mb-6 flex gap-4">
+            <input name="filter" type="text" class="input flex-1" placeholder="Ejemplo: GreenDark"
+                value="@Context.Request.Query["filter"]" />
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+
+        @if (Model.Any())
+        {
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <form asp-controller="Municipality" asp-action="UpdateGraphicTheme" method="post" class="space-y-6 mb-6">
+
+                    <div class="rounded-lg border p-4 shadow-sm">
+                        <!-- Id correcto -->
+                        <input type="hidden" name="Id" value="@Model[i].Id" />
+
+                        <div class="mb-2">
+                            <label class="fieldset-legend">Nombre del tema</label>
+                            <input type="text" class="input w-full" name="NameTheme" value="@Model[i].NameTheme" />
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="fieldset-legend">Color de fondo</label>
+                                <input type="color" class="input color-input w-full" name="BackGroundColor"
+                                    value="@Model[i].BackGroundColor?.Replace("0xFF", "#")" />
+                            </div>
+
+                            <div>
+                                <label class="fieldset-legend">Color primario</label>
+                                <input type="color" class="input color-input w-full" name="PrimaryColor"
+                                    value="@Model[i].PrimaryColor?.Replace("0xFF", "#")" />
+                            </div>
+
+                            <div>
+                                <label class="fieldset-legend">Color secundario</label>
+                                <input type="color" class="input color-input w-full" name="SecondaryColor"
+                                    value="@Model[i].SecondaryColor?.Replace("0xFF", "#")" />
+                            </div>
+
+                            <div>
+                                <label class="fieldset-legend">Color secundario oscuro</label>
+                                <input type="color" class="input color-input w-full" name="SecondaryColorBlack"
+                                    value="@Model[i].SecondaryColorBlack?.Replace("0xFF", "#")" />
+                            </div>
+
+                            <div>
+                                <label class="fieldset-legend">Texto en primario (claro)</label>
+                                <input type="color" class="input color-input w-full" name="OnPrimaryColorLight"
+                                    value="@Model[i].OnPrimaryColorLight?.Replace("0xFF", "#")" />
+                            </div>
+
+                            <div>
+                                <label class="fieldset-legend">Texto en primario (oscuro)</label>
+                                <input type="color" class="input color-input w-full" name="OnPrimaryColorDark"
+                                    value="@Model[i].OnPrimaryColorDark?.Replace("0xFF", "#")" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full">Guardar cambios</button>
+                </form>
+            }
+        }
+        else
+        {
+            <h2 class="text-center text-gray-500">No hay temas registrados aún</h2>
+        }
+    </div>
+</div>
