@@ -38,8 +38,6 @@ namespace CentralizedApps.Controllers.web
         }
 
 
-
-
         [HttpPost]
         public async Task<IActionResult> UpdateStatusMunicipality(int id, bool isActive)
         {
