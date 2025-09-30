@@ -6,6 +6,9 @@
     Layout = "Layout";
 }
 
+
+
+<form asp-action="" asp-controller="" method="post" class="w-full">
 <div class="card bg-base-200 rounded-box p-6 mb-8">
     <div class="flex flex-col items-center justify-center gap-3 w-full p-6">
         <div class="avatar">
@@ -68,22 +71,22 @@
     <fieldset class="fieldset">
         <legend class="fieldset-legend">Color secundario</legend>
         <input type="color" class="input w-full color-input"
-               name="SecondaryColor"
-               value="@Model?.municipality?.Theme?.SecondaryColor?.Replace("0xFF", "#")" />
+            name="SecondaryColor"
+            value="@Model?.municipality?.Theme?.SecondaryColor?.Replace("0xFF", "#")" />
     </fieldset>
 
     <fieldset class="fieldset">
         <legend class="fieldset-legend">Color secundario oscuro</legend>
         <input type="color" class="input w-full color-input"
-               name="SecondaryColorBlack"
-               value="@Model?.municipality?.Theme?.SecondaryColorBlack?.Replace("0xFF", "#")" />
+            name="SecondaryColorBlack"
+            value="@Model?.municipality?.Theme?.SecondaryColorBlack?.Replace("0xFF", "#")" />
     </fieldset>
 
     <fieldset class="fieldset">
         <legend class="fieldset-legend">Texto en primario (claro)</legend>
         <input type="color" class="input w-full color-input"
-               name="OnPrimaryColorLight"
-               value="@Model?.municipality?.Theme?.OnPrimaryColorLight?.Replace("0xFF", "#")" />
+            name="OnPrimaryColorLight"
+            value="@Model?.municipality?.Theme?.OnPrimaryColorLight?.Replace("0xFF", "#")" />
     </fieldset>
 
     <fieldset class="fieldset">
@@ -180,8 +183,6 @@
         </form>
     </div>
 </div>
-
-<form asp-action="" asp-controller="" method="post" class="w-full">
     <div class="card bg-base-300 rounded-box p-6 mb-6">
         <h2 class="font-bold text-2xl text-center mb-6">Información General</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -282,7 +283,7 @@
                         @foreach (var municipalitySocial in Model?.SocialMediaTypes ?? new
                                             List<SocialMediaType>())
                         {
-                            <option value=@municipalitySocial.Id selected="@(municipalitySocial?.Id == municipalitySocial?.Id)">
+                            <option value=@municipalitySocial.Id selected="@(municipalitySocial?.Id == municipalitySocialMedium?.Id)">
                                 @municipalitySocial?.Name</option>
                         }
 
