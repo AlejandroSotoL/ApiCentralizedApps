@@ -41,11 +41,9 @@ namespace CentralizedApps.Controllers.web
         [HttpPost]
         public async Task<IActionResult> UpdateStatusMunicipality(int id, bool isActive)
         {
-            Console.WriteLine($"LLEGA al método con id={id}, isActive={isActive}");
             try
             {
                 var response = await _ProcedureServices.UpdateStatusMunicipality(id, isActive);
-                Console.WriteLine("respuesta " + response);
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
