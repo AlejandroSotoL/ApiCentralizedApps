@@ -26,7 +26,6 @@ namespace CentralizedApps.Controllers.web
         }
 
 
-        // get all municipaly with relations 
         [HttpGet]
         public async Task<IActionResult> Index(string? filter)
         {
@@ -39,7 +38,7 @@ namespace CentralizedApps.Controllers.web
                 }
                 return View(response);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 return View(new List<GetMunicipalitysDto>());
             }
@@ -83,10 +82,85 @@ namespace CentralizedApps.Controllers.web
             }
             catch (Exception ex)
             {
-                TempData["message"] = "no se puedo actulizar la red social del municipio.";
+                TempData["message"] = $"no se puedo actulizar la red social del municipio. -> {ex.Message}";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
             }
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> deparmentIndex()
+        {
+            var respose = await _unitOfWork.genericRepository<Department>().GetAllAsync();
+            return View(respose);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Createdeparment(CreateDepartmentDto departmentDto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(departmentDto.Name))
+                {
+                    TempData["message"] = "No se puedo crear el departamento, campo vacio.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("deparmentIndex");
+                }
+                await _departmentService.createDepartment(departmentDto);
+                TempData["message"] = "El depatamento fue creado correctamente.";
+                TempData["MessageType"] = "success";
+                return RedirectToAction("deparmentIndex");
+
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "No se puedo crear el departamento.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("deparmentIndex");
+
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> updatedeparment(int id, CreateDepartmentDto updatedepartmentDto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(updatedepartmentDto.Name) || id <= 0)
+                {
+                    TempData["message"] = " los cambos estan vacios";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("deparmentIndex");
+
+                }
+                var result = await _departmentService.updateDepartment(id, updatedepartmentDto);
+                if (!result.BooleanStatus)
+                {
+                    TempData["message"] = "no se puedo actulizar el departamento.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("deparmentIndex");
+
+
+                }
+                else
+                {
+                    TempData["message"] = "El depatamento se actualizo correctamente.";
+                    TempData["MessageType"] = "success";
+                    return RedirectToAction("deparmentIndex");
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "no sepuedo actualizar el departamento. comunicate con soporte.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("deparmentIndex");
+
+            }
+        }
     }
 }
+
