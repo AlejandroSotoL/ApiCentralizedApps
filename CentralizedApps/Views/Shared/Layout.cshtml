@@ -43,7 +43,6 @@
             </footer>
         </div>
 
-        <!-- MENU LATERAL -->
         @if (User.IsInRole("Admin"))
         {
             <div class="drawer-side">
@@ -59,8 +58,8 @@
                         <li class="menu-title">Administración</li>
                         <li>
                             <a href="/Web/EnDesarrollo"
-                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-base-200 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M3 7h18M3 12h18M3 17h18" />
@@ -72,8 +71,8 @@
                         <li class="menu-title">Procesos</li>
                         <li>
                             <a href="/Transactions/Index"
-                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-base-200 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 17v-2a4 4 0 014-4h6" />
@@ -82,9 +81,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/Transactions/Index"
-                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-base-200 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            <a href="/GeneralProcedures/Index"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
@@ -96,8 +95,8 @@
                         <li class="menu-title">Municipios</li>
                         <li>
                             <a href="/Web/SubirImagen"
-                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-base-200 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 16v-1a3 3 0 013-3h10a3 3 0 013 3v1m-4-8l-4-4-4 4m4-4v12" />
@@ -107,8 +106,8 @@
                         </li>
                         <li>
                             <a href="/Municipality/GraphicThemes"
-                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-base-200 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h9" />
                                 </svg>
@@ -117,8 +116,8 @@
                         </li>
                         <li>
                             <a href="/Municipality/Index"
-                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-base-200 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8" />
@@ -130,8 +129,8 @@
                         <li class="menu-title">Otros</li>
                         <li>
                             <a href="/Web/EnDesarrollo"
-                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-base-200 transition opacity-70 cursor-not-allowed">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
                                 </svg>
@@ -141,8 +140,8 @@
 
                         <li class="pt-2">
                             <a href="/Account/Logout"
-                                class="flex items-center gap-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900 rounded-lg px-3 py-2 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-100 dark:hover:bg-red-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5m0 14a2 2 0 01-2 2h-3a2 2 0 01-2-2V5a2 2 0 012-2h3a2 2 0 012 2" />

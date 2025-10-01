@@ -8,7 +8,6 @@ namespace CentralizedApps.Controllers
 {
     public class AccountController : Controller
     {
-        // 🔹 Mostrar el formulario de login
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
@@ -33,7 +32,7 @@ namespace CentralizedApps.Controllers
                 var authProperties = new AuthenticationProperties
                 {
                     IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) 
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
                 };
 
                 await HttpContext.SignInAsync(
