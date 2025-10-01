@@ -265,6 +265,52 @@ namespace CentralizedApps.Services
             }
         }
 
+
+        public async Task<List<GetMunicipalitysDto>> GetAllMunicipalityWithRelationsWeb(string? filter)
+        {
+            try
+            {
+                var response = _unitOfWork.genericRepository<Municipality>();
+                var entities = await response.GetAllWithNestedIncludesAsync(query =>
+                    query
+                        .Include(r => r.Courses)
+                        .Include(r => r.IdShieldNavigation)
+                        .Include(r => r.IdBankNavigation)
+                        .Include(r => r.NewsByMunicipalities)
+                        .Include(r => r.QueryFields)
+                        .Include(r => r.SportsFacilities)
+                        .Include(r => r.Department)
+                        .Include(r => r.MunicipalityProcedures)
+                            .ThenInclude(r => r.Procedures)
+                        .Include(r => r.MunicipalitySocialMedia)
+                            .ThenInclude(r => r.SocialMediaType)
+                        .Include(r => r.Theme)
+                );
+
+                if (entities == null || !entities.Any())
+                {
+                    return new List<GetMunicipalitysDto>();
+                }
+
+                filter = filter?.ToLower();
+
+                if (!string.IsNullOrEmpty(filter))
+                {
+                    entities = entities.Where(m =>
+                        (m.Name != null && m.Name.ToLower().Contains(filter)) ||
+                        (m.Department != null && m.Department.Name.ToLower().Contains(filter)) ||
+                        (m.IdBankNavigation != null && m.IdBankNavigation.NameBank.ToLower().Contains(filter))
+                    ).ToList();
+                }
+
+                return _mapper.Map<List<GetMunicipalitysDto>>(entities);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Ocurrió un error inesperado al obtener los municipios: {ex.Message}", ex);
+            }
+        }
+
         public async Task<GetMunicipalitysDto?> JustGetMunicipalityWithRelations(int municipalityId)
         {
             try
@@ -293,6 +339,47 @@ namespace CentralizedApps.Services
                 }
 
                 return _mapper.Map<GetMunicipalitysDto>(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error al obtener municipio con identificador {municipalityId}: {ex.Message}", ex);
+            }
+        }
+        public async Task<MunicipalityDto?> JustGetMunicipalityWithRelationsWeb(int municipalityId)
+        {
+            try
+            {
+                var response = _unitOfWork.genericRepository<Municipality>();
+                var entity = await response.GetOneWithNestedIncludesAsync(
+                    query => query
+                        .Include(m => m.Courses)!
+                        .Include(r => r.NewsByMunicipalities)!
+                        .Include(r => r.IdShieldNavigation)!
+                        .Include(r => r.IdBankNavigation)!
+                        .Include(r => r.QueryFields)!
+                        .Include(m => m.SportsFacilities)!
+                        .Include(r => r.Department)
+                        .Include(r => r.MunicipalityProcedures)
+                            .ThenInclude(r => r.Procedures)
+                        .Include(r => r.MunicipalitySocialMedia)
+                            .ThenInclude(r => r.SocialMediaType)
+                        .Include(r => r.Theme),
+                    m => m.Id == municipalityId
+                );
+
+                if (entity == null)
+                {
+                    return null;
+                }
+
+                var municipalityDto = _mapper.Map<MunicipalityDto>(entity);
+                municipalityDto.Banks = await _unitOfWork.genericRepository<Bank>().GetAllAsync();
+                municipalityDto.Departments = await _unitOfWork.genericRepository<Department>().GetAllAsync();
+                municipalityDto.Themes = await _unitOfWork.genericRepository<Theme>().GetAllAsync();
+                municipalityDto.Procedures = await _unitOfWork.genericRepository<Procedure>().GetAllAsync();
+                municipalityDto.SocialMediaTypes = await _unitOfWork.genericRepository<SocialMediaType>().GetAllAsync();
+                municipalityDto.QueryFields = await _unitOfWork.genericRepository<QueryField>().GetAllAsync();
+                return municipalityDto;
             }
             catch (Exception ex)
             {
@@ -333,7 +420,7 @@ namespace CentralizedApps.Services
                 throw new ApplicationException($"Ocurrió un error inesperado al obtener los municipios: {ex.Message}", ex);
             }
         }
-        
+
     }
 }
 

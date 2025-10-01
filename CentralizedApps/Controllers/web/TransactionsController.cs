@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
-using CentralizedApps.Models.Dtos;
+﻿using CentralizedApps.Models.Dtos;
 using CentralizedApps.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;

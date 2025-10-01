@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using CentralizedApps.Models.Dtos;
+using CentralizedApps.Models.Dtos.PrincipalsDtos;
+using CentralizedApps.Models.Entities;
+using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
+using CentralizedApps.Services.ServicesWeb.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using NuGet.Protocol;
+
 
 namespace CentralizedApps.Controllers.web
 {
@@ -16,74 +13,80 @@ namespace CentralizedApps.Controllers.web
     {
         private readonly IMunicipalityServices _MunicipalityServices;
         private readonly IProcedureServices _ProcedureServices;
-        public MunicipalityController(IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices)
+        private readonly IDepartmentService _departmentService;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IWeb _web;
+        public MunicipalityController(IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork, IDepartmentService departmentService, IWeb web)
         {
             _MunicipalityServices = MunicipalityServices;
             _ProcedureServices = ProcedureServices;
+            _unitOfWork = unitOfWork;
+            _departmentService = departmentService;
+            _web = web;
         }
 
+
+        // get all municipaly with relations 
         [HttpGet]
         public async Task<IActionResult> Index(string? filter)
         {
             try
             {
-                var response = await _MunicipalityServices.GetAllMunicipalityWithRelations();
-                if (!string.IsNullOrEmpty(filter))
-                {
-                    filter.ToLower();
-
-                    response = response.Where(municipio =>
-                    (municipio.Name != null && municipio.Name.ToLower().Contains(filter)) ||
-                    (municipio.Department?.Name != null && municipio.Department.Name.ToLower().Contains(filter)) ||
-                    (municipio.Bank?.NameBank != null && municipio.Bank.NameBank.ToLower().Contains(filter))
-                    ).ToList();
-                }
+                var response = await _MunicipalityServices.GetAllMunicipalityWithRelationsWeb(filter);
                 if (response == null || !response.Any())
                 {
-                    return View(response);
+                    return View(new List<GetMunicipalitysDto>());
                 }
-
-
-
                 return View(response);
             }
             catch (Exception ex)
             {
-                return View(new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 500,
-                    SentencesError = $"Error extraño ${ex.Message}"
-                });
+                return View(new List<GetMunicipalitysDto>());
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> MunicipalitySocialMediaIndex(int? id)
+        {
 
+            var response = await _web.MunicipalitiesAndSocialMediaType(id);
+            return View(response);
 
-
+        }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateStatusMunicipality(int id, bool isActive)
+        public async Task<IActionResult> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
         {
-            Console.WriteLine($"LLEGA al método con id={id}, isActive={isActive}");
+
             try
             {
-                var response = await _ProcedureServices.UpdateStatusMunicipality(id, isActive);
-                Console.WriteLine("respuesta " + response);
-                return RedirectToAction("Index");
+                if (updateMunicipalitySocialMediumDto.MunicipalityId <= 0 || updateMunicipalitySocialMediumDto.SocialMediaTypeId <= 0 || string.IsNullOrEmpty(updateMunicipalitySocialMediumDto.Url))
+                {
+                    TempData["message"] = "no se puedo actulizar la red social del municipio.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("MunicipalitySocialMediaIndex");
+                }
+
+                var result = await _ProcedureServices.updateMunicipalitySocialMedium(id, updateMunicipalitySocialMediumDto);
+
+                if (!result.BooleanStatus)
+                {
+                    TempData["message"] = "no se puedo actulizar la red social del municipio.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
+                }
+                else
+                {
+                    TempData["message"] = "la red social se actualizo correctamente.";
+                    TempData["MessageType"] = "success";
+                    return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
+                }
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Index");
+                TempData["message"] = "no se puedo actulizar la red social del municipio.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
             }
         }
-
-        [HttpGet]
-        public async Task<IActionResult> updateMunicipality(int id)
-        {
-            var response = await _MunicipalityServices.JustGetMunicipalityWithRelations(id);
-            return View(response);
-        }
-
-
     }
 }
