@@ -7,7 +7,6 @@
     <title>@ViewData["Title"] - Mi Proyecto</title>
     <link rel="stylesheet" href="~/css/output.css" />
     <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
-    
 </head>
 
 <body class="bg-base-200 text-base-content min-h-screen">
@@ -127,15 +126,37 @@
                             </a>
                         </li>
 
-                        <li class="menu-title">Otros</li>
                         <li>
-                            <a href="/Web/EnDesarrollo"
-                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <a href="/Web/SubirImagen"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-base-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24">
+                                    <g fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path
+                                            d="M3 22V12c0-1.886 0-2.828.586-3.414C4.172 8 5.114 8 7 8c1.886 0 2.828 0 3.414.586C11 9.172 11 10.114 11 12" />
+                                        <path
+                                            d="M17 22v-6c0-1.886 0-2.828-.586-3.414C15.828 12 14.886 12 13 12h-2c-1.886 0-2.828 0-3.414.586C7 13.172 7 14.114 7 16v6" />
+                                        <path
+                                            d="M21 22V7.772c0-1.34 0-2.011-.356-2.525c-.356-.514-.984-.75-2.24-1.22c-2.455-.921-3.682-1.381-4.543-.785C13 3.84 13 5.15 13 7.772V12" />
+                                        <path stroke-linecap="round"
+                                            d="M4 8V6.5c0-.943 0-1.414.293-1.707C4.586 4.5 5.057 4.5 6 4.5h2c.943 0 1.414 0 1.707.293C10 5.086 10 5.557 10 6.5V8M7 4V2m15 20H2m8-7h4m-4 3h4" />
+                                    </g>
                                 </svg>
-                                Bancos (Próximamente)
+                                Departamentos
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Web/SubirImagen"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-base-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <g fill="none" stroke="currentColor">
+                                        <path
+                                            d="M4 12a8 8 0 1 1 16 0v5.09c0 .848 0 1.27-.126 1.609a2 2 0 0 1-1.175 1.175C18.36 20 17.937 20 17.09 20H12a8 8 0 0 1-8-8z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11h6m-3 4h3" />
+                                    </g>
+                                </svg>
+                                Redes Sociales
                             </a>
                         </li>
 
@@ -150,18 +171,131 @@
                                 Cerrar Sesión
                             </a>
                         </li>
-                    <ul class="menu">
-                        <li><a href="/Web/EnDesarrollo">Administración Centralización</a></li>
-                        <li><a href="/Account/Logout">Cerrar Sesión</a></li>
-                        <li><a class="text-center font-bold">------------------</a></li>
-                        <li><a href="/Web/SubirImagen">Escudos de las Alcaldías</a></li>
-                        <li><a href="/Web/EnDesarrollo">Bancos</a></li>
-                        <li><a href="/Web/EnDesarrollo">Temas Gráficos</a></li>
-                        <li><a href="/Municipality/deparmentIndex">Departamentos</a></li>
-                        <li><a href="/Municipality/Index">Municipios</a></li>
-                        <li><a href="/Municipality/MunicipalitySocialMediaIndex">Redes Sociales</a></li>
-                        <li><a href="/Transactions/Index">Transaciones</a></li>
-                    </ul>
+                        <hr class="mt-10" />
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" aria-hidden="true" role="img">
+                                    <title>Banco</title>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 10.5L12 4l9 6.5M5 11v6a1 1 0 001 1h12a1 1 0 001-1v-6" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 21v-6h6v6" />
+                                </svg>
+                                Bancos (Próximamente)
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" aria-hidden="true" role="img">
+                                    <title>Escenarios deportivos</title>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 2v6M6 8v2a6 6 0 0012 0V8M4 12c0 4 4 6 8 6s8-2 8-6" />
+                                    <circle cx="12" cy="10" r="1.5" />
+                                </svg>
+                                Ecxenarios deportivos
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" aria-hidden="true" role="img">
+                                    <title>Cursos por Alcaldía</title>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 19.5A2.5 2.5 0 015.5 17H20" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 3H8a2 2 0 00-2 2v12" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7h11M8 11h11M8 15h7" />
+                                </svg>
+                                Cursos por Alcaldía
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <!-- Icono: banco (segundo) - variante caja fuerte -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" aria-hidden="true" role="img">
+                                    <title>Banco (variante)</title>
+                                    <rect x="3" y="7" width="18" height="11" rx="2" ry="2" stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-width="2" />
+                                    <circle cx="16" cy="12" r="1.5" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8v8" />
+                                </svg>
+                                Bancos (Próximamente)
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" aria-hidden="true" role="img">
+                                    <title>Noticias</title>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 10v4a2 2 0 002 2h1l4 3V5L6 8H5a2 2 0 00-2 2z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 8l6-2v10l-6-2" />
+                                </svg>
+                                Noticias (Próximamente)
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" aria-hidden="true" role="img">
+                                    <title>Estado de los pagos</title>
+                                    <rect x="2" y="6" width="20" height="12" rx="2" ry="2" stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-width="2" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2 10h20M7 16v-4" />
+                                    <circle cx="16" cy="14" r="1" />
+                                </svg>
+                                Estado de los pagos (Próximamente)
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" aria-hidden="true" role="img">
+                                    <title>Tipos de Documento</title>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 7h10v10H7z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 9h6M9 13h6" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v14" />
+                                </svg>
+                                Tipos de Documento (Próximamente)
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" aria-hidden="true" role="img">
+                                    <title>Personas naturales - Invitados</title>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 11a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2" />
+                                </svg>
+                                Personas naturales - Invitados
+                            </a>
+                        </li>
+
                 </div>
             </div>
         }
