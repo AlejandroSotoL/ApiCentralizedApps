@@ -7,6 +7,8 @@ using CentralizedApps.Repositories;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services;
 using CentralizedApps.Services.Interfaces;
+using CentralizedApps.Services.ServicesWeb;
+using CentralizedApps.Services.ServicesWeb.Interface;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -78,6 +80,7 @@ builder.Services.AddScoped<IRemidersService, RemindersService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
 builder.Services.AddScoped<IBank, BankService>();
 builder.Services.AddScoped<IFintechService, FintechService>();
+builder.Services.AddScoped<IWeb, Web>();
 
 // ---------------- Autenticación / Autorización ----------------
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
