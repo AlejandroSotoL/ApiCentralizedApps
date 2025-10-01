@@ -43,32 +43,91 @@
                 </select>
             </fieldset>
 
-    <div class="card bg-base-300 rounded-box mb-6 p-6">
-        <h3 class="mb-4 text-xl font-bold">Departamento</h3>
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Seleccionar departamento existente</legend>
-                <select class="select w-full">
-                    <option disabled selected>Seleccione un departamento</option>
-                    @foreach (var department in Model!.Departments)
-                    {
-                        <option value=@department.Id selected="@(department.Id == Model.municipality?.Department?.Id)">
-                            @department.Name</option>
-                    }
-                </select>
-            </fieldset>
-        <form asp-controller="Municipality" asp-action="CreateDepartment" method="post">
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Nombre del departamento</legend>
-                <input type="text" class="input w-full"
-                        name="Name" placeholder="Ej: Cundinamarca" />
-            </fieldset>
 
-            <div class="mt-4 flex justify-end">
-                <button type="submit" class="btn btn-primary">Crear Departamento</button>
-            </div>
-        </form>
+<form asp-controller="Municipality" asp-action="CreateThemeWeb" method="post">
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Nombre del tema</legend>
+        <input type="text" class="input w-full" placeholder="Ej: Tema Juvenil"
+               name="NameTheme"
+               value="@Model?.municipality?.Theme?.NameTheme" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Color de fondo</legend>
+        <input type="color" class="input w-full color-input"
+               name="BackGroundColor"
+               value="@Model?.municipality?.Theme?.BackGroundColor?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Color primario</legend>
+        <input type="color" class="input w-full color-input"
+               name="PrimaryColor"
+               value="@Model?.municipality?.Theme?.PrimaryColor?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Color secundario</legend>
+        <input type="color" class="input w-full color-input"
+            name="SecondaryColor"
+            value="@Model?.municipality?.Theme?.SecondaryColor?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Color secundario oscuro</legend>
+        <input type="color" class="input w-full color-input"
+            name="SecondaryColorBlack"
+            value="@Model?.municipality?.Theme?.SecondaryColorBlack?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Texto en primario (claro)</legend>
+        <input type="color" class="input w-full color-input"
+            name="OnPrimaryColorLight"
+            value="@Model?.municipality?.Theme?.OnPrimaryColorLight?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Texto en primario (oscuro)</legend>
+        <input type="color" class="input w-full color-input"
+               name="OnPrimaryColorDark"
+               value="@Model?.municipality?.Theme?.OnPrimaryColorDark?.Replace("0xFF", "#")" />
+    </fieldset>
+
+    <div class="flex justify-end mt-4">
+        <button type="submit" class="btn btn-primary">
+            Guardar
+        </button>
     </div>
+</form>
+
+    </div>
+
+    <script>
+        document.querySelectorAll(".color-input").forEach(input => {
+            input.addEventListener("change", () => {
+                const hex = input.value.replace("#", "");
+                const argb = "0xFF" + hex;
+                input.setAttribute("name", input.dataset.name);
+                input.setAttribute("value", argb);
+            });
+        });
+    </script>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success shadow-lg mt-4">
+        <span>@TempData["Success"]</span>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-error shadow-lg mt-4">
+        <span>@TempData["Error"]</span>
+    </div>
+}
+
+    
 
     <div class="card bg-base-300 rounded-box p-6">
         <h3 class="mb-4 text-xl font-bold">Banco</h3>

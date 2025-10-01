@@ -7,6 +7,7 @@
     <title>@ViewData["Title"] - Mi Proyecto</title>
     <link rel="stylesheet" href="~/css/output.css" />
     <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    
 </head>
 
 <body class="bg-base-200 text-base-content min-h-screen">
@@ -149,6 +150,17 @@
                                 Cerrar Sesión
                             </a>
                         </li>
+                    <ul class="menu">
+                        <li><a href="/Web/EnDesarrollo">Administración Centralización</a></li>
+                        <li><a href="/Account/Logout">Cerrar Sesión</a></li>
+                        <li><a class="text-center font-bold">------------------</a></li>
+                        <li><a href="/Web/SubirImagen">Escudos de las Alcaldías</a></li>
+                        <li><a href="/Web/EnDesarrollo">Bancos</a></li>
+                        <li><a href="/Web/EnDesarrollo">Temas Gráficos</a></li>
+                        <li><a href="/Municipality/deparmentIndex">Departamentos</a></li>
+                        <li><a href="/Municipality/Index">Municipios</a></li>
+                        <li><a href="/Municipality/MunicipalitySocialMediaIndex">Redes Sociales</a></li>
+                        <li><a href="/Transactions/Index">Transaciones</a></li>
                     </ul>
                 </div>
             </div>
@@ -156,6 +168,7 @@
     </div>
 
     <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     <script>
         const themeButton = document.getElementById('toggle-theme');
         themeButton.addEventListener('click', () => {
