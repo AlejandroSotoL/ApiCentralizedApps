@@ -113,7 +113,7 @@ namespace CentralizedApps.Controllers.web
             }
 
         }
-        // create deparment
+        // create social type
         [HttpPost]
         public async Task<IActionResult> CreateSocialType(CreateSocialMediaTypeDto createSocialMediaTypeDto)
         {
