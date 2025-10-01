@@ -6,13 +6,14 @@ using CentralizedApps.Services.Interfaces;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using Microsoft.AspNetCore.Authorization;
+using CentralizedApps.Models.Entities;
 
 namespace CentralizedApps.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [AllowAnonymous]
-    
+
     public class ProcessOfMunicipalitiesController : ControllerBase
     {
 
@@ -26,8 +27,6 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
-
-        //Asign a procedure to a municipality.
         [HttpPost("Asing/Procedure")]
         public async Task<IActionResult> AsingProccessToMunicipality(MunicipalityProcedureAddDto municipalityProcedureAddDto)
         {
@@ -186,6 +185,5 @@ namespace CentralizedApps.Controllers
                 };
             }
         }
-
     }
 }
