@@ -80,6 +80,7 @@ builder.Services.AddScoped<IRemidersService, RemindersService>();
 builder.Services.AddScoped<IProcedureServices, ProcedureServices>();
 builder.Services.AddScoped<IBank, BankService>();
 builder.Services.AddScoped<IFintechService, FintechService>();
+builder.Services.AddScoped<IGeneralProcedures, GeneralProcedures>();
 builder.Services.AddScoped<IWeb, Web>();
 
 // ---------------- Autenticación / Autorización ----------------
