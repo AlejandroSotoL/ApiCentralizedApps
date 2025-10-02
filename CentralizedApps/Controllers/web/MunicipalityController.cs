@@ -14,15 +14,17 @@ namespace CentralizedApps.Controllers.web
         private readonly IMunicipalityServices _MunicipalityServices;
         private readonly IProcedureServices _ProcedureServices;
         private readonly IDepartmentService _departmentService;
+        private readonly IGeneralMunicipality _GeneralMunicipality;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWeb _web;
-        public MunicipalityController(IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork, IDepartmentService departmentService, IWeb web)
+        public MunicipalityController(IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork, IDepartmentService departmentService, IWeb web, IGeneralMunicipality GeneralMunicipality)
         {
             _MunicipalityServices = MunicipalityServices;
             _ProcedureServices = ProcedureServices;
             _unitOfWork = unitOfWork;
             _departmentService = departmentService;
             _web = web;
+            _GeneralMunicipality = GeneralMunicipality;
         }
 
 
@@ -43,13 +45,44 @@ namespace CentralizedApps.Controllers.web
                 return View(new List<GetMunicipalitysDto>());
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateMunicipalityGeneral(int id, MunicipalityDto dto)
+        {
+            var response = await _GeneralMunicipality.UpdateMuniciaplityTransaction(id, dto);
+            if (response.BooleanStatus)
+            {
+                TempData["Success"] = response.SentencesError;
+                return RedirectToAction("FormMunicipality", new { id });
+            }
+
+            TempData["Error"] = response.SentencesError;
+            return RedirectToAction("FormMunicipality", new { id });
+        }
+
         [HttpGet]
         public async Task<IActionResult> MunicipalitySocialMediaIndex(int? id)
         {
-
             var response = await _web.MunicipalitiesAndSocialMediaType(id);
             return View(response);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> FormMunicipality(int id)
+        {
+            try
+            {
+                var municipality = await _MunicipalityServices.JustGetMunicipalityWithRelationsWeb(id);
+                if (municipality == null)
+                {
+                    return View(new GetMunicipalitysDto());
+                }
+                return View(municipality);
+            }
+            catch (Exception ex)
+            {
+                return View(new MunicipalityDto());
+            }
         }
 
         [HttpPost]
