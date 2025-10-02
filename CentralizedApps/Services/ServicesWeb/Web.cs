@@ -48,6 +48,136 @@ namespace CentralizedApps.Services.ServicesWeb
             };
 
         }
+        public async Task<CourseWebDto> courses(int? id)
+        {
+            var response = _unitOfWork.genericRepository<Course>();
+            var Entity = await response.GetAllWithNestedIncludesAsync(query =>
+                query
+                    .Include(msm => msm.Municipality)
+
+            );
+
+            var filtro = id.HasValue
+                ? Entity.Where(m => m.MunicipalityId == id.Value).ToList()
+                : new List<Course>();
+
+            return new CourseWebDto
+            {
+                municipality = id.HasValue
+                    ? await _municipalityServices.JustGetMunicipalityWithRelations(id.Value)
+                    : null,
+                courses = filtro,
+                municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync()
+
+            };
+
+        }
+        public async Task<SportsFacilitiesWebDto> SportsFacilities(int? id)
+        {
+            var response = _unitOfWork.genericRepository<SportsFacility>();
+            var Entity = await response.GetAllWithNestedIncludesAsync(query =>
+                query
+                    .Include(msm => msm.Municipality)
+
+            );
+
+            var filtro = id.HasValue
+                ? Entity.Where(m => m.MunicipalityId == id.Value).ToList()
+                : new List<SportsFacility>();
+
+            return new SportsFacilitiesWebDto
+            {
+                municipality = id.HasValue
+                    ? await _municipalityServices.JustGetMunicipalityWithRelations(id.Value)
+                    : null,
+                sportsFacilities = filtro,
+                municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync()
+
+            };
+
+        }
+
+         public async Task<ValidationResponseDto> UpdateSportFacilietes(int id, CreateSportsFacilityDto updateSportsFacilityDto)
+        {
+            try
+            {
+                var response = await _unitOfWork.genericRepository<SportsFacility>()
+                    .FindAsync_Predicate(x => x.Id == id);
+                if (response == null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 404,
+                        SentencesError = "No se encontró el Sport."
+                    };
+                }
+                response.IsActive = updateSportsFacilityDto.IsActive;
+                response.Get = updateSportsFacilityDto.Get;
+                response.CalendaryPost = updateSportsFacilityDto.CalendaryPost;
+                response.ReservationPost = updateSportsFacilityDto.ReservationPost;
+                response.Name = updateSportsFacilityDto.Name;
+                response.MunicipalityId = updateSportsFacilityDto.MunicipalityId;
+                _unitOfWork.genericRepository<SportsFacility>().Update(response);
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0 && response != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = true,
+                        CodeStatus = 200,
+                        SentencesError = "Estado del Spot actualizado correctamente. " + rows + " filas afectadas."
+                    };
+                }
+                else
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 500,
+                        SentencesError = "Error al actualizar el estado del Sport."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 500,
+                    SentencesError = $"Error al actualizar el estado del Sport: {ex.Message}"
+                };
+            }
+        }
+        
+        public async Task<ValidationResponseDto> updateCourse(int id, CreateCourseDto updateCourseDto)
+        {
+            var Course = await _unitOfWork.genericRepository<Course>().GetByIdAsync(id);
+            if (Course == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 404,
+                    SentencesError = "NotFound"
+                };
+            }
+
+            Course.MunicipalityId = updateCourseDto.MunicipalityId;
+            Course.Name = updateCourseDto.Name;
+            Course.Post = updateCourseDto.Post;
+            Course.Get = updateCourseDto.Get;
+            Course.IsActive = updateCourseDto.IsActive;
+            _unitOfWork.genericRepository<Course>().Update(Course);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ValidationResponseDto
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
+        }
 
     }
 }

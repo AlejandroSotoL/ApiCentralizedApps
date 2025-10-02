@@ -1,0 +1,87 @@
+@model List<CentralizedApps.Models.Entities.Bank>
+@{
+    ViewData["Title"] = "Formulario de Bancos";
+    Layout = "Layout";
+}
+@if (TempData["Message"] != null)   
+{
+    <div id="tempMessage" class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error")">
+        @TempData["Message"]
+    </div>
+}
+<Form asp-action="updateBank" asp-controller="Municipality">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend">Seleccionar Banco existente</legend>
+            <select id="selectDepartment" name="id" class="select w-full">
+                <option disabled selected>Seleccione un Banco</option>
+                @foreach (var bank in Model)
+                {
+                    <option value="@bank.Id">@bank.NameBank</option>
+                }
+            </select>
+        </fieldset>
+
+        <div class="flex flex-col">
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Nombre del Banco</legend>
+                <input id="inputDepartment" type="text" class="input w-full" name="NameBank"
+                    placeholder="Ej: Bancolombia" />
+            </fieldset>
+
+            <div class="flex justify-end gap-6 p-5">
+                <button type="button" class="btn btn-primary" onclick="my_modal_3.showModal()">Crear</button>
+                <button type="submit" name="updateDeparment" class="btn btn-warning">Editar</button>
+            </div>
+        </div>
+    </div>
+</Form>
+
+<dialog id="my_modal_3" class="modal">
+    <div class="modal-box">
+        <form method="dialog" class="flex justify-end">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <form asp-action="createBank" asp-controller="Municipality">
+            <div class="flex flex-col">
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Nombre del Banco</legend>
+                    <input id="inputDepartment" type="text" class="input w-full" name="NameBank"
+                        placeholder="Ej: Cundinamarca" />
+                </fieldset>
+
+                <button class="btn btn-success">Crear</button>
+            </div>
+        </form>     
+    </div>
+</dialog>
+
+
+
+
+<script>
+    const selectDepartment = document.getElementById("selectDepartment");
+    const inputDepartment = document.getElementById("inputDepartment");
+
+    selectDepartment.addEventListener("change", function () {
+        const selectedText = this.options[this.selectedIndex].text;
+        inputDepartment.value = selectedText;
+    });
+
+    setTimeout(() => {
+            const msg = document.getElementById("tempMessage");
+            if (msg) {
+                msg.style.transition = "opacity 0.5s";
+                msg.style.opacity = "0";
+                setTimeout(() => msg.remove(), 500);
+            }
+        }, 2000);
+
+    new TomSelect("#selectDepartment", {
+        create: false, 
+        sortField: { field: "text", direction: "asc" },
+        placeholder: "Seleccione un departamento",
+        allowEmptyOption: true
+    });
+
+</script>
