@@ -1,0 +1,89 @@
+@model List<CentralizedApps.Models.Entities.DocumentType>
+@{
+    ViewData["Title"] = "Formulario de Bancos";
+    Layout = "Layout";
+}
+@if (TempData["Message"] != null)   
+{
+    <div id="tempMessage" class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error")">
+        @TempData["Message"]
+    </div>
+}
+<div class="card bg-base-200 rounded-box p-0 md:p-6">
+<h1 class="font-bold text-3xl text-center mb-6">Tipo de Documento</h1>
+<Form asp-action="updateDocumentType" asp-controller="Municipality">
+    <div class="grid bg-base-300 grid-cols-1 md:grid-cols-2 p-8 gap-4 rounded-2xl">
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend">Seleccionar tipo de documento existente</legend>
+            <select id="selectDocumentType" name="id" class="select w-full">
+                <option disabled selected>Tipo de documento</option>
+                @foreach (var documentType in Model)
+                {
+                    <option value="@documentType.Id">@documentType.NameDocument</option>
+                }
+            </select>
+        </fieldset>
+
+        <div class="flex flex-col">
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Nombre del tipo de documento</legend>
+                <input id="inputDocumentType" type="text" class="input w-full" name="NameDocument"
+                    placeholder="Ej: Cédula" />
+            </fieldset>
+
+            <div class="flex justify-center md:justify-end gap-6 p-5">
+                <button type="button" class="btn btn-soft btn-success" onclick="my_modal_3.showModal()">Crear</button>
+                <button type="submit" class="btn btn-soft btn-warning">Editar</button>
+            </div>
+        </div>
+    </div>
+</Form>
+</div>
+<dialog id="my_modal_3" class="modal">
+    <div class="modal-box">
+        <form method="dialog" class="flex justify-end">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <form asp-action="createDocumentType" asp-controller="Municipality">
+            <div class="flex flex-col">
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Nombre tipo de documento</legend>
+                    <input id="inputDocumentType" type="text" class="input w-full" name="NameDocument"
+                        placeholder="Ej: cédula" />
+                </fieldset>
+
+                <button class="btn btn-success">Crear</button>
+            </div>
+        </form>     
+    </div>
+</dialog>
+
+
+
+
+<script>
+    const selectDocumentType = document.getElementById("selectDocumentType");
+    const inputDocumentType = document.getElementById("inputDocumentType");
+
+    selectDocumentType.addEventListener("change", function () {
+        const selectedText = this.options[this.selectedIndex].text;
+        inputDocumentType.value = selectedText;
+    });
+
+    setTimeout(() => {
+            const msg = document.getElementById("tempMessage");
+            if (msg) {
+                msg.style.transition = "opacity 0.5s";
+                msg.style.opacity = "0";
+                setTimeout(() => msg.remove(), 500);
+            }
+        }, 2000);
+
+    new TomSelect("#selectDocumentType", {
+        create: false, 
+        sortField: { field: "text", direction: "asc" },
+        placeholder: "Tipo de Documento",
+        allowEmptyOption: true
+    });
+
+</script>

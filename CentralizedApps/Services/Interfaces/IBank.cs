@@ -8,6 +8,7 @@ namespace CentralizedApps.Services.Interfaces
 {
     public interface IBank
     {
-        Task<ValidationResponseDto> CreateBank(CreateBankDto bankAccountDto); 
+        Task<ValidationResponseDto> CreateBank(CreateBankDto bankAccountDto);
+        Task<ValidationResponseDto> updateBank(int id, CreateBankDto bankAccountDto);
     }
 }

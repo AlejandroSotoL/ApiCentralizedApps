@@ -7,6 +7,6 @@ namespace CentralizedApps.Models.Dtos
 {
     public class CreateBankDto
     {
-        public string NameBank { get; set; }
+        public string? NameBank { get; set; }
     }
 }

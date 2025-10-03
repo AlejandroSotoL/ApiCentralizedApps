@@ -31,7 +31,7 @@ namespace CentralizedApps.Services
 
                 var response = await _unitOfWork.genericRepository<Bank>()
                     .FindAsync_Predicate(x => x.NameBank == bankAccountDto.NameBank);
-                    
+
                 if (response != null)
                 {
                     return new ValidationResponseDto
@@ -49,14 +49,17 @@ namespace CentralizedApps.Services
 
                 await _unitOfWork.genericRepository<Bank>().AddAsync(strucutr);
                 var rows = await _unitOfWork.SaveChangesAsync();
-                if (rows > 0) {
+                if (rows > 0)
+                {
                     return new ValidationResponseDto
                     {
                         CodeStatus = 200,
                         BooleanStatus = true,
                         SentencesError = "Banco creado correctamente. Filas: " + rows
                     };
-                } else {
+                }
+                else
+                {
                     return new ValidationResponseDto
                     {
                         CodeStatus = 400,
@@ -75,6 +78,30 @@ namespace CentralizedApps.Services
                 };
 
             }
+        }
+        
+
+        public async Task<ValidationResponseDto> updateBank(int id, CreateBankDto bankAccountDto)
+        {
+            var bank = await _unitOfWork.genericRepository<Bank>().GetByIdAsync(id);
+            if (bank == null)
+            {
+                return new ValidationResponseDto
+                {
+                    BooleanStatus = false,
+                    CodeStatus = 400,
+                    SentencesError = "notfund"
+                };
+            }
+            bank.NameBank = bankAccountDto.NameBank;
+            _unitOfWork.genericRepository<Bank>().Update(bank);
+            await _unitOfWork.SaveChangesAsync();
+            return new ValidationResponseDto
+            {
+                CodeStatus = 200,
+                BooleanStatus = true,
+                SentencesError = "succesfully"
+            };
         }
     }
 }
