@@ -350,6 +350,7 @@ namespace CentralizedApps.Services
             try
             {
                 var response = _unitOfWork.genericRepository<Municipality>();
+
                 var entity = await response.GetOneWithNestedIncludesAsync(
                     query => query
                         .Include(m => m.Courses)!

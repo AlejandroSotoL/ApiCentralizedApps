@@ -14,7 +14,6 @@ namespace CentralizedApps.Repositories.Interfaces
         Task<User?> GetByEmailUserByAuthenticate(string email);
         Task<List<T>> GetAllWithFilterAsync(Expression<Func<T, bool>> filter);
         void DeleteRange(IEnumerable<T> entities);
-
         //Predication
         Task<T?> FindAsync_Predicate(Expression<Func<T, bool>> predicate);
         //Predication
