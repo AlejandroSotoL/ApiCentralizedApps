@@ -1,4 +1,5 @@
-﻿using CentralizedApps.Models;
+﻿using AutoMapper;
+using CentralizedApps.Models;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
@@ -20,8 +21,9 @@ namespace CentralizedApps.Controllers.web
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBank _bank;
         private readonly IWeb _web;
+        private readonly IMapper _mapper;
         private readonly ILogger<MunicipalityController> _logger;
-        public MunicipalityController(ILogger<MunicipalityController> logger,IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork, IDepartmentService departmentService, IWeb web, IBank bank)
+        public MunicipalityController(ILogger<MunicipalityController> logger, IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork, IDepartmentService departmentService, IWeb web, IBank bank, IMapper mapper)
         {
             _MunicipalityServices = MunicipalityServices;
             _ProcedureServices = ProcedureServices;
@@ -30,6 +32,7 @@ namespace CentralizedApps.Controllers.web
             _web = web;
             _bank = bank;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -61,7 +64,244 @@ namespace CentralizedApps.Controllers.web
         {
             var response = await _web.MunicipalitiesAndSocialMediaType(id);
             return View(response);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> FormMunicipalityUpdate(int id)
+        {
+            try
+            {
+                var structur = new ToAlcaldiaWeb
+                {
+                    Alcaldia = id > 0
+                        ? await _unitOfWork.genericRepository<Municipality>()
+                            .GetOneWithNestedIncludesAsync(
+                                query => query
+                                    .Include(r => r.IdShieldNavigation)!
+                                    .Include(r => r.Department)!
+                                    .Include(r => r.Theme),
+                                m => m.Id == id
+                            ) ?? new Municipality()
+                        : new Municipality(),
+
+                    Bancos = await _unitOfWork.genericRepository<Bank>().GetAllAsync() ?? new List<Bank>(),
+                    Departamentos = await _unitOfWork.genericRepository<Department>().GetAllAsync() ?? new List<Department>(),
+                    Escudos = await _unitOfWork.genericRepository<ShieldMunicipality>().GetAllAsync() ?? new List<ShieldMunicipality>(),
+                    Themas = await _unitOfWork.genericRepository<Theme>().GetAllAsync() ?? new List<Theme>(),
+                };
+
+                return View("FormMunicipality", structur);
+            }
+            catch
+            {
+                return View("FormMunicipality", new ToAlcaldiaWeb
+                {
+                    Alcaldia = new Municipality(),
+                    Bancos = new List<Bank>(),
+                    Departamentos = new List<Department>(),
+                    Escudos = new List<ShieldMunicipality>(),
+                    Themas = new List<Theme>()
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GraphicThemes()
+        {
+            return View(await _unitOfWork.genericRepository<Theme>().GetAllAsync());
+        }
+        [HttpGet]
+        public async Task<IActionResult> FilterGraphicThemes(string? filter)
+        {
+            if (filter == null)
+            {
+                TempData["Error"] = "Identificador erroneo";
+            }
+            var response = await _unitOfWork
+                .genericRepository<Theme>()
+                .GetAllAsync();
+
+            if (response == null || !response.Any())
+            {
+                return View("GraphicThemes", new List<Theme>());
+            }
+
+            var filterCreated = response
+                .Where(x => x.NameTheme == filter)
+                .ToList();
+
+            return View("GraphicThemes", filterCreated);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateGraphicThemes(Theme theme)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    TempData["Error"] = "Datos inv�lidos, verifica la informaci�n.";
+                    return RedirectToAction(nameof(GraphicThemes));
+                }
+
+
+                theme.BackGroundColor = ConvertToAndroidColor(theme.BackGroundColor);
+                theme.PrimaryColor = ConvertToAndroidColor(theme.PrimaryColor);
+                theme.SecondaryColor = ConvertToAndroidColor(theme.SecondaryColor);
+                theme.SecondaryColorBlack = ConvertToAndroidColor(theme.SecondaryColorBlack);
+                theme.OnPrimaryColorLight = ConvertToAndroidColor(theme.OnPrimaryColorLight);
+                theme.OnPrimaryColorDark = ConvertToAndroidColor(theme.OnPrimaryColorDark);
+
+                await _unitOfWork.genericRepository<Theme>().AddAsync(theme);
+                await _unitOfWork.SaveChangesAsync();
+                TempData["Success"] = "Tema creado correctamente.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Tenemos problemas -> ${ex.Message}";
+            }
+            return RedirectToAction(nameof(GraphicThemes));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateGraphicTheme(int Id, Theme theme)
+        {
+            try
+            {
+                if (theme == null || Id <= 0)
+                {
+                    TempData["Error"] = $"Tenemos problemas -> El tema es invalido - Id {Id} - Theme {theme?.NameTheme}";
+                    return RedirectToAction(nameof(GraphicThemes));
+                }
+
+                theme.BackGroundColor = ConvertToAndroidColor(theme.BackGroundColor);
+                theme.PrimaryColor = ConvertToAndroidColor(theme.PrimaryColor);
+                theme.SecondaryColor = ConvertToAndroidColor(theme.SecondaryColor);
+                theme.SecondaryColorBlack = ConvertToAndroidColor(theme.SecondaryColorBlack);
+                theme.OnPrimaryColorLight = ConvertToAndroidColor(theme.OnPrimaryColorLight);
+                theme.OnPrimaryColorDark = ConvertToAndroidColor(theme.OnPrimaryColorDark);
+
+                var themeDto = _mapper.Map<ThemeDto>(theme);
+                var response = await _ProcedureServices.UpdateTheme(Id, themeDto);
+
+                if (response == null || response.BooleanStatus == false)
+                {
+                    TempData["Error"] = $"No se pudo actualizar el tema con id {Id}. " +
+                                        $"{response?.SentencesError}";
+                }
+                else
+                {
+                    TempData["Success"] = $"Tema actualizado correctamente. " +
+                                        $"{response.SentencesError}";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Tenemos problemas -> {ex.Message}";
+            }
+
+            return RedirectToAction(nameof(GraphicThemes));
+        }
+
+
+        private string ConvertToAndroidColor(string? color)
+        {
+            if (string.IsNullOrEmpty(color)) return color ?? string.Empty;
+            return color.StartsWith("#")
+                ? color.Replace("#", "0xFF")
+                : color;
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SaveAlcadia(ToAlcaldiaWeb model)
+        {
+            try
+            {
+                var municipality = model.Alcaldia;
+
+                if (municipality == null)
+                {
+                    TempData["Error"] = "Datos inválidos.";
+                    return RedirectToAction("FormMunicipalityUpdate", new { Id = 0 });
+                }
+
+                if (municipality.Id > 0)
+                {
+                    var response = await _unitOfWork
+                        .genericRepository<Municipality>()
+                        .FindAsync_Predicate(x => x.Id == municipality.Id);
+
+                    if (response == null)
+                    {
+                        TempData["Error"] = "Municipio no encontrado.";
+                        return RedirectToAction("FormMunicipalityUpdate", new { Id = municipality.Id });
+                    }
+
+                    response.Name = municipality.Name;
+                    response.EntityCode = municipality.EntityCode;
+                    response.Domain = municipality.Domain;
+                    response.UserFintech = municipality.UserFintech;
+                    response.PasswordFintech = municipality.PasswordFintech;
+                    response.DepartmentId = municipality.DepartmentId;
+                    response.ThemeId = municipality.ThemeId;
+                    response.IdShield = municipality.IdShield;
+                    response.IdBank = municipality.IdBank;
+                    response.DataPrivacy = municipality.DataPrivacy;
+                    response.DataProcessingPrivacy = municipality.DataProcessingPrivacy;
+                    response.IsActive = response.IsActive;
+                }
+                else
+                {
+                    municipality.IsActive = true;
+                    await _unitOfWork.genericRepository<Municipality>().AddAsync(municipality);
+                }
+
+                var rows = await _unitOfWork.SaveChangesAsync();
+                TempData["Success"] = "Proceso de guardado - Activado";
+
+                if (rows <= 0)
+                {
+                    TempData["Error"] = "No se guardaron cambios.";
+                    return RedirectToAction("FormMunicipalityUpdate", new { Id = municipality.Id });
+                }
+
+                TempData["Success"] = municipality.Id > 0 ? "Municipio actualizado." : "Municipio creado.";
+                return RedirectToAction("FormMunicipalityUpdate", new { Id = municipality.Id });
+            }
+            catch (Exception e)
+            {
+                TempData["Error"] = $"Error -> {e.Message}";
+                return RedirectToAction("FormMunicipalityUpdate", new { Id = model.Alcaldia?.Id ?? 0 });
+            }
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatusMunicipality(int id, bool isActive)
+        {
+            try
+            {
+                var response = await _ProcedureServices.UpdateStatusMunicipality(id, isActive);
+                if (response.BooleanStatus)
+                {
+                    TempData["Success"] = "El estado del municipio se actualizó correctamente.";
+                }
+                else
+                {
+                    TempData["Error"] = "No se pudo actualizar el estado del municipio.";
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Ocurrió un error inesperado al actualizar el municipio.";
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]
@@ -128,159 +368,6 @@ namespace CentralizedApps.Controllers.web
         {
             var respose = await _unitOfWork.genericRepository<Department>().GetAllAsync();
             return View(respose);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> BankIndex()
-        {
-            var respose = await _unitOfWork.genericRepository<Bank>().GetAllAsync();
-            return View(respose);
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> DocomentTypeIndex()
-        {
-            var respose = await _ProcedureServices.GetDocumentTypes();
-            return View(respose);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> createCourse(CreateCourseDto createCourseDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                TempData["message"] = "No se pudo crear el curso, hay campos vacíos o inválidos.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("CourseIndex", new { id = createCourseDto.MunicipalityId });
-            }
-            try
-            {
-                if (createCourseDto.MunicipalityId == null || createCourseDto.MunicipalityId <= 0
-                    || string.IsNullOrWhiteSpace(createCourseDto.Get)
-                    || string.IsNullOrWhiteSpace(createCourseDto.Post)
-                    || string.IsNullOrWhiteSpace(createCourseDto.Name))
-                {
-                    TempData["message"] = "No se pudo crear el curso, hay campos vacíos o inválidos.";
-                    TempData["MessageType"] = "error";
-
-                    return RedirectToAction("CourseIndex", new { id = createCourseDto.MunicipalityId });
-                }
-                await _ProcedureServices.createCourse(createCourseDto);
-
-                TempData["message"] = "Se creo el curso correctamente.";
-                TempData["MessageType"] = "success";
-                return RedirectToAction("CourseIndex");
-            }
-            catch (Exception ex)
-            {
-                TempData["message"] = $"no se puedo crear el curso del municipio.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("CourseIndex");
-            }
-        }
-        [HttpPost]
-        public async Task<IActionResult> createQueryField(QueryFieldDto queryFieldDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                TempData["message"] = "No se pudo crear el campo cosulta, hay campos vacíos o inválidos.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
-            }
-            try
-            {
-                if (queryFieldDto == null || queryFieldDto.MunicipalityId <= 0
-                    || string.IsNullOrWhiteSpace(queryFieldDto.FieldName)
-                    || string.IsNullOrWhiteSpace(queryFieldDto.QueryFieldType))
-                {
-                    TempData["message"] = "No se pudo crear el campo cosulta, hay campos vacíos o inválidos.";
-                    TempData["MessageType"] = "error";
-
-                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto?.MunicipalityId });
-                }
-                await _ProcedureServices.createQueryField(queryFieldDto);
-
-                TempData["message"] = "Se creo el campo cosulta correctamente.";
-                TempData["MessageType"] = "success";
-                return RedirectToAction("QueryFieldIndex");
-            }
-            catch (Exception ex)
-            {
-                TempData["message"] = $"no se puedo crear el campo cosulta del municipio.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("QueryFieldIndex");
-            }
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> createNewsMunicipality(NewsByMunicipalityDto newsByMunicipalityDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                TempData["message"] = "No se pudo crear las noticias del municipio, hay campos vacíos o inválidos.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("NewsMunicipalityIndex", new { id = newsByMunicipalityDto.IdMunicipality });
-            }
-            try
-            {
-                if (newsByMunicipalityDto == null || newsByMunicipalityDto.IdMunicipality <= 0
-                    || string.IsNullOrWhiteSpace(newsByMunicipalityDto.GetUrlNew))
-                {
-                    TempData["message"] = "No se pudo crear las noticias del municipio, hay campos vacíos o inválidos.";
-                    TempData["MessageType"] = "error";
-
-                    return RedirectToAction("NewsMunicipalityIndex", new { id = newsByMunicipalityDto?.IdMunicipality });
-                }
-                await _ProcedureServices.createNewNotice(newsByMunicipalityDto);
-
-                TempData["message"] = "Se creo la noticia del municipio correctamente.";
-                TempData["MessageType"] = "success";
-                return RedirectToAction("NewsMunicipalityIndex");
-            }
-            catch (Exception ex)
-            {
-                TempData["message"] = $"no se puedo crear la noticia del municipio.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("NewsMunicipalityIndex");
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> createSportsFacilities(CreateSportsFacilityDto createSportsFacilityDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                TempData["message"] = "No se pudo crear el escenario deportivo, hay campos vacíos o inválidos.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("SportsFacilitiesIndex", new { id = createSportsFacilityDto.MunicipalityId });
-            }
-            try
-            {
-                if (createSportsFacilityDto.MunicipalityId == null || createSportsFacilityDto.MunicipalityId <= 0
-                    || string.IsNullOrWhiteSpace(createSportsFacilityDto.Get)
-                    || string.IsNullOrWhiteSpace(createSportsFacilityDto.ReservationPost)
-                    || string.IsNullOrWhiteSpace(createSportsFacilityDto.CalendaryPost)
-                    || string.IsNullOrWhiteSpace(createSportsFacilityDto.Name))
-                {
-                    TempData["message"] = "No se pudo crear el escenario deportivo, hay campos vacíos o inválidos.";
-                    TempData["MessageType"] = "error";
-
-                    return RedirectToAction("SportsFacilitiesIndex", new { id = createSportsFacilityDto.MunicipalityId });
-                }
-                await _ProcedureServices.createSportsFacility(createSportsFacilityDto);
-
-                TempData["message"] = "Se creo el escenario deportivo correctamente.";
-                TempData["MessageType"] = "success";
-                return RedirectToAction("SportsFacilitiesIndex");
-            }
-            catch (Exception ex)
-            {
-                TempData["message"] = $"no se puedo crear el escenario deportivo del municipio.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("SportsFacilitiesIndex");
-            }
         }
 
         [HttpGet]
@@ -673,8 +760,8 @@ namespace CentralizedApps.Controllers.web
 
             try
             {
-                 _logger.LogInformation("Id: {Id}, FieldName: {FieldName}, MunicipalityId: {MunicipalityId}, QueryFieldType: {QueryFieldType}",
-        id, queryFieldDto.FieldName, queryFieldDto.MunicipalityId, queryFieldDto.QueryFieldType);
+                _logger.LogInformation("Id: {Id}, FieldName: {FieldName}, MunicipalityId: {MunicipalityId}, QueryFieldType: {QueryFieldType}",
+       id, queryFieldDto.FieldName, queryFieldDto.MunicipalityId, queryFieldDto.QueryFieldType);
 
                 if (queryFieldDto.MunicipalityId <= 0 || string.IsNullOrEmpty(queryFieldDto.FieldName) || string.IsNullOrEmpty(queryFieldDto.QueryFieldType))
                 {
