@@ -17,7 +17,8 @@ namespace CentralizedApps.Controllers.web
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBank _bank;
         private readonly IWeb _web;
-        public MunicipalityController(IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork, IDepartmentService departmentService, IWeb web, IBank bank)
+        private readonly ILogger<MunicipalityController> _logger;
+        public MunicipalityController(ILogger<MunicipalityController> logger,IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork, IDepartmentService departmentService, IWeb web, IBank bank)
         {
             _MunicipalityServices = MunicipalityServices;
             _ProcedureServices = ProcedureServices;
@@ -25,6 +26,7 @@ namespace CentralizedApps.Controllers.web
             _departmentService = departmentService;
             _web = web;
             _bank = bank;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -71,6 +73,20 @@ namespace CentralizedApps.Controllers.web
         {
 
             var response = await _web.courses(id);
+            return View(response);
+
+        }
+
+        [HttpPost]
+        public IActionResult SelectQueryField(int id)
+        {
+            return RedirectToAction("QueryFieldIndex", "Municipality", new { id });
+        }
+        [HttpGet]
+        public async Task<IActionResult> QueryFieldIndex(int? id)
+        {
+
+            var response = await _web.QueryField(id);
             return View(response);
 
         }
@@ -159,6 +175,39 @@ namespace CentralizedApps.Controllers.web
                 TempData["message"] = $"no se puedo crear el curso del municipio.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("CourseIndex");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> createQueryField(QueryFieldDto queryFieldDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["message"] = "No se pudo crear el campo cosulta, hay campos vacíos o inválidos.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
+            }
+            try
+            {
+                if (queryFieldDto == null || queryFieldDto.MunicipalityId <= 0
+                    || string.IsNullOrWhiteSpace(queryFieldDto.FieldName)
+                    || string.IsNullOrWhiteSpace(queryFieldDto.QueryFieldType))
+                {
+                    TempData["message"] = "No se pudo crear el campo cosulta, hay campos vacíos o inválidos.";
+                    TempData["MessageType"] = "error";
+
+                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto?.MunicipalityId });
+                }
+                await _ProcedureServices.createQueryField(queryFieldDto);
+
+                TempData["message"] = "Se creo el campo cosulta correctamente.";
+                TempData["MessageType"] = "success";
+                return RedirectToAction("QueryFieldIndex");
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = $"no se puedo crear el campo cosulta del municipio.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("QueryFieldIndex");
             }
         }
 
@@ -461,6 +510,44 @@ namespace CentralizedApps.Controllers.web
                 TempData["message"] = "no se puedo Actualizar el curso. comunicate con el desarrollador";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("CourseIndex", new { id = updateCourseDto.MunicipalityId });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> updateQueryField(int id, QueryFieldDto queryFieldDto)
+        {
+
+            try
+            {
+                 _logger.LogInformation("Id: {Id}, FieldName: {FieldName}, MunicipalityId: {MunicipalityId}, QueryFieldType: {QueryFieldType}",
+        id, queryFieldDto.FieldName, queryFieldDto.MunicipalityId, queryFieldDto.QueryFieldType);
+
+                if (queryFieldDto.MunicipalityId <= 0 || string.IsNullOrEmpty(queryFieldDto.FieldName) || string.IsNullOrEmpty(queryFieldDto.QueryFieldType))
+                {
+                    TempData["message"] = "no se puedo Actualizar el campo consulta, campos vacios";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
+                }
+
+                var result = await _ProcedureServices.updateQueryField(id, queryFieldDto);
+
+                if (!result.BooleanStatus)
+                {
+                    TempData["message"] = "no se puedo Actualizar el campo consulta.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
+                }
+                else
+                {
+                    TempData["message"] = "Se Actualizar el campo consulta correctamente.";
+                    TempData["MessageType"] = "success";
+                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "no se puedo Actualizar el campo consulta. comunicate con el desarrollador";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
             }
         }
         [HttpPost]

@@ -14,5 +14,6 @@ namespace CentralizedApps.Services.ServicesWeb.Interface
         Task<ValidationResponseDto> UpdateSportFacilietes(int id, CreateSportsFacilityDto updateSportsFacilityDto);
         Task<SportsFacilitiesWebDto> SportsFacilities(int? id);
         Task<NewsMunicipalityDto> NewsMunicipality(int? id);
+        Task<QueryFieldWeb> QueryField(int? id);
     }
 }

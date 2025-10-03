@@ -9,8 +9,10 @@
         @TempData["Message"]
     </div>
 }
+<div class="card bg-base-200 rounded-box p-0 md:p-6">
+            <h1 class="font-bold text-3xl text-center mb-6">Departamento</h1>
 <Form asp-action="updateDeparment" asp-controller="Municipality">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="bg-base-300 grid grid-cols-1 md:grid-cols-2 p-6 rounded-2xl gap-4">
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Seleccionar departamento existente</legend>
             <select id="selectDepartment" name="id" class="select w-full">
@@ -29,13 +31,14 @@
                     placeholder="Ej: Cundinamarca" />
             </fieldset>
 
-            <div class="flex justify-end gap-6 p-5">
-                <button type="button" class="btn btn-primary" onclick="my_modal_3.showModal()">Crear</button>
-                <button type="submit" name="updateDeparment" class="btn btn-warning">Editar</button>
+            <div class="flex  justify-center md:justify-end gap-6 p-5">
+                <button type="button" class="btn btn-soft btn-success" onclick="my_modal_3.showModal()">Crear</button>
+                <button type="submit" name="updateDeparment" class="btn btn-soft btn-warning">Editar</button>
             </div>
         </div>
     </div>
 </Form>
+</div>
 
 <dialog id="my_modal_3" class="modal">
     <div class="modal-box">

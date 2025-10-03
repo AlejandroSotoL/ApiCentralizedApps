@@ -72,6 +72,30 @@ namespace CentralizedApps.Services.ServicesWeb
             };
 
         }
+        public async Task<QueryFieldWeb>  QueryField(int? id)
+        {
+            var response = _unitOfWork.genericRepository<QueryField>();
+            var Entity = await response.GetAllWithNestedIncludesAsync(query =>
+                query
+                    .Include(msm => msm.Municipality)
+
+            );
+
+            var filtro = id.HasValue
+                ? Entity.Where(m => m.MunicipalityId == id.Value).ToList()
+                : new List<QueryField>();
+
+            return new QueryFieldWeb
+            {
+                municipality = id.HasValue
+                    ? await _municipalityServices.JustGetMunicipalityWithRelations(id.Value)
+                    : null,
+                queryFields = filtro,
+                municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync()
+
+            };
+
+        }
         public async Task<SportsFacilitiesWebDto> SportsFacilities(int? id)
         {
             var response = _unitOfWork.genericRepository<SportsFacility>();
@@ -97,7 +121,7 @@ namespace CentralizedApps.Services.ServicesWeb
 
         }
 
-         public async Task<ValidationResponseDto> UpdateSportFacilietes(int id, CreateSportsFacilityDto updateSportsFacilityDto)
+        public async Task<ValidationResponseDto> UpdateSportFacilietes(int id, CreateSportsFacilityDto updateSportsFacilityDto)
         {
             try
             {
@@ -178,7 +202,7 @@ namespace CentralizedApps.Services.ServicesWeb
                 SentencesError = "succesfully"
             };
         }
-        
+
         public async Task<NewsMunicipalityDto> NewsMunicipality(int? id)
         {
             var response = _unitOfWork.genericRepository<NewsByMunicipality>();
@@ -202,6 +226,9 @@ namespace CentralizedApps.Services.ServicesWeb
 
             };
         }
+        
+
+        
 
     }
 }
