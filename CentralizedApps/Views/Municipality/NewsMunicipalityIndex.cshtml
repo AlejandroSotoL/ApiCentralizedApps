@@ -1,0 +1,130 @@
+@model CentralizedApps.Models.Dtos.NewsMunicipalityDto
+@{
+    ViewData["Title"] = "Formulario de cursos";
+    Layout = "Layout";
+}
+@if (TempData["Message"] != null)
+{
+    <div id="tempMessage"
+        class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error")">
+        @TempData["Message"]
+    </div>
+}
+
+<div class="card bg-base-200 rounded-box p-0 md:p-6">
+    <h1 class="font-bold text-3xl text-center mb-6">Noticias Municipios</h1>
+    <div class="card bg-base-200 rounded-box grid grid-cols-1 md:grid-rows-1 p-2 gap-y-6">
+
+
+
+        <div class="card bg-base-300 grid p-6 ">
+            <h2 class="font-bold text-2xl text-center mb-6">Crear noticia Municipio</h2>
+            <form asp-action="createNewsMunicipality" asp-controller="Municipality" method="post">
+                <div class=" grid md:grid-cols-2 gap-4 ">
+                    <fieldset class="fieldset w-full ">
+                        <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
+                        <select name="IdMunicipality" class="select w-full">
+                            <option disabled selected>Municipios</option>
+                            @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
+                            {
+                                <option value="@municipality.Id">@municipality.Name</option>
+                            }
+                        </select>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">GetUrlNew</legend>
+                        <input type="text" name="GetUrlNew" class="input w-full" placeholder="Enlace API / Post" />
+                    </fieldset>
+
+                </div>
+                <div class="w-full flex justify-end my-6">
+                    <button type="submit"
+                        class="btn btn-soft btn-accent w-full md:w-1/6 justify-self-center ">Crear</button>
+                </div>
+            </form>
+        </div>
+
+
+
+
+        <div class="card bg-base-300 grid p-6 ">
+
+            <h2 class="font-bold text-2xl text-center mb-6">Actualizar Noticia Municipio</h2>
+            <div class="card w-full  bg-base-300 grid  gap-4  ">
+
+                <div class="flex w-full flex-col items-center justify-center gap-3 p-6">
+                    <div class="avatar">
+                        <div class="mask mask-squircle h-24 w-24">
+                            <img src="@Model?.municipality?.IdShield?.Url" alt="escudo municipio" />
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h1 class="text-2xl font-bold">@Model?.municipality?.Name</h1>
+                        <p class="text-sm opacity-70">@Model?.municipality?.Department?.Name</p>
+                    </div>
+                </div>
+
+                <form asp-action="SelectNewsMunicipality" asp-controller="Municipality" method="post"
+                    class=" w-full  md:w-1/2">
+                    <fieldset class="fieldset  ">
+                        <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
+                        <select name="id" class="select w-full" onchange="this.form.submit()">
+                            <option disabled selected>Municipios</option>
+                            @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
+                            {
+                                <option value="@municipality.Id">@municipality.Name</option>
+                            }
+                        </select>
+                    </fieldset>
+                </form>
+
+
+
+                @foreach (var newsByMunicipality in Model?.newsByMunicipalities ?? new List<NewsByMunicipality>())
+                {
+
+
+
+
+
+                    <form asp-action="updateNewsMunicipality" asp-controller="Municipality" method="post"
+                        class="flex flex-col md:flex-row w-full gap-6 md:gap-4">
+
+                        <div class="flex-1 md:basis-2/3">
+                            <input type="hidden" name="Id" value="@newsByMunicipality.Id">
+                            <input type="hidden" name="IdMunicipality" value="@newsByMunicipality.IdMunicipality">
+
+                            <fieldset class="fieldset w-full">
+                                <legend class="fieldset-legend">GetUrlNew</legend>
+                                <div>
+                                    <input type="text" name="GetUrlNew" class="input w-full" placeholder="Enlace API / Post"
+                                        value="@newsByMunicipality.GetUrlNew" />
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <fieldset class="fieldset flex items-end md:basis-1/4 w-full">
+                            <button type="submit" class="btn btn-soft btn-accent w-full">Guardar cambios</button>
+                        </fieldset>
+
+                    </form>
+
+
+
+
+                }
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    setTimeout(() => {
+            const msg = document.getElementById("tempMessage");
+            if (msg) {
+                msg.style.transition = "opacity 0.5s";
+                msg.style.opacity = "0";
+                setTimeout(() => msg.remove(), 500);
+            }
+        }, 2000);
+</script>

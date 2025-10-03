@@ -27,7 +27,6 @@ namespace CentralizedApps.Controllers.web
             _bank = bank;
         }
 
-
         [HttpGet]
         public async Task<IActionResult> Index(string? filter)
         {
@@ -46,6 +45,12 @@ namespace CentralizedApps.Controllers.web
             }
         }
 
+        [HttpPost]
+        public IActionResult SelectMunicipalitySocialMedia(int id)
+        {
+            return RedirectToAction("MunicipalitySocialMediaIndex", "Municipality", new { id });
+        }
+
         [HttpGet]
         public async Task<IActionResult> MunicipalitySocialMediaIndex(int? id)
         {
@@ -54,6 +59,13 @@ namespace CentralizedApps.Controllers.web
             return View(response);
 
         }
+
+        [HttpPost]
+        public IActionResult SelectCourse(int id)
+        {
+            return RedirectToAction("CourseIndex", "Municipality", new { id });
+        }
+
         [HttpGet]
         public async Task<IActionResult> CourseIndex(int? id)
         {
@@ -62,6 +74,28 @@ namespace CentralizedApps.Controllers.web
             return View(response);
 
         }
+
+        [HttpPost]
+        public IActionResult SelectNewsMunicipality(int id)
+        {
+            return RedirectToAction("NewsMunicipalityIndex", "Municipality", new { id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> NewsMunicipalityIndex(int? id)
+        {
+
+            var response = await _web.NewsMunicipality(id);
+            return View(response);
+
+        }
+
+        [HttpPost]
+        public IActionResult SelectSportsFacilities(int id)
+        {
+            return RedirectToAction("SportsFacilitiesIndex", "Municipality", new { id });
+        }
+
         [HttpGet]
         public async Task<IActionResult> SportsFacilitiesIndex(int? id)
         {
@@ -71,41 +105,28 @@ namespace CentralizedApps.Controllers.web
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
+        [HttpGet]
+        public async Task<IActionResult> deparmentIndex()
         {
-
-            try
-            {
-                if (updateMunicipalitySocialMediumDto.MunicipalityId <= 0 || updateMunicipalitySocialMediumDto.SocialMediaTypeId <= 0 || string.IsNullOrEmpty(updateMunicipalitySocialMediumDto.Url))
-                {
-                    TempData["message"] = "no se puedo actulizar la red social del municipio.";
-                    TempData["MessageType"] = "error";
-                    return RedirectToAction("MunicipalitySocialMediaIndex");
-                }
-
-                var result = await _ProcedureServices.updateMunicipalitySocialMedium(id, updateMunicipalitySocialMediumDto);
-
-                if (!result.BooleanStatus)
-                {
-                    TempData["message"] = "no se puedo actulizar la red social del municipio.";
-                    TempData["MessageType"] = "error";
-                    return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
-                }
-                else
-                {
-                    TempData["message"] = "la red social se actualizo correctamente.";
-                    TempData["MessageType"] = "success";
-                    return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
-                }
-            }
-            catch (Exception ex)
-            {
-                TempData["message"] = $"no se puedo actulizar la red social del municipio. -> {ex.Message}";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
-            }
+            var respose = await _unitOfWork.genericRepository<Department>().GetAllAsync();
+            return View(respose);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> BankIndex()
+        {
+            var respose = await _unitOfWork.genericRepository<Bank>().GetAllAsync();
+            return View(respose);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> DocomentTypeIndex()
+        {
+            var respose = await _ProcedureServices.GetDocumentTypes();
+            return View(respose);
+        }
+
         [HttpPost]
         public async Task<IActionResult> createCourse(CreateCourseDto createCourseDto)
         {
@@ -129,17 +150,52 @@ namespace CentralizedApps.Controllers.web
                 }
                 await _ProcedureServices.createCourse(createCourseDto);
 
-                TempData["message"] = "Se creo en curso correctamente.";
+                TempData["message"] = "Se creo el curso correctamente.";
                 TempData["MessageType"] = "success";
                 return RedirectToAction("CourseIndex");
             }
             catch (Exception ex)
             {
-                TempData["message"] = $"no se puedo actulizar la curso del municipio.";
+                TempData["message"] = $"no se puedo crear el curso del municipio.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("CourseIndex");
             }
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> createNewsMunicipality(NewsByMunicipalityDto newsByMunicipalityDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["message"] = "No se pudo crear las noticias del municipio, hay campos vacíos o inválidos.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("NewsMunicipalityIndex", new { id = newsByMunicipalityDto.IdMunicipality });
+            }
+            try
+            {
+                if (newsByMunicipalityDto == null || newsByMunicipalityDto.IdMunicipality <= 0
+                    || string.IsNullOrWhiteSpace(newsByMunicipalityDto.GetUrlNew))
+                {
+                    TempData["message"] = "No se pudo crear las noticias del municipio, hay campos vacíos o inválidos.";
+                    TempData["MessageType"] = "error";
+
+                    return RedirectToAction("NewsMunicipalityIndex", new { id = newsByMunicipalityDto?.IdMunicipality });
+                }
+                await _ProcedureServices.createNewNotice(newsByMunicipalityDto);
+
+                TempData["message"] = "Se creo la noticia del municipio correctamente.";
+                TempData["MessageType"] = "success";
+                return RedirectToAction("NewsMunicipalityIndex");
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = $"no se puedo crear la noticia del municipio.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("NewsMunicipalityIndex");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> createSportsFacilities(CreateSportsFacilityDto createSportsFacilityDto)
         {
@@ -170,26 +226,10 @@ namespace CentralizedApps.Controllers.web
             }
             catch (Exception ex)
             {
-                TempData["message"] = $"no se puedo actulizar el escenario deportivo del municipio.";
+                TempData["message"] = $"no se puedo crear el escenario deportivo del municipio.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("SportsFacilitiesIndex");
             }
-        }
-
-
-
-
-        [HttpGet]
-        public async Task<IActionResult> deparmentIndex()
-        {
-            var respose = await _unitOfWork.genericRepository<Department>().GetAllAsync();
-            return View(respose);
-        }
-        [HttpGet]
-        public async Task<IActionResult> BankIndex()
-        {
-            var respose = await _unitOfWork.genericRepository<Bank>().GetAllAsync();
-            return View(respose);
         }
 
         [HttpPost]
@@ -240,6 +280,32 @@ namespace CentralizedApps.Controllers.web
                 TempData["message"] = "No se puedo crear el banco.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("BankIndex");
+
+            }
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> createDocumentType(DocumentTypeDto documentTypeDto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(documentTypeDto.NameDocument))
+                {
+                    TempData["message"] = "No se puedo crear el tipo de documento, campo vacio.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("DocomentTypeIndex");
+                }
+                await _ProcedureServices.createDocumentType(documentTypeDto);
+                TempData["message"] = "El tipo de documento fue creado correctamente.";
+                TempData["MessageType"] = "success";
+                return RedirectToAction("DocomentTypeIndex");
+
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "No se puedo crear el tipo de documento.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("DocomentTypeIndex");
 
             }
 
@@ -308,7 +374,7 @@ namespace CentralizedApps.Controllers.web
                 }
                 else
                 {
-                    TempData["message"] = "El depatamento se actualizo banco.";
+                    TempData["message"] = "El banco se actualizo correctamente.";
                     TempData["MessageType"] = "success";
                     return RedirectToAction("BankIndex");
 
@@ -323,6 +389,44 @@ namespace CentralizedApps.Controllers.web
 
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> updateDocumentType(int id, DocumentTypeDto updateDocumentTypeDto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(updateDocumentTypeDto.NameDocument) || id <= 0)
+                {
+                    TempData["message"] = " los cambos estan vacios";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("DocomentTypeIndex");
+
+                }
+                var result = await _ProcedureServices.updateDocumentType(id, updateDocumentTypeDto);
+                if (!result.BooleanStatus)
+                {
+                    TempData["message"] = "no se puedo actulizar el tipo de documento.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("DocomentTypeIndex");
+
+
+                }
+                else
+                {
+                    TempData["message"] = "El tipo de documento se actualizo correctamente.";
+                    TempData["MessageType"] = "success";
+                    return RedirectToAction("DocomentTypeIndex");
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "no sepuedo actualizar el tipo de documento. comunicate con soporte.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("DocomentTypeIndex");
+
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> updateCourse(int id, CreateCourseDto updateCourseDto)
@@ -332,7 +436,7 @@ namespace CentralizedApps.Controllers.web
             {
                 if (updateCourseDto.MunicipalityId <= 0 || string.IsNullOrEmpty(updateCourseDto.Get) || string.IsNullOrEmpty(updateCourseDto.Post) || string.IsNullOrEmpty(updateCourseDto.Name))
                 {
-                    TempData["message"] = "no se puedo crear el curso, campos vacios";
+                    TempData["message"] = "no se puedo Actualizar el curso, campos vacios";
                     TempData["MessageType"] = "error";
                     return RedirectToAction("CourseIndex", new { id = updateCourseDto.MunicipalityId });
                 }
@@ -341,22 +445,57 @@ namespace CentralizedApps.Controllers.web
 
                 if (!result.BooleanStatus)
                 {
-                    TempData["message"] = "no se puedo crear el curso.";
+                    TempData["message"] = "no se puedo Actualizar el curso.";
                     TempData["MessageType"] = "error";
                     return RedirectToAction("CourseIndex", new { id = updateCourseDto.MunicipalityId });
                 }
                 else
                 {
-                    TempData["message"] = "Se creo en curso correctamente.";
+                    TempData["message"] = "Se Actualizar el curso correctamente.";
                     TempData["MessageType"] = "success";
                     return RedirectToAction("CourseIndex", new { id = updateCourseDto.MunicipalityId });
                 }
             }
             catch (Exception ex)
             {
-                TempData["message"] = "no se puedo crear el curso. comunicate con el desarrollador";
+                TempData["message"] = "no se puedo Actualizar el curso. comunicate con el desarrollador";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("CourseIndex", new { id = updateCourseDto.MunicipalityId });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> updateNewsMunicipality(int id, NewsByMunicipalityDto newsByMunicipalityDto)
+        {
+
+            try
+            {
+                if (newsByMunicipalityDto.IdMunicipality <= 0 || string.IsNullOrEmpty(newsByMunicipalityDto.GetUrlNew))
+                {
+                    TempData["message"] = "no se puedo Actualizar la noticia del municipio, campos vacios";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("NewsMunicipalityIndex", new { id = newsByMunicipalityDto.IdMunicipality });
+                }
+
+                var result = await _ProcedureServices.updateNews(id, newsByMunicipalityDto);
+
+                if (!result.BooleanStatus)
+                {
+                    TempData["message"] = "no se puedo Actualizar la noticia del municipio.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("NewsMunicipalityIndex", new { id = newsByMunicipalityDto.IdMunicipality });
+                }
+                else
+                {
+                    TempData["message"] = "Se Actualizar la noticia del municipio correctamente.";
+                    TempData["MessageType"] = "success";
+                    return RedirectToAction("NewsMunicipalityIndex", new { id = newsByMunicipalityDto.IdMunicipality });
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "no se puedo Actualizar la noticia del municipio. comunicate con el desarrollador";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("NewsMunicipalityIndex", new { id = newsByMunicipalityDto.IdMunicipality });
             }
         }
 
@@ -369,7 +508,7 @@ namespace CentralizedApps.Controllers.web
             {
                 if (updateSportsFacilityDto.MunicipalityId <= 0 || string.IsNullOrEmpty(updateSportsFacilityDto.Get) || string.IsNullOrEmpty(updateSportsFacilityDto.ReservationPost) || string.IsNullOrEmpty(updateSportsFacilityDto.CalendaryPost) || string.IsNullOrEmpty(updateSportsFacilityDto.Name))
                 {
-                    TempData["message"] = "no se puedo crear el escenario deportivo, campos vacios";
+                    TempData["message"] = "no se puedo Actualizar el escenario deportivo, campos vacios";
                     TempData["MessageType"] = "error";
                     return RedirectToAction("SportsFacilitiesIndex", new { id = updateSportsFacilityDto.MunicipalityId });
                 }
@@ -378,22 +517,58 @@ namespace CentralizedApps.Controllers.web
 
                 if (!result.BooleanStatus)
                 {
-                    TempData["message"] = "no se puedo crear el escenario deportivo.";
+                    TempData["message"] = "no se puedo Actualizar el escenario deportivo.";
                     TempData["MessageType"] = "error";
                     return RedirectToAction("SportsFacilitiesIndex", new { id = updateSportsFacilityDto.MunicipalityId });
                 }
                 else
                 {
-                    TempData["message"] = "Se creo el escenario deportivo correctamente.";
+                    TempData["message"] = "Se Actualizar el escenario deportivo correctamente.";
                     TempData["MessageType"] = "success";
                     return RedirectToAction("SportsFacilitiesIndex", new { id = updateSportsFacilityDto.MunicipalityId });
                 }
             }
             catch (Exception ex)
             {
-                TempData["message"] = "no se puedo crear el escenario deportivo. comunicate con el desarrollador";
+                TempData["message"] = "no se puedo Actualizar el escenario deportivo. comunicate con el desarrollador";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("SportsFacilitiesIndex", new { id = updateSportsFacilityDto.MunicipalityId });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
+        {
+
+            try
+            {
+                if (updateMunicipalitySocialMediumDto.MunicipalityId <= 0 || updateMunicipalitySocialMediumDto.SocialMediaTypeId <= 0 || string.IsNullOrEmpty(updateMunicipalitySocialMediumDto.Url))
+                {
+                    TempData["message"] = "no se puedo actulizar la red social del municipio.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("MunicipalitySocialMediaIndex");
+                }
+
+                var result = await _ProcedureServices.updateMunicipalitySocialMedium(id, updateMunicipalitySocialMediumDto);
+
+                if (!result.BooleanStatus)
+                {
+                    TempData["message"] = "no se puedo actulizar la red social del municipio.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
+                }
+                else
+                {
+                    TempData["message"] = "la red social se actualizo correctamente.";
+                    TempData["MessageType"] = "success";
+                    return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = $"no se puedo actulizar la red social del municipio. -> {ex.Message}";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
             }
         }
     }

@@ -149,7 +149,7 @@ namespace CentralizedApps.Services.ServicesWeb
                 };
             }
         }
-        
+
         public async Task<ValidationResponseDto> updateCourse(int id, CreateCourseDto updateCourseDto)
         {
             var Course = await _unitOfWork.genericRepository<Course>().GetByIdAsync(id);
@@ -176,6 +176,30 @@ namespace CentralizedApps.Services.ServicesWeb
                 CodeStatus = 200,
                 BooleanStatus = true,
                 SentencesError = "succesfully"
+            };
+        }
+        
+        public async Task<NewsMunicipalityDto> NewsMunicipality(int? id)
+        {
+            var response = _unitOfWork.genericRepository<NewsByMunicipality>();
+            var Entity = await response.GetAllWithNestedIncludesAsync(query =>
+                query
+                    .Include(msm => msm.IdMunicipalityNavigation)
+
+            );
+
+            var filtro = id.HasValue
+                ? Entity.Where(m => m.IdMunicipality == id.Value).ToList()
+                : new List<NewsByMunicipality>();
+
+            return new NewsMunicipalityDto
+            {
+                municipality = id.HasValue
+                    ? await _municipalityServices.JustGetMunicipalityWithRelations(id.Value)
+                    : null,
+                newsByMunicipalities = filtro,
+                municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync()
+
             };
         }
 

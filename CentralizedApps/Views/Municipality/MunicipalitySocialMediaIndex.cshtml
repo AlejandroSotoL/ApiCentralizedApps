@@ -121,7 +121,7 @@
         </div>
         <div class="grid gap-4">
 
-            <form asp-action="MunicipalitySocialMediaIndex" asp-controller="Municipality" method="get">
+            <form asp-action="SelectMunicipalitySocialMedia" asp-controller="Municipality" method="post">
                 <fieldset class="fieldset w-full md:w-1/3">
                     <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
                     <select id="selectMunicipality" name="id" class="select w-full" onchange="this.form.submit()">
