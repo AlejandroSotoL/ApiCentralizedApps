@@ -59,9 +59,37 @@ namespace CentralizedApps.Controllers.web
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateSmothingIt()
+        public async Task<IActionResult> UpdateMunicipalityProcedure(int MunicipalityId, MunicipalityProcedureDto_Reminders dto)
         {
-            return View();
+            try
+            {
+                var response = await _unitOfWork.genericRepository<MunicipalityProcedure>()
+                                                 .FindAsync_Predicate(x => x.Id == dto.Id);
+
+                if (response == null || response.MunicipalityId != MunicipalityId)
+                {
+                    TempData["Error"] = $"Problema al identificar el proceso o la alcaldía. -> llego {MunicipalityId}  - es {response?.Id}";
+                    return RedirectToAction("Index");
+                }
+
+                response.ProceduresId = dto.Procedures?.Id ?? response.ProceduresId;
+                response.IntegrationType = dto.IntegrationType;
+                response.IsActive = dto.IsActive ?? false;
+
+                var rows = await _unitOfWork.SaveChangesAsync();
+                if (rows > 0)
+                    TempData["Success"] = "El proceso se ha editado correctamente.";
+                else
+                    TempData["Error"] = "No se lograron guardar los cambios.";
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                TempData["Error"] = "Ocurrió un error al guardar los cambios.";
+                return RedirectToAction("Index");
+            }
         }
+
+
     }
 }
