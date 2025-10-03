@@ -295,7 +295,7 @@ namespace CentralizedApps.Services
 
         public async Task<ValidationResponseDto> updateQueryField(int id, QueryFieldDto updatequeryFieldDto)
         {
-            var queryField = await _unitOfWork.genericRepository<QueryFieldDto>().GetByIdAsync(id);
+            var queryField = await _unitOfWork.genericRepository<QueryField>().GetByIdAsync(id);
             if (queryField == null)
             {
                 return new ValidationResponseDto
@@ -309,7 +309,7 @@ namespace CentralizedApps.Services
             queryField.MunicipalityId = queryField.MunicipalityId;
             queryField.FieldName = updatequeryFieldDto.FieldName;
             queryField.QueryFieldType = updatequeryFieldDto.QueryFieldType;
-            _unitOfWork.genericRepository<QueryFieldDto>().Update(queryField);
+            _unitOfWork.genericRepository<QueryField>().Update(queryField);
             await _unitOfWork.SaveChangesAsync();
 
             return new ValidationResponseDto

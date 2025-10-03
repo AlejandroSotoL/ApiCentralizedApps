@@ -1,6 +1,6 @@
-@model List<CentralizedApps.Models.Entities.Department>
+@model List<CentralizedApps.Models.Entities.Bank>
 @{
-    ViewData["Title"] = "Formulario de Municipío";
+    ViewData["Title"] = "Formulario de Bancos";
     Layout = "Layout";
 }
 @if (TempData["Message"] != null)   
@@ -10,28 +10,28 @@
     </div>
 }
 <div class="card bg-base-200 rounded-box p-0 md:p-6">
-            <h1 class="font-bold text-3xl text-center mb-6">Departamento</h1>
-<Form asp-action="updateDeparment" asp-controller="Municipality">
-    <div class="bg-base-300 grid grid-cols-1 md:grid-cols-2 p-6 rounded-2xl gap-4">
+<h1 class="font-bold text-3xl text-center mb-6">Banco Municipio</h1>
+<Form asp-action="updateBank" asp-controller="Municipality">
+    <div class="bg-base-300 rounded-2xl grid grid-cols-1 md:grid-cols-2 p-6 gap-4">
         <fieldset class="fieldset">
-            <legend class="fieldset-legend">Seleccionar departamento existente</legend>
+            <legend class="fieldset-legend">Seleccionar Banco existente</legend>
             <select id="selectDepartment" name="id" class="select w-full">
-                <option disabled selected>Seleccione un departamento</option>
-                @foreach (var department in Model)
+                <option disabled selected>Seleccione un Banco</option>
+                @foreach (var bank in Model)
                 {
-                    <option value="@department.Id">@department.Name</option>
+                    <option value="@bank.Id">@bank.NameBank</option>
                 }
             </select>
         </fieldset>
 
         <div class="flex flex-col">
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Nombre del departamento</legend>
-                <input id="inputDepartment" type="text" class="input w-full" name="Name"
-                    placeholder="Ej: Cundinamarca" />
+                <legend class="fieldset-legend">Nombre del Banco</legend>
+                <input id="inputDepartment" type="text" class="input w-full" name="NameBank"
+                    placeholder="Ej: Bancolombia" />
             </fieldset>
 
-            <div class="flex  justify-center md:justify-end gap-6 p-5">
+            <div class="flex justify-center md:justify-end gap-6 p-5">
                 <button type="button" class="btn btn-soft btn-success" onclick="my_modal_3.showModal()">Crear</button>
                 <button type="submit" name="updateDeparment" class="btn btn-soft btn-warning">Editar</button>
             </div>
@@ -45,15 +45,15 @@
         <form method="dialog" class="flex justify-end">
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
-        <form asp-action="createDeparment" asp-controller="Municipality">
+        <form asp-action="createBank" asp-controller="Municipality">
             <div class="flex flex-col">
                 <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Nombre del departamento</legend>
-                    <input id="inputDepartment" type="text" class="input w-full" name="Name"
+                    <legend class="fieldset-legend">Nombre del Banco</legend>
+                    <input id="inputDepartment" type="text" class="input w-full" name="NameBank"
                         placeholder="Ej: Cundinamarca" />
                 </fieldset>
 
-                <button class="btn btn-success">Crear</button>
+                <button class="btn btn-soft btn-success">Crear</button>
             </div>
         </form>     
     </div>
