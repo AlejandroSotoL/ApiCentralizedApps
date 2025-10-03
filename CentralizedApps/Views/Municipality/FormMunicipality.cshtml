@@ -1,25 +1,41 @@
 ﻿@using CentralizedApps.Models.Dtos.PrincipalsDtos
-@model CentralizedApps.Models.Dtos.PrincipalsDtos.MunicipalityDto
+@model CentralizedApps.Models.ToAlcaldiaWeb
 
 @{
     ViewData["Title"] = "Formulario de Municipío";
     Layout = "Layout";
 }
 
-<form asp-action="SaveMunicipality" asp-controller="Municipality" method="post" enctype="multipart/form-data"
-    class="w-full">
-    <div class="card bg-base-200 rounded-box mb-8 p-6">
+<form asp-action="SaveAlcadia" asp-controller="Municipality" method="post" class="w-full">
+    <input type="hidden" asp-for="Alcaldia.Id" />
 
-        <!-- Avatar y Nombre -->
+    <div class="w-full">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success animate-fade-in mt-4 shadow-md">
+                <span>@TempData["Success"]</span>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-error animate-fade-in mt-4 shadow-md">
+                <span>@TempData["Error"]</span>
+            </div>
+        }
+    </div>
+
+    <div class="card bg-base-100 w-full rounded-2xl p-6 shadow-xl">
         <div class="flex w-full flex-col items-center justify-center gap-3 p-6">
             <div class="avatar">
                 <div class="mask mask-squircle h-24 w-24">
-                    <img id="previewEscudo" src="@Model?.municipality?.IdShield?.Url" alt="escudo municipio" />
+                    <img id="previewEscudo"
+                         src="@(Model?.Alcaldia?.IdShieldNavigation?.Url ?? "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png")"
+                         alt="escudo municipio" />
                 </div>
             </div>
             <div class="text-center">
-                <h1 class="text-2xl font-bold">@Model?.municipality?.Name</h1>
-                <p class="text-sm opacity-70">@Model?.municipality?.Department?.Name</p>
+                <h1 class="text-2xl font-bold">@(Model?.Alcaldia?.Name ?? "En Creación")</h1>
+                <p class="text-sm opacity-70">@(Model?.Alcaldia?.Department?.Name ?? "En Creación")</p>
             </div>
         </div>
 
@@ -30,94 +46,72 @@
         </p>
 
         <div class="card bg-base-300 rounded-box mb-6 p-6">
-            <h3 class="mb-4 text-xl font-bold">Tema</h3>
+            <h3 class="mb-4 text-xl font-bold">¡Cambiar o dejar!</h3>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Seleccionar tema existente</legend>
-                    <select class="select w-full" name="municipality.Theme.Id">
-                        <option disabled selected>Seleccione un tema</option>
-                        @foreach (var tema in Model!.Themes)
-                        {
-                            <option value="@tema.Id">@tema.NameTheme</option>
-                        }
+                    <select class="select w-full"
+                            asp-for="Alcaldia.ThemeId"
+                            asp-items="@(new SelectList(Model.Themas, "Id", "NameTheme", Model.Alcaldia.ThemeId))">
+                        <option value="">Seleccione un tema</option>
                     </select>
                 </fieldset>
 
-
-                <fieldset class=" fieldset">
-                    <legend class="fieldset-legend">Nombre del tema</legend>
-                    <input type="text" class="input w-full" name="municipality.Theme.NameTheme"
-                        placeholder="Ej: Tema Juvenil" value="@Model?.municipality?.Theme?.NameTheme" />
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Seleccione el banco existente</legend>
+                    <select class="select w-full"
+                            asp-for="Alcaldia.IdBank"
+                            asp-items="@(new SelectList(Model.Bancos, "Id", "NameBank", Model.Alcaldia.IdBank))">
+                        <option value="">Seleccione el banco</option>
+                    </select>
                 </fieldset>
 
                 <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Color de fondo</legend>
-                    <input type="color" class="input w-full color-input" name="municipality.Theme.BackGroundColor"
-                        value="@Model?.municipality?.Theme?.BackGroundColor?.Replace("0xFF", "#")" />
+                    <legend class="fieldset-legend">Seleccione un escudo existente</legend>
+                    <select class="select w-full"
+                            asp-for="Alcaldia.IdShield"
+                            asp-items="@(new SelectList(Model.Escudos, "Id", "NameOfMunicipality", Model.Alcaldia.IdShield))">
+                        <option value="">Seleccione un escudo</option>
+                    </select>
                 </fieldset>
 
                 <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Color primario</legend>
-                    <input type="color" class="input w-full color-input" name="municipality.Theme.PrimaryColor"
-                        value="@Model?.municipality?.Theme?.PrimaryColor?.Replace("0xFF", "#")" />
+                    <legend class="fieldset-legend">Seleccione el Departamento</legend>
+                    <select class="select w-full"
+                            asp-for="Alcaldia.DepartmentId"
+                            asp-items="@(new SelectList(Model.Departamentos, "Id", "Name", Model.Alcaldia.DepartmentId))">
+                        <option value="">Seleccione un departamento</option>
+                    </select>
                 </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Color secundario</legend>
-                    <input type="color" class="input w-full color-input" name="municipality.Theme.SecondaryColor"
-                        value="@Model?.municipality?.Theme?.SecondaryColor?.Replace("0xFF", "#")" />
-                </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Color secundario oscuro</legend>
-                    <input type="color" class="input w-full color-input" name="municipality.Theme.SecondaryColorBlack"
-                        value="@Model?.municipality?.Theme?.SecondaryColorBlack?.Replace("0xFF", "#")" />
-                </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Texto en primario (claro)</legend>
-                    <input type="color" class="input w-full color-input" name="municipality.Theme.OnPrimaryColorLight"
-                        value="@Model?.municipality?.Theme?.OnPrimaryColorLight?.Replace("0xFF", "#")" />
-                </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Texto en primario (oscuro)</legend>
-                    <input type="color" class="input w-full color-input" name="municipality.Theme.OnPrimaryColorDark"
-                        value="@Model?.municipality?.Theme?.OnPrimaryColorDark?.Replace("0xFF", "#")" />
-                </fieldset>
-
             </div>
         </div>
 
-        <!-- Información General -->
         <div class="card bg-base-300 rounded-box mb-6 p-6">
             <h2 class="mb-6 text-center text-2xl font-bold">Información General</h2>
             <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Código</legend>
-                    <input type="text" class="input w-full" name="municipality.EntityCode"
-                        value="@Model.municipality?.EntityCode" />
+                    <input asp-for="Alcaldia.EntityCode" class="input w-full" />
                 </fieldset>
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Dominio</legend>
-                    <div class="flex gap-2 items-center">
-                        <input type="text" class="input w-full" name="municipality.Domain"
-                            value="@Model.municipality?.Domain" />
-                        <a class="btn btn-primary" href="@Model.municipality?.Domain" target="_blank"
-                            title="Abrir dominio">
-                            Observar
-                        </a>
+                    <div class="flex items-center gap-2">
+                        <input asp-for="Alcaldia.Domain" class="input w-full" />
+                        <a class="btn btn-primary" href="@Model?.Alcaldia.Domain" target="_blank"
+                           title="Abrir dominio">Observar</a>
                     </div>
                 </fieldset>
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Escudo</legend>
-                    <div class="flex gap-2 items-center">
-                        <input type="file" class="file-input w-full" name="EscudoFile"
-                            onchange="previewEscudo(event)" />
+                    <div class="flex items-center gap-2">
+                        <input type="text" class="file-input w-full"
+                               name="EscudoFile"
+                               onchange="previewEscudo(event)"
+                               value="@(Model?.Alcaldia?.IdShieldNavigation?.Url ?? string.Empty)" />
                         <button type="button" class="btn btn-secondary" onclick="openEscudo()" title="Vista previa">
                             Observar
                         </button>
@@ -126,40 +120,39 @@
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Nombre Alcaldía</legend>
-                    <input type="text" class="input w-full" name="municipality.Name"
-                        value="@Model.municipality?.Name" />
+                    <input asp-for="Alcaldia.Name" class="input w-full" />
                 </fieldset>
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Usuario Fintech</legend>
-                    <input type="text" class="input w-full" name="municipality.UserFintech"
-                        value="@Model.municipality?.UserFintech" />
+                    <input asp-for="Alcaldia.UserFintech" class="input w-full" />
                 </fieldset>
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Contraseña Fintech</legend>
-                    <input type="password" class="input w-full" name="municipality.PasswordFintech"
-                        value="@Model.municipality?.PasswordFintech" />
+                    <input asp-for="Alcaldia.PasswordFintech" type="password" class="input w-full" />
                 </fieldset>
 
                 <fieldset class="fieldset col-span-3">
                     <legend class="fieldset-legend">Política de Privacidad</legend>
-                    <textarea class="textarea w-full"
-                        name="municipality.DataPrivacy">@Model.municipality?.DataPrivacy</textarea>
+                    <textarea asp-for="Alcaldia.DataPrivacy" class="textarea w-full"></textarea>
                 </fieldset>
 
                 <fieldset class="fieldset col-span-3">
                     <legend class="fieldset-legend">Términos y Condiciones</legend>
-                    <textarea class="textarea w-full"
-                        name="municipality.DataProcessingPrivacy">@Model.municipality?.DataProcessingPrivacy</textarea>
+                    <textarea asp-for="Alcaldia.DataProcessingPrivacy" class="textarea w-full"></textarea>
                 </fieldset>
-
             </div>
         </div>
 
-        <div class="flex justify-end mt-6">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-        </div>
+        @if (Model?.Alcaldia?.Id > 0)
+        {
+            <button type="submit" class="btn btn-primary w-max">Guardar cambios</button>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-success w-max">Crear</button>
+        }
     </div>
 </form>
 
@@ -176,5 +169,4 @@
         const src = document.getElementById('previewEscudo').src;
         if (src) window.open(src, '_blank');
     }
-
 </script>

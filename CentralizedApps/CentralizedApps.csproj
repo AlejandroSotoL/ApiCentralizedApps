@@ -33,6 +33,8 @@
 
 
   <ItemGroup>
+    <Folder Include="Models\NewFolder1\" />
+    <Folder Include="Models\NewFolder\" />
     <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>
 

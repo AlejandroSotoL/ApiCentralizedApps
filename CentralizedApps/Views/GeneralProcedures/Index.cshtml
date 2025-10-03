@@ -5,42 +5,42 @@
     Layout = "Layout";
 }
 
-<header class="bg-stone-400 p-10 rounded-lg shadow-md flex justify-center">
-    <h2 class="text-3xl font-bold text-white tracking-wide">
+<header class="flex justify-center rounded-lg bg-stone-400 p-10 shadow-md">
+    <h2 class="text-3xl font-bold tracking-wide text-white">
         Procesos de las Alcaldías
     </h2>
 </header>
-<div class="card w-full p-6 shadow-xl bg-base-100 rounded-2xl">
+<div class="card bg-base-100 w-full rounded-2xl p-6 shadow-xl">
     <div class="w-full">
         @if (TempData["Success"] != null)
         {
-            <div class="alert alert-success mt-4 shadow-md animate-fade-in">
+            <div class="alert alert-success animate-fade-in mt-4 shadow-md">
                 <span>@TempData["Success"]</span>
             </div>
         }
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-error mt-4 shadow-md animate-fade-in">
+            <div class="alert alert-error animate-fade-in mt-4 shadow-md">
                 <span>@TempData["Error"]</span>
             </div>
         }
     </div>
 
 
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
 
-        <section class="bg-white rounded-xl shadow-lg p-6">
-            <h3 class="font-semibold text-lg text-stone-700 mb-2">
+        <section class="rounded-xl bg-white p-6 shadow-lg">
+            <h3 class="mb-2 text-lg font-semibold text-stone-700">
                 Procesos disponibles
             </h3>
-            <p class="text-sm text-stone-500 mb-4">
+            <p class="mb-4 text-sm text-stone-500">
                 Esta lista muestra los procesos generales que se pueden asignar a cualquier Alcaldía.
             </p>
 
             @if (Model?.Procedures?.Any() == true)
             {
                 <select
-                    class="w-full rounded-lg border border-stone-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400">
+                    class="w-full rounded-lg border border-stone-300 p-2 text-sm focus:ring-2 focus:ring-stone-400 focus:outline-none">
                     <option selected disabled>Selecciona un proceso</option>
                     @foreach (var x in Model.Procedures)
                     {
@@ -50,17 +50,17 @@
             }
             else
             {
-                <div class="p-4 bg-red-100 text-red-700 rounded-lg shadow-sm text-sm">
+                <div class="rounded-lg bg-red-100 p-4 text-sm text-red-700 shadow-sm">
                     No hay procesos disponibles actualmente.
                 </div>
             }
         </section>
 
-        <section class="bg-white rounded-xl shadow-lg p-6">
-            <h3 class="font-semibold text-lg text-stone-700">
+        <section class="rounded-xl bg-white p-6 shadow-lg">
+            <h3 class="text-lg font-semibold text-stone-700">
                 Alcaldías con procesos
             </h3>
-            <p class="text-sm text-stone-500 mb-4">
+            <p class="mb-4 text-sm text-stone-500">
                 Selecciona una Alcaldía para visualizar y administrar sus procesos.
             </p>
 
@@ -68,7 +68,7 @@
             {
                 <form asp-controller="GeneralProcedures" asp-action="BringResultById" method="post" class="w-full">
                     <select name="id"
-                        class="w-full rounded-lg border border-stone-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                        class="w-full rounded-lg border border-stone-300 p-2 text-sm focus:ring-2 focus:ring-stone-400 focus:outline-none"
                         onchange="this.form.submit()">
                         <option selected disabled>Selecciona una Alcaldía</option>
                         @foreach (var x in Model.Municipalities)
@@ -81,7 +81,7 @@
             }
             else
             {
-                <div class="p-4 bg-red-100 text-red-700 rounded-lg shadow-sm text-sm">
+                <div class="rounded-lg bg-red-100 p-4 text-sm text-red-700 shadow-sm">
                     No hay alcaldías disponibles actualmente.
                 </div>
             }
@@ -91,10 +91,10 @@
 @if (Model?.ProceduresWithRelations?.Any() == true)
 {
         <section class="mt-10 w-full">
-            <h3 class="text-xl font-semibold text-stone-700 mb-4">
+            <h3 class="mb-4 text-xl font-semibold text-stone-700">
                 Procesos de la Alcaldía seleccionada
             </h3>
-            <p class="text-sm text-stone-500 mb-6">
+            <p class="mb-6 text-sm text-stone-500">
                 Desde aquí puedes cambiar el proceso asignado, actualizar el tipo de integración o activar/desactivar cada
                 proceso.
             </p>
@@ -103,13 +103,13 @@
                 @foreach (var item in Model.ProceduresWithRelations)
                 {
   <form asp-controller="GeneralProcedures" asp-action="UpdateMunicipalityProcedure" method="post"
-      class="border border-stone-300 rounded-xl shadow-md overflow-hidden p-5 bg-white">
+      class="overflow-hidden rounded-xl border border-stone-300 bg-white p-5 shadow-md">
 
     <input type="hidden" name="Id" value="@item.Id" />
     <input type="hidden" name="MunicipalityId" value="@item.Municipality?.Id" />
 
     <div class="mb-4">
-        <label class="block text-xs text-stone-600 mb-1">Cambiar Proceso:</label>
+        <label class="mb-1 block text-xs text-stone-600">Cambiar Proceso:</label>
         <select name="Procedures.Id" class="w-full rounded-lg border border-stone-300 p-2 text-sm">
             <option value="@item.Procedures?.Id" selected>@item.Procedures?.Name (actual)</option>
             @foreach (var x in Model.Procedures.Where(p => p.Id != item.Procedures?.Id))
@@ -120,20 +120,20 @@
     </div>
 
     <div class="mb-4">
-        <label class="block text-xs text-stone-600 mb-1">Tipo de Integración:</label>
-        <input type="text" name="IntegrationType" class="w-full border border-stone-300 rounded-lg p-2 text-sm"
+        <label class="mb-1 block text-xs text-stone-600">Tipo de Integración:</label>
+        <input type="text" name="IntegrationType" class="w-full rounded-lg border border-stone-300 p-2 text-sm"
                value="@item.IntegrationType" />
     </div>
 
     <div class="mb-4">
-        <label class="block text-xs text-stone-600 mb-1">Estado del Proceso:</label>
+        <label class="mb-1 block text-xs text-stone-600">Estado del Proceso:</label>
         <input type="checkbox" name="IsActive" value="true" class="toggle toggle-success"
                @(item.IsActive == true ? "checked" : "") />
     </div>
 
     <div class="flex justify-end">
         <button type="submit"
-                class="px-5 py-2 bg-yellow-500 text-white font-medium text-sm rounded-lg shadow hover:bg-yellow-600">
+                class="rounded-lg bg-yellow-500 px-5 py-2 text-sm font-medium text-white shadow hover:bg-yellow-600">
             Guardar cambios
         </button>
     </div>
@@ -147,7 +147,7 @@
 else
 {
         <section class="mt-10">
-            <div class="p-4 bg-yellow-100 text-yellow-700 rounded-lg shadow-sm text-sm">
+            <div class="rounded-lg bg-yellow-100 p-4 text-sm text-yellow-700 shadow-sm">
                 No hay procesos relacionados con la Alcaldía seleccionada.
             </div>
         </section>

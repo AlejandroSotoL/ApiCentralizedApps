@@ -1,3 +1,4 @@
+﻿using CentralizedApps.Models;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 using CentralizedApps.Models.Entities;
@@ -5,6 +6,7 @@ using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
 using CentralizedApps.Services.ServicesWeb.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace CentralizedApps.Controllers.web
@@ -46,20 +48,6 @@ namespace CentralizedApps.Controllers.web
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateMunicipalityGeneral(int id, MunicipalityDto dto)
-        {
-            var response = await _GeneralMunicipality.UpdateMuniciaplityTransaction(id, dto);
-            if (response.BooleanStatus)
-            {
-                TempData["Success"] = response.SentencesError;
-                return RedirectToAction("FormMunicipality", new { id });
-            }
-
-            TempData["Error"] = response.SentencesError;
-            return RedirectToAction("FormMunicipality", new { id });
-        }
-
         [HttpGet]
         public async Task<IActionResult> MunicipalitySocialMediaIndex(int? id)
         {
@@ -68,20 +56,131 @@ namespace CentralizedApps.Controllers.web
         }
 
         [HttpGet]
-        public async Task<IActionResult> FormMunicipality(int id)
+        public async Task<IActionResult> FormMunicipalityUpdate(int id)
         {
             try
             {
-                var municipality = await _MunicipalityServices.JustGetMunicipalityWithRelationsWeb(id);
+                var structur = new ToAlcaldiaWeb
+                {
+                    Alcaldia = id > 0
+                        ? await _unitOfWork.genericRepository<Municipality>()
+                            .GetOneWithNestedIncludesAsync(
+                                query => query
+                                    .Include(r => r.IdShieldNavigation)!
+                                    .Include(r => r.Department)!
+                                    .Include(r => r.Theme),
+                                m => m.Id == id
+                            ) ?? new Municipality()
+                        : new Municipality(),
+
+                    Bancos = await _unitOfWork.genericRepository<Bank>().GetAllAsync() ?? new List<Bank>(),
+                    Departamentos = await _unitOfWork.genericRepository<Department>().GetAllAsync() ?? new List<Department>(),
+                    Escudos = await _unitOfWork.genericRepository<ShieldMunicipality>().GetAllAsync() ?? new List<ShieldMunicipality>(),
+                    Themas = await _unitOfWork.genericRepository<Theme>().GetAllAsync() ?? new List<Theme>(),
+                };
+
+                return View("FormMunicipality", structur);
+            }
+            catch
+            {
+                return View("FormMunicipality", new ToAlcaldiaWeb
+                {
+                    Alcaldia = new Municipality(),
+                    Bancos = new List<Bank>(),
+                    Departamentos = new List<Department>(),
+                    Escudos = new List<ShieldMunicipality>(),
+                    Themas = new List<Theme>()
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveAlcadia(ToAlcaldiaWeb model)
+        {
+            try
+            {
+                var municipality = model.Alcaldia;
+
                 if (municipality == null)
                 {
-                    return View(new GetMunicipalitysDto());
+                    TempData["Error"] = "Datos inválidos.";
+                    return RedirectToAction("FormMunicipalityUpdate", new { Id = 0 });
                 }
-                return View(municipality);
+
+                if (municipality.Id > 0)
+                {
+                    var response = await _unitOfWork
+                        .genericRepository<Municipality>()
+                        .FindAsync_Predicate(x => x.Id == municipality.Id);
+
+                    if (response == null)
+                    {
+                        TempData["Error"] = "Municipio no encontrado.";
+                        return RedirectToAction("FormMunicipalityUpdate", new { Id = municipality.Id });
+                    }
+
+                    response.Name = municipality.Name;
+                    response.EntityCode = municipality.EntityCode;
+                    response.Domain = municipality.Domain;
+                    response.UserFintech = municipality.UserFintech;
+                    response.PasswordFintech = municipality.PasswordFintech;
+                    response.DepartmentId = municipality.DepartmentId;
+                    response.ThemeId = municipality.ThemeId;
+                    response.IdShield = municipality.IdShield;
+                    response.IdBank = municipality.IdBank;
+                    response.DataPrivacy = municipality.DataPrivacy;
+                    response.DataProcessingPrivacy = municipality.DataProcessingPrivacy;
+                    response.IsActive = response.IsActive;
+                }
+                else
+                {
+                    municipality.IsActive = true;
+                    await _unitOfWork.genericRepository<Municipality>().AddAsync(municipality);
+                }
+
+                var rows = await _unitOfWork.SaveChangesAsync();
+                TempData["Success"] = "Proceso de guardado - Activado";
+
+                if (rows <= 0)
+                {
+                    TempData["Error"] = "No se guardaron cambios.";
+                    return RedirectToAction("FormMunicipalityUpdate", new { Id = municipality.Id });
+                }
+
+                TempData["Success"] = municipality.Id > 0 ? "Municipio actualizado." : "Municipio creado.";
+                return RedirectToAction("FormMunicipalityUpdate", new { Id = municipality.Id });
+            }
+            catch (Exception e)
+            {
+                TempData["Error"] = $"Error -> {e.Message}";
+                return RedirectToAction("FormMunicipalityUpdate", new { Id = model.Alcaldia?.Id ?? 0 });
+            }
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatusMunicipality(int id, bool isActive)
+        {
+            try
+            {
+                var response = await _ProcedureServices.UpdateStatusMunicipality(id, isActive);
+                if (response.BooleanStatus)
+                {
+                    TempData["Success"] = "El estado del municipio se actualizó correctamente.";
+                }
+                else
+                {
+                    TempData["Error"] = "No se pudo actualizar el estado del municipio.";
+                }
+
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                return View(new MunicipalityDto());
+                TempData["Error"] = "Ocurrió un error inesperado al actualizar el municipio.";
+                return RedirectToAction("Index");
             }
         }
 
