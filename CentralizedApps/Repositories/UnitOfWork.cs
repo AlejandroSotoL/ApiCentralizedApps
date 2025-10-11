@@ -6,12 +6,12 @@ namespace CentralizedApps.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-    private readonly CentralizedAppsDbContext _context;
-    private IAuthRepository _AuthRepository;
-    private IUserRepository _UserRepository;
-    private IPaymentHistoryRepository _paymentHistoryRepository;
-    private IConfigurationEmail _configurationEmail;
-    
+        private readonly CentralizedAppsDbContext _context;
+        private IAuthRepository _AuthRepository;
+        private IUserRepository _UserRepository;
+        private IPaymentHistoryRepository _paymentHistoryRepository;
+        private IConfigurationEmail _configurationEmail;
+
 
         public UnitOfWork(CentralizedAppsDbContext context)
         {

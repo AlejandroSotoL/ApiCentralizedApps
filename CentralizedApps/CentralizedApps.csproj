@@ -35,7 +35,16 @@
   <ItemGroup>
     <Folder Include="Models\NewFolder1\" />
     <Folder Include="Models\NewFolder\" />
+    <Folder Include="wwwroot\Logos\" />
     <Folder Include="wwwroot\Uploads\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="wwwroot\Logos\LogoSvg.svg" />
+    <None Include="wwwroot\Logos\LogoTramiApp.png" />
+    <None Include="wwwroot\Logos\NewTramiAppSvg.svg" />
+    <None Include="wwwroot\Logos\nuevotramiapp.png" />
   </ItemGroup>
 
 </Project>

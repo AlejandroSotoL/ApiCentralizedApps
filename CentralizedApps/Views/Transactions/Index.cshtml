@@ -20,7 +20,7 @@
 }
 
 <section class="bg-base-100 rounded-xl shadow-md">
-    <header class="border-b border-base-300 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <header class="border-base-300 flex flex-col justify-between gap-4 border-b p-6 sm:flex-row sm:items-center">
         <h1 class="text-xl font-bold">Estado de los Pagos</h1>
 
         <div class="flex items-center gap-4">
@@ -30,7 +30,7 @@
             <div class="stat p-0">
                 <div class="stat-value text-primary flex items-center gap-2">
                     <span class="text-base font-bold xl:text-xl">@TotalPayments</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current text-success"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="text-success h-5 w-5 fill-current"
                         viewBox="0 0 24 24">
                         <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.59 5.58L20 12l-8-8-8 8z" />
                     </svg>
@@ -43,55 +43,55 @@
     </header>
 
 
-    <div class="p-7 space-y-15">
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6">
-            <article class="bg-blue-500 rounded-lg p-6 text-white shadow-md flex flex-col gap-2">
-                <h2 class="text-sm uppercase tracking-wide">Pagos Totales</h2>
+    <div class="space-y-15 p-7">
+        <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
+            <article class="flex flex-col gap-2 rounded-lg bg-blue-500 p-6 text-white shadow-md">
+                <h2 class="text-sm tracking-wide uppercase">Pagos Totales</h2>
                 <p class="text-2xl font-bold">@totalPagos</p>
                 <span class="text-xs opacity-80">Registro actual</span>
             </article>
 
-            <article class="bg-green-500 rounded-lg p-6 text-white shadow-md flex flex-col gap-2">
-                <h2 class="text-sm uppercase tracking-wide">Aprobados</h2>
+            <article class="flex flex-col gap-2 rounded-lg bg-green-500 p-6 text-white shadow-md">
+                <h2 class="text-sm tracking-wide uppercase">Aprobados</h2>
                 <p class="text-2xl font-bold">@aprobados</p>
                 <span class="text-xs opacity-80">✔ Confirmados</span>
             </article>
 
-            <article class="bg-yellow-500 rounded-lg p-6 text-white shadow-md flex flex-col gap-2">
-                <h2 class="text-sm uppercase tracking-wide">En Proceso</h2>
+            <article class="flex flex-col gap-2 rounded-lg bg-yellow-500 p-6 text-white shadow-md">
+                <h2 class="text-sm tracking-wide uppercase">En Proceso</h2>
                 <p class="text-2xl font-bold">@enProceso</p>
                 <span class="text-xs opacity-80">⌛ Pendientes</span>
             </article>
 
-            <article class="bg-red-500 rounded-lg p-6 text-white shadow-md flex flex-col gap-2">
-                <h2 class="text-sm uppercase tracking-wide">Denegados</h2>
+            <article class="flex flex-col gap-2 rounded-lg bg-red-500 p-6 text-white shadow-md">
+                <h2 class="text-sm tracking-wide uppercase">Denegados</h2>
                 <p class="text-2xl font-bold">@denegados</p>
                 <span class="text-xs opacity-80">❌ Rechazados</span>
             </article>
 
-            <article class="bg-emerald-700 rounded-lg p-6 text-black shadow-md flex flex-col gap-2">
-                <h2 class="text-sm uppercase tracking-wide">Total Recaudado</h2>
+            <article class="flex flex-col gap-2 rounded-lg bg-emerald-700 p-6 text-black shadow-md">
+                <h2 class="text-sm tracking-wide uppercase">Total Recaudado</h2>
                 <p class="text-2xl font-bold">@TotalPayments</p>
                 <span class="text-xs opacity-80">Total recaudado</span>
             </article>
         </section>
 
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-base-100 rounded-lg p-6 shadow-md w-full">
-                <h3 class="text-md font-bold mb-4">📊 Distribución por Estado</h3>
+        <section class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div class="bg-base-100 w-full rounded-lg p-6 shadow-md">
+                <h3 class="text-md mb-4 font-bold">📊 Distribución por Estado</h3>
                 <canvas id="graficaPagos" width="80%" height="80"></canvas>
             </div>
 
             <div class="bg-base-100 rounded-lg p-6 shadow-md">
-                <h3 class="text-md font-bold mb-4">📈 Pagos en el Tiempo</h3>
+                <h3 class="text-md mb-4 font-bold">📈 Pagos en el Tiempo</h3>
                 <canvas id="graficaLineal" width="80%" height="80"></canvas>
             </div>
         </section>
 
         <section class="bg-base-100 rounded-lg p-6 shadow-md">
-            <h3 class="font-bold mb-4">🔎 Filtros</h3>
+            <h3 class="mb-4 font-bold">🔎 Filtros</h3>
             <form asp-action="ReturnByValidatorDni" asp-controller="Transactions" method="post"
-                class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div>
                     <label for="FilterDni" class="text-sm font-medium">Por Identificación</label>
                     <input id="FilterDni" name="FilterDni" type="text" placeholder="0000000"
@@ -108,10 +108,10 @@
             </form>
         </section>
 
-        <section class="rounded-lg shadow-md p-4 border border-gray-200">
-            <h3 class="font-bold mb-4 text-base">📑 Historial de Pagos</h3>
+        <section class="rounded-lg border border-gray-200 p-4 shadow-md">
+            <h3 class="mb-4 text-base font-bold">📑 Historial de Pagos</h3>
             <div class="overflow-x-auto">
-                <table class="table table-zebra w-full text-sm">
+                <table class="table-zebra table w-full text-sm">
                     <thead class="bg-gray-100 text-gray-700">
                         <tr>
                             <th>Usuario</th>
@@ -169,7 +169,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="5" class="text-center text-gray-500 py-4">
+                                <td colspan="5" class="py-4 text-center text-gray-500">
                                     No hay datos disponibles
                                 </td>
                             </tr>
@@ -233,12 +233,12 @@
 
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box w-full max-w-3xl">
-        <h3 class="text-xl font-bold mb-6">Detalle Completo del Pago</h3>
+        <h3 class="mb-6 text-xl font-bold">Detalle Completo del Pago</h3>
 
         <div class="space-y-4">
 
-            <div class="border rounded-lg p-4">
-                <h4 class="font-semibold mb-2">Información del Pago</h4>
+            <div class="rounded-lg border p-4">
+                <h4 class="mb-2 font-semibold">Información del Pago</h4>
                 <ul class="space-y-1 text-sm">
                     <li><span class="font-medium">ID Pago:</span> <span id="modalId">-</span></li>
                     <li><span class="font-medium">Monto:</span> $<span id="modalAmount">-</span></li>
@@ -246,16 +246,16 @@
                 </ul>
             </div>
 
-            <div class="border rounded-lg p-4">
-                <h4 class="font-semibold mb-2">Estado</h4>
+            <div class="rounded-lg border p-4">
+                <h4 class="mb-2 font-semibold">Estado</h4>
                 <ul class="space-y-1 text-sm">
                     <li><span class="font-medium">Estado:</span> <span id="modalStatus">-</span></li>
                     <li><span class="font-medium">ID Estado:</span> <span id="modalStatusId">-</span></li>
                 </ul>
             </div>
 
-            <div class="border rounded-lg p-4">
-                <h4 class="font-semibold mb-2">Usuario</h4>
+            <div class="rounded-lg border p-4">
+                <h4 class="mb-2 font-semibold">Usuario</h4>
                 <ul class="space-y-1 text-sm">
                     <li><span class="font-medium">ID Usuario:</span> <span id="modalUserId">-</span></li>
                     <li><span class="font-medium">Nombre:</span> <span id="modalUser">-</span></li>
@@ -264,8 +264,8 @@
                 </ul>
             </div>
 
-            <div class="border rounded-lg p-4">
-                <h4 class="font-semibold mb-2">Municipio y Procedimiento</h4>
+            <div class="rounded-lg border p-4">
+                <h4 class="mb-2 font-semibold">Municipio y Procedimiento</h4>
                 <ul class="space-y-1 text-sm">
                     <li><span class="font-medium">ID Municipio:</span> <span id="modalMunicipalityId">-</span></li>
                     <li><span class="font-medium">Municipio:</span> <span id="modalMunicipality">-</span></li>
