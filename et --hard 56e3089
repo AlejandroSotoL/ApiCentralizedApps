@@ -1,0 +1,236 @@
+[33mcommit efcb1b94f931a512400d4ff4a8eeac48a1422d5b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mAlejandro[m[33m)[m
+Merge: 145a3e9 a526ac8
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Fri Sep 26 10:03:29 2025 -0500
+
+    Merge branch 'Sebastian' of https://github.com/AlejandroSotoL/ApiCentralizedApps into Alejandro
+
+[33mcommit a526ac8c50329d929f723d4bf6a842671a8c77e4[m[33m ([m[1;31morigin/Sebastian[m[33m)[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Fri Sep 26 10:03:10 2025 -0600
+
+    New format about create municipality
+
+[33mcommit 56e308979f395dd49d213866840dc45ecce644f9[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Thu Sep 25 17:08:04 2025 -0600
+
+    dsa
+
+[33mcommit 145a3e979f3379d61485c6f56ff25c27264e8f5a[m[33m ([m[1;31morigin/Alejandro[m[33m)[m
+Merge: 3e4dfde 56e3089
+Author: Juan Sebastián Montaño Pérez <134357858+sebasp-125@users.noreply.github.com>
+Date:   Thu Sep 25 16:18:35 2025 -0600
+
+    Merge pull request #53 from AlejandroSotoL/Sebastian
+    
+    Sebastian
+
+[33mcommit 906dc30858ad1f2f505664dfa1b07b4ad9a3f848[m
+Merge: 82c4118 e426545
+Author: Juan Sebastián Montaño Pérez <134357858+sebasp-125@users.noreply.github.com>
+Date:   Thu Sep 25 16:04:23 2025 -0600
+
+    Merge pull request #52 from AlejandroSotoL/main
+    
+    Wuepa x2
+
+[33mcommit e42654556d2496e5feda9c9a0b91f9b64d956660[m
+Merge: 862f078 3e4dfde
+Author: Juan Sebastián Montaño Pérez <134357858+sebasp-125@users.noreply.github.com>
+Date:   Thu Sep 25 16:03:52 2025 -0600
+
+    Merge pull request #51 from AlejandroSotoL/Alejandro
+    
+    Alejandro
+
+[33mcommit 82c41186bad692618ea254413cc155cbd245dfc4[m
+Merge: f6a3b72 862f078
+Author: Juan Sebastián Montaño Pérez <134357858+sebasp-125@users.noreply.github.com>
+Date:   Thu Sep 25 16:03:07 2025 -0600
+
+    Merge pull request #50 from AlejandroSotoL/main
+    
+    Merge pull request #49 from AlejandroSotoL/Sebastian
+
+[33mcommit f6a3b72e1b7cc76cee05c6dff4e16ec6310e682e[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Thu Sep 25 16:56:44 2025 -0600
+
+     "Every change it's important because it a great structur and great programming!, So. I hope that this project get out very early so the next week we will be on other project, speceally. Cobro Coactivo. Sometimes i feel very scared because it's a little delicated that homework, i hope everything goes well! "
+    bash: !,: event not found
+
+[33mcommit 3e4dfded024b9e16b7618537de9ea0ba4c62066e[m
+Merge: cc6a194 f6a3b72
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Thu Sep 25 17:02:59 2025 -0500
+
+    Merge branch 'Sebastian' of https://github.com/AlejandroSotoL/ApiCentralizedApps into Alejandro
+
+[33mcommit 862f078a2110192b9d8fa0c97a3d0260b93db6ea[m
+Merge: a777d98 f6a3b72
+Author: Juan Sebastián Montaño Pérez <134357858+sebasp-125@users.noreply.github.com>
+Date:   Thu Sep 25 16:02:45 2025 -0600
+
+    Merge pull request #49 from AlejandroSotoL/Sebastian
+    
+     "Every change it's important because it a great structur and great p…
+
+[33mcommit cc6a1944e8efb14a21d95f844827eac97faea52f[m
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Thu Sep 25 16:58:50 2025 -0500
+
+    nuevo
+
+[33mcommit c9ee5815994e7fe4cbe38e44db8eb6e99b5e5b46[m
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Thu Sep 25 16:49:39 2025 -0500
+
+    editar  municipio
+
+[33mcommit 65d3a9f51ad79cd3024d0fede09d03f42661db5d[m
+Merge: ccc67dd 24ec9bf
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Thu Sep 25 07:32:47 2025 -0500
+
+    Merge branch 'Sebastian' of https://github.com/AlejandroSotoL/ApiCentralizedApps into Alejandro
+
+[33mcommit ccc67dd1461414449d3b78b31f309e4ff07991bd[m
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Thu Sep 25 07:21:04 2025 -0500
+
+    visa muicipios
+
+[33mcommit a777d98ff01c675bb580155d3bbe5eb020a3023d[m
+Merge: 24ec9bf 1b54910
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 17:21:27 2025 -0600
+
+    Merge branch 'main' into Sebastian
+
+[33mcommit 1b54910f44cda9e2272e4708e1db53704e52b0c7[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 17:10:08 2025 -0600
+
+    git ignored asigned
+
+[33mcommit 24ec9bf95f413e7e1d57df9c82626daae4fdf455[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 17:06:24 2025 -0600
+
+    Too
+
+[33mcommit 939866ec3f4ec5e5a96e4c4946577ab4f33b6218[m
+Merge: 83435e4 a577064
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 17:03:02 2025 -0600
+
+    Merge branch 'Sebastian' of https://github.com/AlejandroSotoL/ApiCentralizedApps into Sebastian
+
+[33mcommit 83435e4f5e8ec89fc72fa0cbb2b09c2066710975[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 17:02:59 2025 -0600
+
+    Tome I hope
+
+[33mcommit a5770640e8f40c3d7d95b5aa16906e13153c4582[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 16:54:56 2025 -0600
+
+    Wuepa
+
+[33mcommit d7cdb3887601a4b922bdbc8831c8e382406e7309[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 11:45:31 2025 -0600
+
+    d
+
+[33mcommit 174050da2a7b0af228ff4aab366396e8583d5e06[m
+Merge: d7cdb38 4f40a03
+Author: Juan Sebastián Montaño Pérez <134357858+sebasp-125@users.noreply.github.com>
+Date:   Wed Sep 24 10:44:41 2025 -0600
+
+    Merge pull request #46 from AlejandroSotoL/Alejandro
+    
+    Merge pull request #44 from AlejandroSotoL/Sebastian
+
+[33mcommit 4f40a0397b2f2efbf645429acaa9d8958da35d84[m
+Merge: 2e3ccf7 d7cdb38
+Author: AlejandroSotoL <alejandro12.soto.lopez@gmail.com>
+Date:   Wed Sep 24 11:42:49 2025 -0500
+
+    Merge pull request #44 from AlejandroSotoL/Sebastian
+    
+    Merge pull request #43 from AlejandroSotoL/Alejandro
+
+[33mcommit d487629e275a28e5d068e1d6ddf813a26ee475d3[m
+Merge: 23d57ba 2e3ccf7
+Author: Juan Sebastián Montaño Pérez <134357858+sebasp-125@users.noreply.github.com>
+Date:   Wed Sep 24 10:41:59 2025 -0600
+
+    Merge pull request #43 from AlejandroSotoL/Alejandro
+    
+    Alejandro
+
+[33mcommit 23d57ba8c8280e2af869ea47305984a9fe32e477[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 11:40:29 2025 -0600
+
+    To main
+
+[33mcommit 2e3ccf7feef6a5568f0ff7232f2e623137fd94ec[m
+Merge: d0bf77c 23d57ba
+Author: Juan Sebastián Montaño Pérez <134357858+sebasp-125@users.noreply.github.com>
+Date:   Wed Sep 24 10:41:51 2025 -0600
+
+    Merge branch 'Sebastian' into Alejandro
+
+[33mcommit d0bf77c7450c839c38f535161a8897ab943b8e45[m
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Wed Sep 24 11:32:28 2025 -0500
+
+    municipios
+
+[33mcommit d64985bf1a5f4ace139f1b9058e0e0d9ac30e87f[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 10:11:42 2025 -0600
+
+    Other Changed to Soto
+
+[33mcommit a80d9b22e394c154176d2a50f5752604ca2e4378[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Wed Sep 24 10:09:15 2025 -0600
+
+    To Soto
+
+[33mcommit 32259d68b35217b767454e8ff6cdfb6532f0c8fb[m
+Merge: ef6c69c 59b9535
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Wed Sep 24 08:08:28 2025 -0500
+
+    Merge branch 'Sebastian' of https://github.com/AlejandroSotoL/ApiCentralizedApps into Alejandro
+
+[33mcommit ef6c69cbe8ec533fded0eec8a9e94cba615aaad8[m
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Wed Sep 24 08:06:28 2025 -0500
+
+    cambiso de vista
+
+[33mcommit 59b9535494b924a2b36a4750520b71c64058df54[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Tue Sep 23 17:05:31 2025 -0600
+
+    To Soto
+
+[33mcommit 0a18c0bb519cce87f3c99c340f0f9f8cf2eec65c[m
+Author: Juan Sebastián Montaño Pérez <sp6027193@gmail.com>
+Date:   Tue Sep 23 11:24:37 2025 -0600
+
+    To soto
+
+[33mcommit c378e753ef0b533496fb4bcb91c33ebb041a9020[m
+Merge: 6cbdce1 0a18c0b
+Author: desarollofasemovil <desarrollofasemovil@hotmial.com>
+Date:   Tue Sep 23 11:25:56 2025 -0500
+
+    Merge branch 'Sebastian' of https://github.com/AlejandroSotoL/ApiCentralizedA

@@ -1,0 +1,108 @@
+﻿@using Microsoft.CodeAnalysis.Scripting
+@model List<CentralizedApps.Models.Dtos.PrincipalsDtos.GetMunicipalitysDto>;
+
+@{
+    ViewData["Title"] = "Muni";
+    Layout = "Layout";
+}
+
+<div class="w-full">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success animate-fade-in mt-4 shadow-md">
+            <span>@TempData["Success"]</span>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-error animate-fade-in mt-4 shadow-md">
+            <span>@TempData["Error"]</span>
+        </div>
+    }
+</div>
+
+<div class="P-10 flex flex-col">
+    <div class="flex flex-col justify-between gap-4 p-4 md:flex-row">
+        <h1 class="flex h-15 w-full items-center justify-center text-4xl font-bold md:w-1/3">
+            Gestión De Municipios
+        </h1>
+        <div class="flex w-full items-center justify-center self-center md:w-1/4">
+            <form asp-action="Index" asp-controller="Municipality" method="get"
+                class="flex w-full justify-center md:w-full">
+                <input type="text" name="filter" class="input bg-base-100 w-full md:1/2"
+                    placeholder="Buscar por Municipio, Departamento o Banco..." />
+            </form>
+
+        </div>
+        <div class="flex w-full flex-wrap justify-evenly gap-2 self-end p-2 md:w-1/4 md:justify-evenly">
+            <form asp-controller="Municipality" asp-action="FormMunicipalityUpdate" method="get">
+                <input type="hidden" name="id" value="0"/>
+                <button type="submit" class="btn btn-outline btn-warning w-25">
+                    Crear
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <br>
+
+    <div>
+        <div class="mt-4 overflow-x-auto">
+            <table class="table">
+                <thead class="bg-base-100">
+                    <tr class="text-center">
+                        <th>Municipio</th>
+                        <th>Código</th>
+                        <th>Departamento</th>
+                        <th>Banco</th>
+                        <th>Activo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var municipio in Model)
+                    {
+                        <tr class="text-center">
+                            <td class="text-start">
+                                <div class="flex items-center gap-3">
+                                    <div class="avatar">
+                                        <div class="mask mask-squircle h-12 w-12">
+                                            <img src="@municipio?.IdShield?.Url" alt="escudo municipio" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold">@municipio?.Name</div>
+                                        <div class="text-sm opacity-50">@municipio?.Department?.Name</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@municipio?.EntityCode</td>
+                            <td>@municipio?.Department?.Name</td>
+                            <td>@municipio?.Bank?.NameBank</td>
+                            <td>
+                                <div class="flex justify-evenly">
+
+                                    <form asp-controller="Municipality" asp-action="UpdateStatusMunicipality" method="post">
+                                        <input type="hidden" name="id" value="@municipio?.Id" />
+                                        <input type="hidden" name="isActive"
+                                            value="@(municipio?.IsActive == true ? "false" : "true")" />
+                                        <button type="submit"
+                                            class="btn btn-outline w-25 @(municipio?.IsActive == true ? "btn-accent" : "btn-error")">
+                                            @(municipio?.IsActive == true ? "Activo" : "Desactivado")
+                                        </button>
+                                    </form>
+                                    <form asp-controller="Municipality" asp-action="FormMunicipalityUpdate" method="get">
+                                        <input type="hidden" name="id" value="@municipio?.Id" />
+                                        <button type="submit" class="btn btn-outline btn-warning w-25">
+                                            Editar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

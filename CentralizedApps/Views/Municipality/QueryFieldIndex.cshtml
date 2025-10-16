@@ -1,0 +1,117 @@
+﻿@model CentralizedApps.Models.Dtos.QueryFieldWeb
+@{
+    ViewData["Title"] = "Formulario de campo consulda";
+    Layout = "Layout";
+}
+@if (TempData["Message"] != null)
+{
+    <div id="tempMessage"
+        class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error")">
+        @TempData["Message"]
+    </div>
+}
+
+<div class="card bg-base-200 rounded-box p-0 md:p-6">
+            <h1 class="mb-6 text-center text-3xl font-bold">Campo consulta</h1>
+            <div class="card bg-base-200 rounded-box grid grid-cols-1 gap-y-6 p-2 md:grid-rows-1">
+                
+     
+                    <div class="card bg-base-300 grid p-6">
+            <h2 class="mb-6 text-center text-2xl font-bold">Crear campo consulta</h2>
+                <form asp-action="createQueryField"  asp-controller="Municipality" method="post">
+                        <div class="grid gap-4 md:grid-cols-2">
+                        <fieldset class="fieldset w-full">
+                    <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
+                    <select  name="MunicipalityId" class="select w-full">
+                        <option disabled selected>Municipios</option>
+                        @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
+                        {
+                            <option value="@municipality.Id">@municipality.Name</option>
+                        }
+                    </select>
+                </fieldset>
+                            <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Campo consulta</legend>
+                                <input type="text"  name="FieldName" class="input w-full" placeholder="Identificacion"  />
+                            </fieldset>
+                            <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Nombre</legend>
+                                <input type="text" name="QueryFieldType" class="input w-full" placeholder="Cédula de Ciudadanía"  />
+                            </fieldset>
+                        </div>
+                        <div class="my-6 flex w-full justify-end">
+                        <button type="submit" class="btn btn-soft btn-accent w-full justify-self-center md:w-1/6">Crear</button>
+                        </div>
+                </form>
+                    </div>
+                
+
+
+
+<div class="card bg-base-300 grid p-6">
+            
+            <h2 class="mb-6 text-center text-2xl font-bold">Actualizar Campo Consulta</h2>
+            <form asp-action="SelectQueryField" asp-controller="Municipality" method="post">
+                <fieldset class="fieldset w-full md:w-1/3">
+                    <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
+                    <select  name="id" class="select w-full" onchange="this.form.submit()">
+                        <option disabled selected>Municipios</option>
+                        @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
+                        {
+                            <option value="@municipality.Id">@municipality.Name</option>
+                        }
+                    </select>
+                </fieldset>
+            </form>
+        <div class="my-10 flex flex-col items-center justify-center">
+                    <div class="avatar">
+                        <div class="mask mask-squircle h-24 w-24">
+                            <img 
+                            src="@Model?.municipality?.IdShield?.Url" 
+                            alt="escudo municipio" />
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h1 class="text-2xl font-bold">@Model?.municipality?.Name</h1>
+                        <p class="text-sm opacity-70">@Model?.municipality?.Department?.Name</p>
+                    </div>
+                </div>
+
+
+            @foreach (var queryField in Model?.queryFields ?? new List<QueryField>())
+            {
+                   
+                <form asp-action="updateQueryField"  asp-controller="Municipality" method="post">
+                        <div class="grid gap-4 md:grid-cols-2">
+                        <input type="hidden" name="id" value=@queryField.Id>
+                        <input type="hidden" name="MunicipalityId" value=@queryField.MunicipalityId>
+
+                            <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Campo Consulta</legend>
+                                <input type="text" name="FieldName" class="input w-full" placeholder="Identificacion" value=@queryField.FieldName />
+                            </fieldset>
+                            <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Nombre</legend>
+                                <input type="text" name="QueryFieldType" class="input w-full" placeholder="Cédula de Ciudadanía" value=@queryField.QueryFieldType />
+                            </fieldset >
+                        </div>
+                        <div class="my-6 flex w-full justify-center md:justify-end">
+                        <button type="submit" class="btn btn-soft btn-accent w-full justify-self-center md:w-1/6">Guardar
+                            cambios</button>
+                        </div>
+                </form>
+
+            }
+</div>
+</div>
+
+<script>
+    setTimeout(() => {
+            const msg = document.getElementById("tempMessage");
+            if (msg) {
+                msg.style.transition = "opacity 0.5s";
+                msg.style.opacity = "0";
+                setTimeout(() => msg.remove(), 500);
+            }
+        }, 2000);
+</script>

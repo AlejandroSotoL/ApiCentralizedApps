@@ -1,0 +1,152 @@
+﻿@model List<CentralizedApps.Models.Entities.Theme>
+
+@{
+    ViewData["Title"] = "Gestión de Temas";
+    Layout = "Layout";
+}
+
+<div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
+    <div class="card w-full p-6 shadow-xl bg-base-100 rounded-2xl">
+        <div class="w-full">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success mt-4 shadow-md animate-fade-in">
+                    <span>@TempData["Success"]</span>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-error mt-4 shadow-md animate-fade-in">
+                    <span>@TempData["Error"]</span>
+                </div>
+            }
+        </div>
+
+        <h3 class="mb-6 text-center text-2xl font-extrabold text-primary">Crear un nuevo tema</h3>
+        <form asp-controller="Municipality" asp-action="CreateGraphicThemes" method="post" class="space-y-6">
+            <div>
+                <label class="label font-semibold">Nombre del tema</label>
+                <input type="text" class="input input-bordered w-full" placeholder="Ej: Tema Juvenil" name="NameTheme"
+                    required />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="label font-semibold">Color de fondo</label>
+                    <input type="color" class="input w-full h-12 cursor-pointer" name="BackGroundColor" required />
+                </div>
+                <div>
+                    <label class="label font-semibold">Color primario</label>
+                    <input type="color" class="input w-full h-12 cursor-pointer" name="PrimaryColor" required />
+                </div>
+                <div>
+                    <label class="label font-semibold">Color secundario</label>
+                    <input type="color" class="input w-full h-12 cursor-pointer" name="SecondaryColor" required />
+                </div>
+                <div>
+                    <label class="label font-semibold">Color secundario oscuro</label>
+                    <input type="color" class="input w-full h-12 cursor-pointer" name="SecondaryColorBlack" />
+                </div>
+                <div>
+                    <label class="label font-semibold">Texto en primario (claro)</label>
+                    <input type="color" class="input w-full h-12 cursor-pointer" name="OnPrimaryColorLight" />
+                </div>
+                <div>
+                    <label class="label font-semibold">Texto en primario (oscuro)</label>
+                    <input type="color" class="input w-full h-12 cursor-pointer" name="OnPrimaryColorDark" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full hover:scale-105 transition-transform">💾 Guardar
+                Tema</button>
+        </form>
+    </div>
+
+    <div class="card p-6 shadow-xl bg-base-100 rounded-2xl">
+        <h3 class="mb-6 text-center text-2xl font-extrabold text-primary">Temas existentes</h3>
+
+        <form asp-action="FilterGraphicThemes" asp-controller="Municipality" method="get" class="mb-6 flex gap-3">
+            <input name="filter" type="text" class="input input-bordered flex-1" placeholder="Ejemplo: GreenDark"
+                value="@Context.Request.Query["filter"]" />
+            <button type="submit" class="btn btn-primary hover:scale-105 transition-transform">🔍 Filtrar</button>
+        </form>
+
+        @if (Model.Any())
+        {
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <form asp-controller="Municipality" asp-action="UpdateGraphicTheme" method="post" class="mb-6">
+                    <div
+                        class="rounded-xl border border-base-300 bg-base-200 p-4 shadow-md hover:shadow-xl transition-all duration-300">
+                        <input type="hidden" name="Id" value="@Model[i].Id" />
+
+                        <div class="mb-4">
+                            <label class="label font-semibold">Nombre del tema</label>
+                            <input type="text" class="input input-bordered w-full" name="NameTheme"
+                                value="@Model[i].NameTheme" />
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-3 mb-4">
+                            <div class="flex flex-col items-center">
+                                <label class="text-sm">Fondo</label>
+                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer" name="BackGroundColor"
+                                    value="@Model[i].BackGroundColor?.Replace("0xFF", "#")" />
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <label class="text-sm">Primario</label>
+                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer" name="PrimaryColor"
+                                    value="@Model[i].PrimaryColor?.Replace("0xFF", "#")" />
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <label class="text-sm">Secundario</label>
+                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer" name="SecondaryColor"
+                                    value="@Model[i].SecondaryColor?.Replace("0xFF", "#")" />
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <label class="text-sm">Secundario oscuro</label>
+                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer"
+                                    name="SecondaryColorBlack" value="@Model[i].SecondaryColorBlack?.Replace("0xFF", "#")" />
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <label class="text-sm">Texto claro</label>
+                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer"
+                                    name="OnPrimaryColorLight" value="@Model[i].OnPrimaryColorLight?.Replace("0xFF", "#")" />
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <label class="text-sm">Texto oscuro</label>
+                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer" name="OnPrimaryColorDark"
+                                    value="@Model[i].OnPrimaryColorDark?.Replace("0xFF", "#")" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline btn-primary w-full hover:scale-105 transition-transform">
+                            💾 Guardar cambios
+                        </button>
+                    </div>
+                </form>
+            }
+        }
+        else
+        {
+            <h2 class="text-center text-gray-500">⚠️ No hay temas registrados aún</h2>
+        }
+    </div>
+</div>
+
+<style>
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

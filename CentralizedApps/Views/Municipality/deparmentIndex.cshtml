@@ -1,0 +1,90 @@
+@model List<CentralizedApps.Models.Entities.Department>
+@{
+    ViewData["Title"] = "Formulario de Municipío";
+    Layout = "Layout";
+}
+@if (TempData["Message"] != null)   
+{
+    <div id="tempMessage" class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error")">
+        @TempData["Message"]
+    </div>
+}
+<div class="card bg-base-200 rounded-box p-0 md:p-6">
+            <h1 class="font-bold text-3xl text-center mb-6">Departamento</h1>
+<Form asp-action="updateDeparment" asp-controller="Municipality">
+    <div class="bg-base-300 grid grid-cols-1 md:grid-cols-2 p-6 rounded-2xl gap-4">
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend">Seleccionar departamento existente</legend>
+            <select id="selectDepartment" name="id" class="select w-full">
+                <option disabled selected>Seleccione un departamento</option>
+                @foreach (var department in Model)
+                {
+                    <option value="@department.Id">@department.Name</option>
+                }
+            </select>
+        </fieldset>
+
+        <div class="flex flex-col">
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Nombre del departamento</legend>
+                <input id="inputDepartment" type="text" class="input w-full" name="Name"
+                    placeholder="Ej: Cundinamarca" />
+            </fieldset>
+
+            <div class="flex  justify-center md:justify-end gap-6 p-5">
+                <button type="button" class="btn btn-soft btn-success" onclick="my_modal_3.showModal()">Crear</button>
+                <button type="submit" name="updateDeparment" class="btn btn-soft btn-warning">Editar</button>
+            </div>
+        </div>
+    </div>
+</Form>
+</div>
+
+<dialog id="my_modal_3" class="modal">
+    <div class="modal-box">
+        <form method="dialog" class="flex justify-end">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <form asp-action="createDeparment" asp-controller="Municipality">
+            <div class="flex flex-col">
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Nombre del departamento</legend>
+                    <input id="inputDepartment" type="text" class="input w-full" name="Name"
+                        placeholder="Ej: Cundinamarca" />
+                </fieldset>
+
+                <button class="btn btn-success">Crear</button>
+            </div>
+        </form>     
+    </div>
+</dialog>
+
+
+
+
+<script>
+    const selectDepartment = document.getElementById("selectDepartment");
+    const inputDepartment = document.getElementById("inputDepartment");
+
+    selectDepartment.addEventListener("change", function () {
+        const selectedText = this.options[this.selectedIndex].text;
+        inputDepartment.value = selectedText;
+    });
+
+    setTimeout(() => {
+            const msg = document.getElementById("tempMessage");
+            if (msg) {
+                msg.style.transition = "opacity 0.5s";
+                msg.style.opacity = "0";
+                setTimeout(() => msg.remove(), 500);
+            }
+        }, 2000);
+
+    new TomSelect("#selectDepartment", {
+        create: false, 
+        sortField: { field: "text", direction: "asc" },
+        placeholder: "Seleccione un departamento",
+        allowEmptyOption: true
+    });
+
+</script>
