@@ -28,8 +28,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Seleccionar red social existente</legend>
-                    <select id="selectSocialType" name="id" class="select w-full">
-                        <option disabled selected>Seleccione una Red Social</option>
+                    <select id="selectSocialType" name="id" class="select w-full" required>
+                        <option disabled selected value="">Seleccione una Red Social</option>
                         @foreach (var socialMediaType in Model.socialMediaTypes)
                         {
                             <option value="@socialMediaType.Id">@socialMediaType.Name</option>
@@ -41,7 +41,7 @@
                     <fieldset class="fieldset">
                         <legend class="fieldset-legend">Nombre del la red social</legend>
                         <input id="inputSocialType" type="text" class="input w-full" name="Name"
-                            placeholder="Ej: Facebook" />
+                            placeholder="Ej: Facebook" required />
                     </fieldset>
 
                     <div class="grid w-full grid-cols-1  gap-6 p-5">
@@ -63,8 +63,8 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                    <select id="selectMunicipality" name="municipalityId" class="select w-full">
-                        <option disabled selected>Municipios</option>
+                    <select id="selectMunicipality" name="municipalityId" class="select w-full" required>
+                        <option disabled selected value="">Municipios</option>
                         @foreach (var municipality in Model.municipalities)
                         {
                             <option value="@municipality.Id">@municipality.Name</option>
@@ -74,8 +74,8 @@
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Seleccionar red social existente</legend>
-                    <select id="selectSocialType" name="socialMediaTypeId" class="select w-full">
-                        <option disabled selected>Red Social</option>
+                    <select id="selectSocialType" name="socialMediaTypeId" class="select w-full" required>
+                        <option disabled selected value="">Red Social</option>
                         @foreach (var socialMediaType in Model.socialMediaTypes)
                         {
                             <option value="@socialMediaType.Id">@socialMediaType.Name</option>
@@ -85,12 +85,12 @@
 
                 <fieldset class="fieldset w-full">
                     <legend class="fieldset-legend">Enlace integración</legend>
-                    <input type="text" class="input w-full" name="url" placeholder="Enlace integración" />
+                    <input type="text" class="input w-full" name="url" placeholder="Enlace integración" required />
                 </fieldset>
 
                 <fieldset class="fieldset  flex justify-center items-center gap-3">
                     <legend class="fieldset-legend text-center">Estado</legend>
-                    <input type="checkbox" class="toggle toggle-success" name="IsActive" value="true" />
+                    <input type="checkbox" class="toggle toggle-success" name="IsActive" value="true"  required/>
                     <input type="hidden" name="IsActive" value="false" />
                 </fieldset>
             </div>
@@ -124,8 +124,8 @@
             <form asp-action="SelectMunicipalitySocialMedia" asp-controller="Municipality" method="post">
                 <fieldset class="fieldset w-full md:w-1/3">
                     <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                    <select id="selectMunicipality" name="id" class="select w-full" onchange="this.form.submit()">
-                        <option disabled selected>Municipios</option>
+                    <select id="selectMunicipality" name="id" class="select w-full" onchange="this.form.submit()" required>
+                        <option disabled selected value="">Municipios</option>
                         @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
                         {
                             <option value="@municipality.Id">@municipality.Name</option>
@@ -143,8 +143,8 @@
                         <input type="hidden" name="MunicipalityId" value=@municipalitySocialMedium.MunicipalityId>
                         <input type="hidden" name="id" value=@municipalitySocialMedium?.Id>
 
-                        <select class="select w-full " name="SocialMediaTypeId">
-                            <option disabled selected>Seleccione red</option>
+                        <select class="select w-full " name="SocialMediaTypeId" required>
+                            <option disabled selected value="">Seleccione red</option>
                             @foreach (var municipalitySocial in Model?.socialMediaTypes ?? new
                                                     List<SocialMediaType>())
                             {
@@ -155,7 +155,7 @@
                         </select>
 
                         <input type="text" name="Url" class="input w-full" placeholder="Enlace integración"
-                            value=@municipalitySocialMedium?.Url />
+                            value=@municipalitySocialMedium?.Url required />
                         <div class="flex flex-col md:flex-row justify-center items-center gap-2 justify-self-center">
                             <span>Estado</span>
                             <input type="checkbox" name="IsActive" value="true" class="toggle toggle-success"
@@ -186,7 +186,7 @@
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Nombre del la red social</legend>
                     <input id="inputSocialType" type="text" class="input w-full" name="Name"
-                        placeholder="Ej: Facebook" />
+                        placeholder="Ej: Facebook" required/>
                 </fieldset>
                 <button class="btn btn-soft btn-success">Crear</button>
             </div>

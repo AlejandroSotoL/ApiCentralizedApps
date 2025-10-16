@@ -10,13 +10,13 @@
     </div>
 }
 <div class="card bg-base-200 rounded-box p-0 md:p-6">
-<h1 class="font-bold text-3xl text-center mb-6">Banco Municipio</h1>
+<h1 class="font-bold text-3xl text-center mb-6">Bancos</h1>
 <Form asp-action="updateBank" asp-controller="Municipality">
     <div class="bg-base-300 rounded-2xl grid grid-cols-1 md:grid-cols-2 p-6 gap-4">
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Seleccionar Banco existente</legend>
-            <select id="selectDepartment" name="id" class="select w-full">
-                <option disabled selected>Seleccione un Banco</option>
+            <select id="selectDepartment" name="id" class="select w-full" required>
+                <option disabled selected value="">Seleccione un Banco</option>
                 @foreach (var bank in Model)
                 {
                     <option value="@bank.Id">@bank.NameBank</option>
@@ -28,7 +28,7 @@
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre del Banco</legend>
                 <input id="inputDepartment" type="text" class="input w-full" name="NameBank"
-                    placeholder="Ej: Bancolombia" />
+                    placeholder="Ej: Bancolombia" required />
             </fieldset>
 
             <div class="flex justify-center md:justify-end gap-6 p-5">
@@ -50,7 +50,7 @@
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Nombre del Banco</legend>
                     <input id="inputDepartment" type="text" class="input w-full" name="NameBank"
-                        placeholder="Ej: Cundinamarca" />
+                        placeholder="Ej: Cundinamarca" required />
                 </fieldset>
 
                 <button class="btn btn-soft btn-success">Crear</button>

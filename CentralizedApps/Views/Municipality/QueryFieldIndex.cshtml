@@ -23,8 +23,8 @@
                         <div class=" grid md:grid-cols-2 gap-4 ">
                         <fieldset class="fieldset w-full ">
                     <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                    <select  name="MunicipalityId" class="select w-full">
-                        <option disabled selected>Municipios</option>
+                    <select  name="MunicipalityId" class="select w-full" required>
+                        <option disabled selected value="">Municipios</option>
                         @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
                         {
                             <option value="@municipality.Id">@municipality.Name</option>
@@ -33,11 +33,11 @@
                 </fieldset>
                             <fieldset class="fieldset">
                             <legend class="fieldset-legend">Campo consulta</legend>
-                                <input type="text"  name="FieldName" class="input w-full" placeholder="Identificacion"  />
+                                <input type="text"  name="FieldName" class="input w-full" placeholder="Identificacion" required />
                             </fieldset>
                             <fieldset class="fieldset">
                             <legend class="fieldset-legend">Nombre</legend>
-                                <input type="text" name="QueryFieldType" class="input w-full" placeholder="Cédula de Ciudadanía"  />
+                                <input type="text" name="QueryFieldType" class="input w-full" placeholder="Cédula de Ciudadanía" required />
                             </fieldset>
                         </div>
                         <div class="w-full flex justify-end my-6">
@@ -55,8 +55,8 @@
             <form asp-action="SelectQueryField" asp-controller="Municipality" method="post">
                 <fieldset class="fieldset w-full md:w-1/3">
                     <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                    <select  name="id" class="select w-full" onchange="this.form.submit()">
-                        <option disabled selected>Municipios</option>
+                    <select  name="id" class="select w-full" onchange="this.form.submit()" required>
+                        <option disabled selected value="">Municipios</option>
                         @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
                         {
                             <option value="@municipality.Id">@municipality.Name</option>
@@ -89,15 +89,15 @@
                 <form asp-action="updateQueryField"  asp-controller="Municipality" method="post">
                         <div class=" grid md:grid-cols-2 gap-4 ">
                         <input type="hidden" name="id" value=@queryField.Id>
-                        <input type="hidden" name="MunicipalityId" value=@queryField.MunicipalityId>
+                        <input type="hidden" name="MunicipalityId" value=@queryField.MunicipalityId >
 
                             <fieldset class="fieldset">
                             <legend class="fieldset-legend">Campo Consulta</legend>
-                                <input type="text" name="FieldName" class="input w-full" placeholder="Identificacion" value=@queryField.FieldName />
+                                <input type="text" name="FieldName" class="input w-full" placeholder="Identificacion" value=@queryField.FieldName required />
                             </fieldset>
                             <fieldset class="fieldset">
                             <legend class="fieldset-legend">Nombre</legend>
-                                <input type="text" name="QueryFieldType" class="input w-full" placeholder="Cédula de Ciudadanía" value=@queryField.QueryFieldType />
+                                <input type="text" name="QueryFieldType" class="input w-full" placeholder="Cédula de Ciudadanía" value=@queryField.QueryFieldType required />
                             </fieldset >
                         </div>
                         <div class="w-full flex justify-center md:justify-end my-6">

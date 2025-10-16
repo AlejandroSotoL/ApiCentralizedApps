@@ -15,8 +15,8 @@
     <div class="grid bg-base-300 grid-cols-1 md:grid-cols-2 p-8 gap-4 rounded-2xl">
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Seleccionar tipo de documento existente</legend>
-            <select id="selectDocumentType" name="id" class="select w-full">
-                <option disabled selected>Tipo de documento</option>
+            <select id="selectDocumentType" name="id" class="select w-full" required>
+                <option disabled selected value="">Tipo de documento</option>
                 @foreach (var documentType in Model)
                 {
                     <option value="@documentType.Id">@documentType.NameDocument</option>
@@ -28,7 +28,7 @@
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre del tipo de documento</legend>
                 <input id="inputDocumentType" type="text" class="input w-full" name="NameDocument"
-                    placeholder="Ej: Cédula" />
+                    placeholder="Ej: Cédula" required />
             </fieldset>
 
             <div class="flex justify-center md:justify-end gap-6 p-5">
@@ -49,7 +49,7 @@
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Nombre tipo de documento</legend>
                     <input id="inputDocumentType" type="text" class="input w-full" name="NameDocument"
-                        placeholder="Ej: cédula" />
+                        placeholder="Ej: cédula" required />
                 </fieldset>
 
                 <button class="btn btn-success">Crear</button>

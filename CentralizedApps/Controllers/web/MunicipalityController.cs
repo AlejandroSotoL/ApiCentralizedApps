@@ -58,6 +58,68 @@ namespace CentralizedApps.Controllers.web
         {
             return RedirectToAction("MunicipalitySocialMediaIndex", "Municipality", new { id });
         }
+        public async Task<IActionResult> CreateMuncipalitySocialMedia(MunicipalitySocialMeditaDto_Response dto)
+        {
+            if (dto.MunicipalityId <= 0 || dto.SocialMediaTypeId <= 0 || string.IsNullOrEmpty(dto.Url))
+            {
+                TempData["message"] = "No se puedo crear la red social, campo vacio.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("MunicipalitySocialMediaIndex");
+            }
+
+            var result = await _ProcedureServices.AddMuncipalitySocialMediaToMunicipality(dto);
+            if (!result)
+            {
+                TempData["message"] = "No se puedo crear la red social.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("MunicipalitySocialMediaIndex");
+            }
+
+            TempData["message"] = "la red social fue creada correctamente.";
+            TempData["MessageType"] = "success";
+            return RedirectToAction("MunicipalitySocialMediaIndex");
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> updateSocialType(int id, CreateSocialMediaTypeDto updateSocialMediaTypeDto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(updateSocialMediaTypeDto.Name) || id <= 0)
+                {
+                    TempData["message"] = " los cambos estan vacios";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("MunicipalitySocialMediaIndex");
+
+                }
+                var result = await _ProcedureServices.updateSocialMediaType(id, updateSocialMediaTypeDto);
+                if (!result.BooleanStatus)
+                {
+                    TempData["message"] = "no se puedo actulizar la red social.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("MunicipalitySocialMediaIndex");
+
+
+                }
+                else
+                {
+                    TempData["message"] = "la red social se actualizo correctamente.";
+                    TempData["MessageType"] = "success";
+                    return RedirectToAction("MunicipalitySocialMediaIndex");
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "no sepuedo actualizar la red social. comunicate con soporte.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("deparmentIndex");
+
+            }
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> MunicipalitySocialMediaIndex(int? id)
@@ -141,7 +203,7 @@ namespace CentralizedApps.Controllers.web
             {
                 if (!ModelState.IsValid)
                 {
-                    TempData["Error"] = "Datos inv�lidos, verifica la informaci�n.";
+                    TempData["Error"] = "Datos inv lidos, verifica la informaci n.";
                     return RedirectToAction(nameof(GraphicThemes));
                 }
 
@@ -866,9 +928,36 @@ namespace CentralizedApps.Controllers.web
         }
 
         [HttpPost]
+        public async Task<IActionResult> CreateSocialType(CreateSocialMediaTypeDto createSocialMediaTypeDto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(createSocialMediaTypeDto.Name))
+                {
+                    TempData["message"] = "No se puedo crear la red social, campo vacio.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("MunicipalitySocialMediaIndex");
+                }
+                await _ProcedureServices.createSocialMediaType(createSocialMediaTypeDto);
+                TempData["message"] = "La red social fue creada correctamente.";
+                TempData["MessageType"] = "success";
+                return RedirectToAction("MunicipalitySocialMediaIndex");
+
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "No se puedo crear l ared social.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("MunicipalitySocialMediaIndex");
+
+            }
+
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
         {
-
             try
             {
                 if (updateMunicipalitySocialMediumDto.MunicipalityId <= 0 || updateMunicipalitySocialMediumDto.SocialMediaTypeId <= 0 || string.IsNullOrEmpty(updateMunicipalitySocialMediumDto.Url))
@@ -902,4 +991,3 @@ namespace CentralizedApps.Controllers.web
         }
     }
 }
-
