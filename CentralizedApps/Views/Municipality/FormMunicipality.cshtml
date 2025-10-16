@@ -51,36 +51,34 @@
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Seleccionar tema existente</legend>
-                    <select class="select w-full"
-                            asp-for="Alcaldia.ThemeId"
-                            asp-items="@(new SelectList(Model.Themas, "Id", "NameTheme", Model.Alcaldia.ThemeId))" required>
+                    <select class="select w-full" asp-for="Alcaldia.ThemeId"
+                        asp-items="@(new SelectList(Model.Themas, "Id", "NameTheme", Model.Alcaldia.ThemeId))" required>
                         <option value="">Seleccione un tema</option>
                     </select>
                 </fieldset>
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Seleccione el banco existente</legend>
-                    <select class="select w-full"
-                            asp-for="Alcaldia.IdBank"
-                            asp-items="@(new SelectList(Model.Bancos, "Id", "NameBank", Model.Alcaldia.IdBank))" required>
+                    <select class="select w-full" asp-for="Alcaldia.IdBank"
+                        asp-items="@(new SelectList(Model.Bancos, "Id", "NameBank", Model.Alcaldia.IdBank))" required>
                         <option value="">Seleccione el banco</option>
                     </select>
                 </fieldset>
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Seleccione un escudo existente</legend>
-                    <select class="select w-full"
-                            asp-for="Alcaldia.IdShield"
-                            asp-items="@(new SelectList(Model.Escudos, "Id", "NameOfMunicipality", Model.Alcaldia.IdShield))" required>
+                    <select class="select w-full" asp-for="Alcaldia.IdShield"
+                        asp-items="@(new SelectList(Model.Escudos, "Id", "NameOfMunicipality", Model.Alcaldia.IdShield))"
+                        required>
                         <option value="">Seleccione un escudo</option>
                     </select>
                 </fieldset>
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Seleccione el Departamento</legend>
-                    <select class="select w-full"
-                            asp-for="Alcaldia.DepartmentId"
-                            asp-items="@(new SelectList(Model.Departamentos, "Id", "Name", Model.Alcaldia.DepartmentId))" required>
+                    <select class="select w-full" asp-for="Alcaldia.DepartmentId"
+                        asp-items="@(new SelectList(Model.Departamentos, "Id", "Name", Model.Alcaldia.DepartmentId))"
+                        required>
                         <option value="">Seleccione un departamento</option>
                     </select>
                 </fieldset>
@@ -101,17 +99,15 @@
                     <div class="flex items-center gap-2">
                         <input asp-for="Alcaldia.Domain" class="input w-full" required />
                         <a class="btn btn-primary" href="@Model?.Alcaldia.Domain" target="_blank"
-                        title="Abrir dominio">Observar</a>
+                            title="Abrir dominio">Observar</a>
                     </div>
                 </fieldset>
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Escudo</legend>
                     <div class="flex items-center gap-2">
-                        <input type="text" class="file-input w-full"
-                            name="EscudoFile"
-                            onchange="previewEscudo(event)"
-                            value="@(Model?.Alcaldia?.IdShieldNavigation?.Url ?? string.Empty)" required/>
+                        <input type="text" class="file-input w-full" name="EscudoFile" onchange="previewEscudo(event)"
+                            value="@(Model?.Alcaldia?.IdShieldNavigation?.Url ?? string.Empty)" required />
                         <button type="button" class="btn btn-secondary" onclick="openEscudo()" title="Vista previa">
                             Observar
                         </button>
@@ -130,7 +126,8 @@
 
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Contraseña Fintech</legend>
-                    <input value="@Model.Alcaldia.PasswordFintech" name="Alcaldia.PasswordFintech" type="text" class="input w-full" required />
+                    <input value="@Model.Alcaldia.PasswordFintech" name="Alcaldia.PasswordFintech" type="text"
+                        class="input w-full" required />
                 </fieldset>
 
                 <fieldset class="fieldset col-span-3">
