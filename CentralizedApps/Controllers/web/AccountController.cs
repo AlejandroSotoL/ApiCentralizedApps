@@ -1,14 +1,22 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using CentralizedApps.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace CentralizedApps.Controllers
 {
     public class AccountController : Controller
     {
-        // 🔹 Mostrar el formulario de login
+        private readonly IUnitOfWork _Unit;
+        public AccountController(IUnitOfWork Unit)
+        {
+            _Unit = Unit;
+        }
+
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
@@ -21,19 +29,21 @@ namespace CentralizedApps.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password, string? returnUrl = null)
         {
-            if (username == "admin" && password == "1234")
+            if (!username.IsNullOrEmpty())
             {
+                var response = await _Unit.AuthRepositoryUnitOfWork.LoginAdmins(username, password);
+
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Role, "Admin")
+                    new Claim(ClaimTypes.Name, response.CompleteName),
+                    new Claim(ClaimTypes.Role, response?.IdRolNavigation?.TypeRole ?? "")
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
                 {
                     IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) 
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
                 };
 
                 await HttpContext.SignInAsync(
