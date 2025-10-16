@@ -8,6 +8,5 @@ public partial class DocumentType
 
     public string? NameDocument { get; set; }
 
-    [JsonIgnore]
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

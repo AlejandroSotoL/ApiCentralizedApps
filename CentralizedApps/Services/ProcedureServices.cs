@@ -1,11 +1,10 @@
 
-using CentralizedApps.Models.Dtos;
-using CentralizedApps.Repositories.Interfaces;
-using CentralizedApps.Models.Entities;
-using CentralizedApps.Services.Interfaces;
 using AutoMapper;
+using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
-using Microsoft.AspNetCore.Http.HttpResults;
+using CentralizedApps.Models.Entities;
+using CentralizedApps.Repositories.Interfaces;
+using CentralizedApps.Services.Interfaces;
 
 namespace CentralizedApps.Services
 {
@@ -296,7 +295,7 @@ namespace CentralizedApps.Services
 
         public async Task<ValidationResponseDto> updateQueryField(int id, QueryFieldDto updatequeryFieldDto)
         {
-            var queryField = await _unitOfWork.genericRepository<QueryFieldDto>().GetByIdAsync(id);
+            var queryField = await _unitOfWork.genericRepository<QueryField>().GetByIdAsync(id);
             if (queryField == null)
             {
                 return new ValidationResponseDto
@@ -310,7 +309,7 @@ namespace CentralizedApps.Services
             queryField.MunicipalityId = queryField.MunicipalityId;
             queryField.FieldName = updatequeryFieldDto.FieldName;
             queryField.QueryFieldType = updatequeryFieldDto.QueryFieldType;
-            _unitOfWork.genericRepository<QueryFieldDto>().Update(queryField);
+            _unitOfWork.genericRepository<QueryField>().Update(queryField);
             await _unitOfWork.SaveChangesAsync();
 
             return new ValidationResponseDto
@@ -819,7 +818,7 @@ namespace CentralizedApps.Services
 
                 find.IsActive = status;
                 find.IntegrationType = IntegrationType;
-                
+
                 _unitOfWork.genericRepository<MunicipalityProcedure>().Update(find);
                 var rows = await _unitOfWork.SaveChangesAsync();
                 if (rows > 0 && find != null)

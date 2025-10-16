@@ -13,7 +13,7 @@ namespace CentralizedApps.Services.Interfaces
         Task<ValidationResponseDto> UpdatePaymentHistory(int id, int idStatusType);
         Task<ValidationResponseDto> DeletePaymentHistory(int idUser, int idHistory);
         Task<List<AvailibityDto>> getAllAvailibity();
-
+        Task<List<CompletePaymentDto>> getAllPaymentHistory();
 
     }
 }

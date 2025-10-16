@@ -9,12 +9,14 @@ using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services;
 using CentralizedApps.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CentralizedApps.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class ProceduresController : ControllerBase
     {
         private readonly IProcedureServices _ProcedureServices;
@@ -28,7 +30,7 @@ namespace CentralizedApps.Controllers
         }
 
         [HttpPut("Update/Status/Municipality/Id")]
-        public async Task<ValidationResponseDto> UpdateStatusMunicipality(int id , bool status)
+        public async Task<ValidationResponseDto> UpdateStatusMunicipality(int id, bool status)
         {
             try
             {
@@ -39,7 +41,9 @@ namespace CentralizedApps.Controllers
                     BooleanStatus = response.BooleanStatus,
                     CodeStatus = response.CodeStatus
                 };
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return new ValidationResponseDto
                 {
                     SentencesError = $"Tenemos problemas -> ${ex.Message}",
@@ -85,7 +89,7 @@ namespace CentralizedApps.Controllers
             }
         }
 
-        
+
         [HttpPut("Update/Status/SportFacilietes/{id}")]
         public async Task<ValidationResponseDto> UpdateStatusSportFacilietes(int id, bool status)
         {
@@ -490,9 +494,6 @@ namespace CentralizedApps.Controllers
                     SentencesError = "Error al actualizar la noticia: " + e.Message
                 };
             }
-            }
-
+        }
     }
 }
-
-

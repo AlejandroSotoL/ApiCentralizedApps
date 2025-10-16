@@ -6,12 +6,15 @@ using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Models.RemidersDto;
 using CentralizedApps.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CentralizedApps.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
+    
     public class RemindersController : ControllerBase
     {
         private readonly IRemidersService _RemidersService;
@@ -62,7 +65,7 @@ namespace CentralizedApps.Controllers
         public async Task<ActionResult<List<ResponseReminderDto>>> GetReminders(int userId)
         {
             try
-            { 
+            {
                 var response = await _RemidersService.GetRemindersByUserId(userId);
 
                 return response;

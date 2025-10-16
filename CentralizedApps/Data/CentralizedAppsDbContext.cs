@@ -107,7 +107,10 @@ public partial class CentralizedAppsDbContext : DbContext
         modelBuilder.Entity<ConfiguracionEmail>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Configur__3214EC07CD0A1474");
+<<<<<<< HEAD
 
+=======
+>>>>>>> 45979831012e6e5b0f29822061f5883076c0aa6d
             entity.HasIndex(e => e.Recurso, "IX_ConfiguracionEmails_Recurso");
 
             entity.Property(e => e.FechaCreacion)

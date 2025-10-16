@@ -5,11 +5,15 @@ using CentralizedApps.Services;
 using CentralizedApps.Services.Interfaces;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
+using Microsoft.AspNetCore.Authorization;
+using CentralizedApps.Models.Entities;
 
 namespace CentralizedApps.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
+
     public class ProcessOfMunicipalitiesController : ControllerBase
     {
 
@@ -23,8 +27,6 @@ namespace CentralizedApps.Controllers
             _ProcedureServices = ProcedureServices;
         }
 
-
-        //Asign a procedure to a municipality.
         [HttpPost("Asing/Procedure")]
         public async Task<IActionResult> AsingProccessToMunicipality(MunicipalityProcedureAddDto municipalityProcedureAddDto)
         {
@@ -151,7 +153,7 @@ namespace CentralizedApps.Controllers
             return result;
         }
         [HttpPut("Update/ProcedureStatus/{id}")]
-        public async Task<ValidationResponseDto> UpdateProcedureStatus(int id, [FromQuery] bool ?status , [FromQuery] string IntegrationType)
+        public async Task<ValidationResponseDto> UpdateProcedureStatus(int id, [FromQuery] bool? status, [FromQuery] string IntegrationType)
         {
             if (id <= 0 || status == null || IntegrationType == null)
             {
@@ -183,6 +185,5 @@ namespace CentralizedApps.Controllers
                 };
             }
         }
-
     }
 }
