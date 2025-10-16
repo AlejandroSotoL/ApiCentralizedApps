@@ -60,10 +60,6 @@ public partial class CentralizedAppsDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-CJE8DS1;Database=CentralizedApps;Trusted_Connection=True;TrustServerCertificate=True;");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Admin>(entity =>
@@ -107,10 +103,6 @@ public partial class CentralizedAppsDbContext : DbContext
         modelBuilder.Entity<ConfiguracionEmail>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Configur__3214EC07CD0A1474");
-<<<<<<< HEAD
-
-=======
->>>>>>> 45979831012e6e5b0f29822061f5883076c0aa6d
             entity.HasIndex(e => e.Recurso, "IX_ConfiguracionEmails_Recurso");
 
             entity.Property(e => e.FechaCreacion)
