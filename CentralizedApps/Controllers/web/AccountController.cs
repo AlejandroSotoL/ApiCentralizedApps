@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
+
 namespace CentralizedApps.Controllers
 {
     public class AccountController : Controller
@@ -59,6 +60,7 @@ namespace CentralizedApps.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -66,9 +68,9 @@ namespace CentralizedApps.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult AccessDenied()
+        public IActionResult AccessDenied(string? returnUrl = null)
         {
-            return View();
+            return View(returnUrl ?? "Login");
         }
     }
 }

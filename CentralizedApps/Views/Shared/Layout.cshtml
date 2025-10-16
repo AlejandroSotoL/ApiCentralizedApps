@@ -45,7 +45,7 @@
             </footer>
         </div>
 
-        @if (User.IsInRole("Admin"))
+        @if (User.IsInRole("Administrador"))
         {
             <div class="drawer-side">
                 <label for="my-drawer" class="drawer-overlay"></label>
@@ -59,7 +59,7 @@
                     <ul class="menu space-y-1">
                         <li class="menu-title">Administración</li>
                         <li>
-                            <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                            <a href="/" class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">dashboard</span>
                                 Administración Centralización
                             </a>
@@ -68,7 +68,7 @@
                         <li class="menu-title">Procesos</li>
                         <li>
                             <a href="/Transactions/Index"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">sync_alt</span>
                                 Transacciones Generales
                             </a>
@@ -76,7 +76,7 @@
 
                         <li>
                             <a href="/GeneralProcedures/Index"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">schema</span>
                                 Procesos y sus tipos
                             </a>
@@ -85,7 +85,7 @@
                         <li class="menu-title">Municipios</li>
                         <li>
                             <a href="/Municipality/BankIndex"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">account_balance</span>
                                 Bancos
                             </a>
@@ -93,7 +93,7 @@
 
                         <li>
                             <a href="/Municipality/GraphicThemes"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">palette</span>
                                 Temas Gráficos
                             </a>
@@ -101,7 +101,7 @@
 
                         <li>
                             <a href="/Web/SubirImagen"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">image</span>
                                 Escudos de las Alcaldías
                             </a>
@@ -109,7 +109,7 @@
 
                         <li>
                             <a href="/Municipality/deparmentIndex"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">apartment</span>
                                 Departamentos
                             </a>
@@ -117,7 +117,7 @@
 
                         <li>
                             <a href="/Municipality/Index"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">location_city</span>
                                 Alcaldías
                             </a>
@@ -125,7 +125,7 @@
 
                         <li>
                             <a href="/Municipality/QueryFieldIndex"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">manage_search</span>
                                 Campo Consulta
                             </a>
@@ -133,7 +133,7 @@
 
                         <li>
                             <a href="/Municipality/MunicipalitySocialMediaIndex"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">share</span>
                                 Redes Sociales
                             </a>
@@ -141,7 +141,7 @@
 
                         <li>
                             <a href="/Municipality/CourseIndex"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">school</span>
                                 Cursos por Alcaldía
                             </a>
@@ -149,7 +149,7 @@
 
                         <li>
                             <a href="/Municipality/SportsFacilitiesIndex"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">sports_soccer</span>
                                 Escenarios deportivos
                             </a>
@@ -157,7 +157,7 @@
 
                         <li>
                             <a href="/Municipality/NewsMunicipalityIndex"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">newspaper</span>
                                 Noticias
                             </a>
@@ -165,7 +165,7 @@
 
                         <li>
                             <a href="/Municipality/DocomentTypeIndex"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">description</span>
                                 Tipos de Documento
                             </a>
@@ -173,7 +173,7 @@
 
                         <li class="pt-2">
                             <a href="/Account/Logout"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-100 transition">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-100">
                                 <span class="material-icons-outlined text-lg">logout</span>
                                 Cerrar Sesión
                             </a>
@@ -183,7 +183,7 @@
 
                         <li>
                             <a href="/Web/EnDesarrollo"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg opacity-70 cursor-not-allowed hover:bg-base-200 transition">
+                                class="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">credit_card</span>
                                 Estado de los pagos (Próximamente)
                             </a>
@@ -191,7 +191,7 @@
 
                         <li>
                             <a href="/Web/EnDesarrollo"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg opacity-70 cursor-not-allowed hover:bg-base-200 transition">
+                                class="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">groups</span>
                                 Personas naturales - Invitados
                             </a>

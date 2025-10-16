@@ -2,9 +2,12 @@ using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CentralizedApps.Controllers.Web
 {
+    [Authorize(Roles = "Administrador")]
     public class WebController : Controller
     {
         private readonly IWebHostEnvironment _env;
