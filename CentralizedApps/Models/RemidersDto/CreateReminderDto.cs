@@ -10,10 +10,10 @@ namespace CentralizedApps.Models.Dtos
         public int? IdProcedureMunicipality { get; set; }
         public int? IdUser { get; set; }
         public DateOnly? ExpirationDate { get; set; }
-
         public string? VigenciaDate { get; set; }
-
         public string? ReminderType { get; set; }
+        public string? ReminderName { get; set; }
+        public TimeOnly? ReminderTime { get; set; }
 
     }
 }

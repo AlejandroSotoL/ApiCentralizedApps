@@ -76,18 +76,38 @@ namespace CentralizedApps.Repositories
                     return null;
                 }
 
-                //bool passwordValid = BCrypt.Net.BCrypt.Verify(Password, user.PasswordAdmin);
-                //if (!passwordValid)
-                //{
-                //    return null;
-                //}
-
-
+                // bool passwordValid = BCrypt.Net.BCrypt.Verify(Password, user.PasswordAdmin);
+                // if (!passwordValid)
+                // {
+                //     return null;
+                // }
                 return user;
             }
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public Task<bool> AddAdmin(string completeName, string username, string password)
+        {
+            try
+            {
+                var newAdmin = new Admin
+                {
+                    CompleteName = completeName,
+                    UserNanem = username,
+                    PasswordAdmin = BCrypt.Net.BCrypt.HashPassword(password),
+                    IdRol = 1
+                };
+
+                _Context.Admins.Add(newAdmin);
+                _Context.SaveChanges();
+                return Task.FromResult(true);
+            }
+            catch (Exception)
+            {
+                return Task.FromResult(false);
             }
         }
     }

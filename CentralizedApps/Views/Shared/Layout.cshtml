@@ -170,6 +170,13 @@
                                 Tipos de Documento
                             </a>
                         </li>
+                        <li class="pt-2">
+                            <a href="/Account/Logout"
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition hover:bg-primary-500">
+                                <span class="material-icons-outlined text-lg">people</span>
+                                Agregar Administradores
+                            </a>
+                        </li>
 
                         <li class="pt-2">
                             <a href="/Account/Logout"
@@ -219,3 +226,124 @@
 </body>
 
 </html>
+
+<dialog id="my_modal" class="modal">
+    <div class="modal-box rounded-2xl bg-white shadow-2xl border border-gray-100">
+        <h3 class="font-bold text-2xl text-gray-800 mb-2">Registrar Administrador</h3>
+        <p class="text-sm text-gray-500 mb-4">
+            Completa la información para agregar un nuevo administrador.
+        </p>
+
+        <form method="post" asp-controller asp-action="AddAdmin" class="space-y-4">
+            <div>
+                <label class="label">
+                    <span class="label-text font-semibold">Nombre completo</span>
+                </label>
+                <input type="text" name="completeName" placeholder="Ej: María Pérez"
+                    class="input input-bordered w-full rounded-xl focus:ring-2 focus:ring-blue-400" required />
+            </div>
+
+            <div>
+                <label class="label">
+                    <span class="label-text font-semibold">Usuario</span>
+                </label>
+                <input type="text" name="username" placeholder="Ej: mperez"
+                    class="input input-bordered w-full rounded-xl focus:ring-2 focus:ring-blue-400" required />
+            </div>
+
+            <div>
+                <label class="label">
+                    <span class="label-text font-semibold">Contraseña</span>
+                </label>
+                <div class="relative">
+                    <input type="password" name="password" id="password" placeholder="Mínimo 6 caracteres"
+                        class="input input-bordered w-full rounded-xl pr-20 focus:ring-2 focus:ring-blue-400"
+                        required />
+                    <button type="button" onclick="togglePassword()"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-blue-600 hover:text-blue-800">
+                        Mostrar
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button" class="btn btn-ghost" onclick="my_modal.close()">Cancelar</button>
+                <button type="submit" class="btn btn-primary rounded-xl px-6">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<!-- Modal de DaisyUI -->
+<dialog id="my_modal" class="modal">
+    <div class="modal-box rounded-2xl bg-white shadow-2xl border border-gray-100">
+        <h3 class="font-bold text-2xl text-gray-800 mb-2">Registrar Administrador</h3>
+        <p class="text-sm text-gray-500 mb-4">
+            Completa la información para agregar un nuevo administrador.
+        </p>
+
+        <form method="post" asp-action="AddAdmin" class="space-y-4">
+
+            <!-- Nombre completo -->
+            <div>
+                <label class="label">
+                    <span class="label-text font-semibold">Nombre completo</span>
+                </label>
+                <input type="text" name="completeName" placeholder="Ej: María Pérez"
+                    class="input input-bordered w-full rounded-xl focus:ring-2 focus:ring-blue-400" required />
+            </div>
+
+            <!-- Nombre de usuario -->
+            <div>
+                <label class="label">
+                    <span class="label-text font-semibold">Usuario</span>
+                </label>
+                <input type="text" name="username" placeholder="Ej: mperez"
+                    class="input input-bordered w-full rounded-xl focus:ring-2 focus:ring-blue-400" required />
+            </div>
+
+            <!-- Contraseña -->
+            <div>
+                <label class="label">
+                    <span class="label-text font-semibold">Contraseña</span>
+                </label>
+                <div class="relative">
+                    <input type="password" name="password" id="password" placeholder="Mínimo 6 caracteres"
+                        class="input input-bordered w-full rounded-xl pr-20 focus:ring-2 focus:ring-blue-400"
+                        required />
+                    <button type="button" onclick="togglePassword()"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-blue-600 hover:text-blue-800">
+                        Mostrar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button" class="btn btn-ghost" onclick="my_modal.close()">Cancelar</button>
+                <button type="submit" class="btn btn-primary rounded-xl px-6">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+<script>
+    function togglePassword() {
+        const pass = document.getElementById("password");
+        const btn = event.target;
+        if (pass.type === "password") {
+            pass.type = "text";
+            btn.textContent = "Ocultar";
+        } else {
+            pass.type = "password";
+            btn.textContent = "Mostrar";
+        }
+    }
+</script>
