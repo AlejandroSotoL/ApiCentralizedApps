@@ -203,7 +203,7 @@ namespace CentralizedApps.Controllers.web
             {
                 if (!ModelState.IsValid)
                 {
-                    TempData["Error"] = "Datos inv�lidos, verifica la informaci�n.";
+                    TempData["Error"] = "Datos inv lidos, verifica la informaci n.";
                     return RedirectToAction(nameof(GraphicThemes));
                 }
 
@@ -991,4 +991,3 @@ namespace CentralizedApps.Controllers.web
         }
     }
 }
-

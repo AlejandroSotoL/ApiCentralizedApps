@@ -15,8 +15,8 @@
     <div class="bg-base-300 grid grid-cols-1 md:grid-cols-2 p-6 rounded-2xl gap-4">
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Seleccionar departamento existente</legend>
-            <select id="selectDepartment" name="id" class="select w-full">
-                <option disabled selected>Seleccione un departamento</option>
+            <select id="selectDepartment" name="id" class="select w-full" required>
+                <option disabled selected value="">Seleccione un departamento</option>
                 @foreach (var department in Model)
                 {
                     <option value="@department.Id">@department.Name</option>
@@ -28,7 +28,7 @@
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nombre del departamento</legend>
                 <input id="inputDepartment" type="text" class="input w-full" name="Name"
-                    placeholder="Ej: Cundinamarca" />
+                    placeholder="Ej: Cundinamarca" required/>
             </fieldset>
 
             <div class="flex  justify-center md:justify-end gap-6 p-5">
@@ -50,7 +50,7 @@
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Nombre del departamento</legend>
                     <input id="inputDepartment" type="text" class="input w-full" name="Name"
-                        placeholder="Ej: Cundinamarca" />
+                        placeholder="Ej: Cundinamarca" required />
                 </fieldset>
 
                 <button class="btn btn-success">Crear</button>

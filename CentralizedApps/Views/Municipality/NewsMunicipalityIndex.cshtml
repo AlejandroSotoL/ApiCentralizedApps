@@ -23,8 +23,8 @@
                 <div class=" grid md:grid-cols-2 gap-4 ">
                     <fieldset class="fieldset w-full ">
                         <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                        <select name="IdMunicipality" class="select w-full">
-                            <option disabled selected>Municipios</option>
+                        <select name="IdMunicipality" class="select w-full" required>
+                            <option disabled selected value="">Municipios</option>
                             @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
                             {
                                 <option value="@municipality.Id">@municipality.Name</option>
@@ -33,7 +33,7 @@
                     </fieldset>
                     <fieldset class="fieldset">
                         <legend class="fieldset-legend">GetUrlNew</legend>
-                        <input type="text" name="GetUrlNew" class="input w-full" placeholder="Enlace API / Post" />
+                        <input type="text" name="GetUrlNew" class="input w-full" placeholder="Enlace API / Post" required/>
                     </fieldset>
 
                 </div>
@@ -68,8 +68,8 @@
                     class=" w-full  md:w-1/2">
                     <fieldset class="fieldset  ">
                         <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                        <select name="id" class="select w-full" onchange="this.form.submit()">
-                            <option disabled selected>Municipios</option>
+                        <select name="id" class="select w-full" onchange="this.form.submit()" required>
+                            <option disabled selected value="">Municipios</option>
                             @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
                             {
                                 <option value="@municipality.Id">@municipality.Name</option>
@@ -98,7 +98,7 @@
                                 <legend class="fieldset-legend">GetUrlNew</legend>
                                 <div>
                                     <input type="text" name="GetUrlNew" class="input w-full" placeholder="Enlace API / Post"
-                                        value="@newsByMunicipality.GetUrlNew" />
+                                        value="@newsByMunicipality.GetUrlNew" required />
                                 </div>
                             </fieldset>
                         </div>
