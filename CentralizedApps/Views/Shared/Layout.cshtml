@@ -1,25 +1,22 @@
-﻿@using System.Security.Claims
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html data-theme="light" lang="es">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Centralización</title>
-
+    <title>@ViewData["Title"] - Mi Proyecto</title>
     <link rel="stylesheet" href="~/css/output.css" />
-    <link rel="shortcut icon" href="~/Logos/LogoTramiApp.png" />
-    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link rel="shortcut icon" href="../wwwroot/Logos/LogoTramiApp.png" />
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 
 <body class="bg-base-200 text-base-content min-h-screen">
     <div class="drawer">
         <input id="my-drawer" type="checkbox" class="drawer-toggle" />
 
-        <!-- CONTENIDO PRINCIPAL -->
         <div class="drawer-content flex flex-col">
-            <!-- NAVBAR -->
             <header class="navbar bg-base-100 shadow-md">
                 <label for="my-drawer" class="btn btn-square btn-ghost">
                     <span class="material-icons-outlined text-xl">menu</span>
@@ -37,27 +34,25 @@
                 </div>
             </header>
 
-            <!-- CUERPO -->
+            @RenderSection("Scripts", required: false)
+
             <main class="flex-1 p-6">
                 @RenderBody()
             </main>
 
-            <!-- FOOTER -->
             <footer class="footer footer-center bg-base-300 text-base-content p-4 text-center">
-                <p>&copy; 2025 - 1cero1 Software - CENTRALIZACIÓN</p>
+                <p>&copy; 2025 - 1cero1 Software - CENTRALIZACION</p>
             </footer>
         </div>
 
-        <!-- MENÚ LATERAL SOLO PARA ADMIN -->
         @if (User.IsInRole("Administrador"))
         {
             <div class="drawer-side">
                 <label for="my-drawer" class="drawer-overlay"></label>
-
                 <div class="bg-base-100 text-base-content min-h-full w-64 p-4">
                     <div class="mb-4 flex items-center gap-4">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwr_zZjgvmu4BccwDNIHic8K5dyehw7cSYA&s"
-                            alt="Logo" class="h-16 rounded-md shadow-md" />
+                            alt="Logo" class="h-16" />
                         <h2 class="text-lg font-bold">Bienvenido @User?.Identity?.Name</h2>
                     </div>
 
@@ -66,7 +61,7 @@
                         <li>
                             <a href="/" class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">dashboard</span>
-                                Centralización
+                                Administración Centralización
                             </a>
                         </li>
 
@@ -75,7 +70,7 @@
                             <a href="/Transactions/Index"
                                 class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">sync_alt</span>
-                                Transacciones
+                                Transacciones Generales
                             </a>
                         </li>
 
@@ -83,7 +78,7 @@
                             <a href="/GeneralProcedures/Index"
                                 class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">schema</span>
-                                Procesos y Tipos
+                                Procesos y sus tipos
                             </a>
                         </li>
 
@@ -108,7 +103,7 @@
                             <a href="/Web/SubirImagen"
                                 class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">image</span>
-                                Escudos Alcaldías
+                                Escudos de las Alcaldías
                             </a>
                         </li>
 
@@ -132,7 +127,7 @@
                             <a href="/Municipality/QueryFieldIndex"
                                 class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">manage_search</span>
-                                Campos de Consulta
+                                Campo Consulta
                             </a>
                         </li>
 
@@ -156,7 +151,7 @@
                             <a href="/Municipality/SportsFacilitiesIndex"
                                 class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">sports_soccer</span>
-                                Escenarios Deportivos
+                                Escenarios deportivos
                             </a>
                         </li>
 
@@ -177,18 +172,28 @@
                         </li>
 
                         <li class="pt-2">
-                            <button onclick="my_modal.showModal()"
-                                class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-primary transition hover:bg-primary/10">
-                                <span class="material-icons-outlined text-lg">person_add</span>
-                                Agregar Administrador
-                            </button>
-                        </li>
-
-                        <li class="pt-2">
                             <a href="/Account/Logout"
                                 class="flex items-center gap-3 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-100">
                                 <span class="material-icons-outlined text-lg">logout</span>
                                 Cerrar Sesión
+                            </a>
+                        </li>
+
+                        <hr class="mt-10" />
+
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <span class="material-icons-outlined text-lg">credit_card</span>
+                                Estado de los pagos (Próximamente)
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Web/EnDesarrollo"
+                                class="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                <span class="material-icons-outlined text-lg">groups</span>
+                                Personas naturales - Invitados
                             </a>
                         </li>
                     </ul>
@@ -197,88 +202,20 @@
         }
     </div>
 
-    <!-- 🌙 CAMBIO DE TEMA -->
     <script>
         const html = document.documentElement;
         const themeButton = document.getElementById('toggle-theme');
+
         const savedTheme = localStorage.getItem('theme') || 'light';
         html.setAttribute('data-theme', savedTheme);
 
         themeButton.addEventListener('click', () => {
-            const current = html.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
         });
     </script>
-
-    <!-- 🧱 MODAL REGISTRO ADMIN -->
-    <dialog id="my_modal" class="modal">
-        <div class="modal-box rounded-2xl bg-white shadow-2xl border border-gray-100">
-            <h3 class="font-bold text-2xl text-gray-800 mb-2">Registrar Administrador</h3>
-            <p class="text-sm text-gray-500 mb-4">
-                Completa la información para agregar un nuevo administrador.
-            </p>
-
-            <form method="post" asp-controller="Account" asp-action="AddAdmin" class="space-y-4">
-                <div>
-                    <label class="label">
-                        <span class="label-text font-semibold">Nombre completo</span>
-                    </label>
-                    <input type="text" name="completeName" placeholder="Ej: María Pérez"
-                        class="input input-bordered w-full rounded-xl focus:ring-2 focus:ring-blue-400" required />
-                </div>
-
-                <div>
-                    <label class="label">
-                        <span class="label-text font-semibold">Usuario</span>
-                    </label>
-                    <input type="text" name="username" placeholder="Ej: mperez"
-                        class="input input-bordered w-full rounded-xl focus:ring-2 focus:ring-blue-400" required />
-                </div>
-
-                <div>
-                    <label class="label">
-                        <span class="label-text font-semibold">Contraseña</span>
-                    </label>
-                    <div class="relative">
-                        <input type="password" name="password" id="password" placeholder="Mínimo 6 caracteres"
-                            class="input input-bordered w-full rounded-xl pr-20 focus:ring-2 focus:ring-blue-400"
-                            required />
-                        <button type="button" onclick="togglePassword()"
-                            class="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-blue-600 hover:text-blue-800">
-                            Mostrar
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex justify-end gap-3 pt-4">
-                    <button type="button" class="btn btn-ghost" onclick="my_modal.close()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary rounded-xl px-6">Guardar</button>
-                </div>
-            </form>
-        </div>
-
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
-
-    <script>
-        function togglePassword() {
-            const pass = document.getElementById("password");
-            const btn = event.target;
-            if (pass.type === "password") {
-                pass.type = "text";
-                btn.textContent = "Ocultar";
-            } else {
-                pass.type = "password";
-                btn.textContent = "Mostrar";
-            }
-        }
-    </script>
-
-    @RenderSection("Scripts", required: false)
 </body>
 
 </html>

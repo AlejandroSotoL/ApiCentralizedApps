@@ -31,16 +31,16 @@ namespace CentralizedApps.Repositories
                     };
                 }
 
-                //bool passwordValid = BCrypt.Net.BCrypt.Verify(password, user.Password);
-                //if (!passwordValid)
-                //{
-                //    return new ValidationResponseDto
-                //    {
-                //        BooleanStatus = false,
-                //        CodeStatus = 401,
-                //        SentencesError = "Contraseña incorrecta"
-                //    };
-                //}
+                bool passwordValid = BCrypt.Net.BCrypt.Verify(password, user.Password);
+                if (!passwordValid)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 401,
+                        SentencesError = "Contraseña incorrecta"
+                    };
+                }
 
                 user.LoginStatus = true;
                 await _Context.SaveChangesAsync();
@@ -76,34 +76,18 @@ namespace CentralizedApps.Repositories
                     return null;
                 }
 
+                //bool passwordValid = BCrypt.Net.BCrypt.Verify(Password, user.PasswordAdmin);
+                //if (!passwordValid)
+                //{
+                //    return null;
+                //}
+
+
                 return user;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
-            }
-        }
-
-
-        public Task<bool> AddAdmin(string completeName, string username, string password)
-        {
-            try
-            {
-                var newAdmin = new Admin
-                {
-                    CompleteName = completeName,
-                    UserNanem = username,
-                    PasswordAdmin = BCrypt.Net.BCrypt.HashPassword(password),
-                    IdRol = 1
-                };
-
-                _Context.Admins.Add(newAdmin);
-                _Context.SaveChanges();
-                return Task.FromResult(true);
-            }
-            catch (Exception)
-            {
-                return Task.FromResult(false);
             }
         }
     }
