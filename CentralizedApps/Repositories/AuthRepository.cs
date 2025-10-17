@@ -31,16 +31,16 @@ namespace CentralizedApps.Repositories
                     };
                 }
 
-                bool passwordValid = BCrypt.Net.BCrypt.Verify(password, user.Password);
-                if (!passwordValid)
-                {
-                    return new ValidationResponseDto
-                    {
-                        BooleanStatus = false,
-                        CodeStatus = 401,
-                        SentencesError = "Contraseña incorrecta"
-                    };
-                }
+                //bool passwordValid = BCrypt.Net.BCrypt.Verify(password, user.Password);
+                //if (!passwordValid)
+                //{
+                //    return new ValidationResponseDto
+                //    {
+                //        BooleanStatus = false,
+                //        CodeStatus = 401,
+                //        SentencesError = "Contraseña incorrecta"
+                //    };
+                //}
 
                 user.LoginStatus = true;
                 await _Context.SaveChangesAsync();
@@ -76,18 +76,14 @@ namespace CentralizedApps.Repositories
                     return null;
                 }
 
-                // bool passwordValid = BCrypt.Net.BCrypt.Verify(Password, user.PasswordAdmin);
-                // if (!passwordValid)
-                // {
-                //     return null;
-                // }
                 return user;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
         }
+
 
         public Task<bool> AddAdmin(string completeName, string username, string password)
         {
