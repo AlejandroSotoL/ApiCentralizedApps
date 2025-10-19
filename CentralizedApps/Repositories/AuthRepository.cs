@@ -90,5 +90,27 @@ namespace CentralizedApps.Repositories
                 return null;
             }
         }
+
+        public async Task<bool> AddAdmin(string completeName, string username, string convertPASSWORDTO)
+        {
+            try
+            {
+                var newAdmin = new Admin
+                {
+                    CompleteName = completeName,
+                    UserNanem = username,
+                    PasswordAdmin = convertPASSWORDTO,
+                    IdRol = 1
+                };
+
+                await _Context.Admins.AddAsync(newAdmin);
+                await _Context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
