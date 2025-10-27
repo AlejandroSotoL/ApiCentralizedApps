@@ -23,27 +23,23 @@ namespace CentralizedApps.Controllers
             _RemidersService = RemidersService;
         }
 
+
         [HttpPost("Create/Reminders")]
-        public async Task<ValidationResponseDto> CreateReminders([FromBody] CreateReminderDto createReminderDto)
+        public async Task<IActionResult> CreateReminders([FromBody] CreateReminderDto createReminderDto)
         {
             try
             {
                 var response = await _RemidersService.createReminders(createReminderDto);
-                return new ValidationResponseDto
-                {
-                    CodeStatus = response.CodeStatus,
-                    BooleanStatus = response.BooleanStatus,
-                    SentencesError = response.SentencesError
-                };
+
+                return CreatedAtAction(
+                            nameof(GetReminders), // Nombre del método GET para este recurso
+                            new { id = createReminderDto.ReminderName }, // Parámetros de ruta para ese método
+                            response // El objeto creado (ResponseReminderDto)
+                        );
             }
             catch (Exception ex)
             {
-                return new ValidationResponseDto
-                {
-                    CodeStatus = 400,
-                    BooleanStatus = false,
-                    SentencesError = $"Error: {ex.Message}"
-                };
+                return StatusCode(400, $"Error interno al crear el recordatorio: {ex.Message}");
             }
         }
 

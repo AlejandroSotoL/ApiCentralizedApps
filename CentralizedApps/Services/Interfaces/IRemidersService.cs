@@ -10,7 +10,7 @@ namespace CentralizedApps.Services.Interfaces
 {
     public interface IRemidersService
     {
-        Task<ValidationResponseDto> createReminders(CreateReminderDto createReminderDto);
+        Task<ResponseReminderDto> createReminders(CreateReminderDto createReminderDto);
         Task<List<ResponseReminderDto>> GetReminders();
         Task<List<ResponseReminderDto>> GetRemindersByUserId(int userId);
     }

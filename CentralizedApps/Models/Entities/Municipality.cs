@@ -31,6 +31,10 @@ public partial class Municipality
 
     public string? DataProcessingPrivacy { get; set; }
 
+    public string? Latitude { get; set; }
+
+    public string? Longitude { get; set; }
+
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
     public virtual Department? Department { get; set; }

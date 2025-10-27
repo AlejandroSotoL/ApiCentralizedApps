@@ -251,6 +251,8 @@ namespace CentralizedApps.Controllers.web
                     response.DataPrivacy = municipality.DataPrivacy;
                     response.DataProcessingPrivacy = municipality.DataProcessingPrivacy;
                     response.IsActive = response.IsActive;
+                    response.Latitude = municipality.Latitude;
+                    response.Longitude = municipality.Longitude;
                 }
                 else
                 {

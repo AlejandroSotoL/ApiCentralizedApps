@@ -601,6 +601,8 @@ namespace CentralizedApps.Services
                 existingMunicipality.Domain = municipalityDto.Domain;
                 existingMunicipality.UserFintech = municipalityDto.UserFintech;
                 existingMunicipality.PasswordFintech = municipalityDto.PasswordFintech;
+                existingMunicipality.Latitude = municipalityDto.Latitude;
+                existingMunicipality.Longitude = municipalityDto.Longitude;
 
                 if (departmentEntity != null)
                     existingMunicipality.Department = departmentEntity;
