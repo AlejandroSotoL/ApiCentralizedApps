@@ -67,12 +67,14 @@ namespace CentralizedApps.Repositories
         {
             try
             {
+                Console.WriteLine(Username);
                 var user = await _Context.Admins
                     .Include(x => x.IdRolNavigation)
                     .FirstOrDefaultAsync(u => u.UserNanem == Username);
 
                 if (user is null)
                 {
+                    Console.WriteLine("Es null");
                     return null;
                 }
 
@@ -82,7 +84,7 @@ namespace CentralizedApps.Repositories
                 //    return null;
                 //}
 
-
+                Console.WriteLine(user.CompleteName);
                 return user;
             }
             catch (Exception ex)

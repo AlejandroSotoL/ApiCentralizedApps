@@ -11,7 +11,7 @@
                     <fieldset class="space-y-4">
                         <div>
                             <label class="label font-semibold">Nombre de Usuario</label>
-                            <input  name="UserName" class="input input-bordered w-full text-lg"
+                            <input name="username" class="input input-bordered w-full text-lg"
                                 placeholder="Nombre de Usuario" />
                         </div>
                         <div>
@@ -22,7 +22,7 @@
                         <button type="submit" class="btn btn-neutral mt-4 w-full py-3 text-lg">Inicia Sesión</button>
                     </fieldset>
                 </form>
-            </div> 
+            </div>
             @if (!ViewData.ModelState.IsValid)
             {
                 <div style="color:red">

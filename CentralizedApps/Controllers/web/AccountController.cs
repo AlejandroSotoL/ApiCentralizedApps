@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace CentralizedApps.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly IUnitOfWork _Unit;
@@ -18,7 +19,6 @@ namespace CentralizedApps.Controllers
         }
 
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
@@ -26,11 +26,11 @@ namespace CentralizedApps.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string username, string password, string? returnUrl = null)
         {
-            if (!username.IsNullOrEmpty() && !password.IsNullOrEmpty())
+            if (!username.IsNullOrEmpty())
             {
                 var response = await _Unit.AuthRepositoryUnitOfWork.LoginAdmins(username, password);
                 if (response == null)
