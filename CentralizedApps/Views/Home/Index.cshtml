@@ -2,6 +2,67 @@
     Layout = "Layout";
 }
 
-@{
-    
-}
+<div class="from-primary/20 via-base-200 to-secondary/20 relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-r">
+
+    <div class="absolute inset-0 -z-10">
+        <div class="bg-primary/30 absolute top-0 left-0 h-96 w-96 animate-pulse rounded-full blur-3xl"></div>
+        <div class="bg-secondary/30 absolute right-0 bottom-0 h-96 w-96 animate-pulse rounded-full blur-3xl delay-700"></div>
+        <div class="bg-accent/20 animate-spin-slow absolute top-1/2 left-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="animate-fadeIn mx-4 max-w-2xl rounded-2xl border border-white/20 bg-white/10 p-12 text-center shadow-2xl backdrop-blur-xl">
+
+        <div class="mb-6 flex justify-center">
+            <img src="~/Logos/nuevotramiapp.png" alt="Logo"
+                 class="h-28 w-28 object-contain drop-shadow-xl transition-transform duration-500 hover:scale-110" />
+        </div>
+
+        <h1 class="text-4xl font-extrabold text-white drop-shadow-lg">
+            Bienvenido a <span class="text-primary">tu Dashboard</span>
+        </h1>
+
+        <p class="mt-4 text-lg leading-relaxed text-white/80">
+            Un espacio minimalista, potente y diseñado para que gestiones tu información con estilo.
+            Accede a tus métricas y controla todo desde un solo lugar.
+        </p>
+
+        <div class="mt-8">
+            <a href="/Home/Index"
+               class="btn btn-primary btn-lg px-10 shadow-lg transition-all duration-300 hover:shadow-primary/50 hover:scale-105">
+                🚀 Comenzar ahora
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fadeIn {
+        animation: fadeIn 1s ease-out forwards;
+    }
+
+    @@keyframes spin-slow {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .animate-spin-slow {
+        animation: spin-slow 30s linear infinite;
+    }
+</style>

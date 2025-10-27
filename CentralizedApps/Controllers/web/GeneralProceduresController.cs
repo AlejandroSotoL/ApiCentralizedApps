@@ -1,15 +1,16 @@
-﻿using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Entities;
 using CentralizedApps.Models.RemidersDto;
 using CentralizedApps.Repositories.Interfaces;
 using CentralizedApps.Services.Interfaces;
 using CentralizedApps.Services.ServicesWeb.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CentralizedApps.Controllers.web
 {
+    [Authorize(Roles = "Administrador")]
     public class GeneralProceduresController : Controller
     {
         private readonly IMunicipalityServices _MunicipalityServices;

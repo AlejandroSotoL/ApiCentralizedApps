@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
 
 namespace CentralizedApps.Models.RemidersDto
@@ -24,7 +19,7 @@ namespace CentralizedApps.Models.RemidersDto
     public class MunicipalityProcedureDto_Reminders
     {
         public int Id { get; set; }
-        public string IntegrationType { get; set; }
+        public string IntegrationType { get; set; } = string.Empty;
         public bool? IsActive { get; set; }
         public ProcedureDto? Procedures { get; set; }
         public JustMunicipalitysDto? Municipality { get; set; }
