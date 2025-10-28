@@ -78,11 +78,11 @@ namespace CentralizedApps.Repositories
                     return null;
                 }
 
-                //bool passwordValid = BCrypt.Net.BCrypt.Verify(Password, user.PasswordAdmin);
-                //if (!passwordValid)
-                //{
-                //    return null;
-                //}
+                bool passwordValid = BCrypt.Net.BCrypt.Verify(Password, user.PasswordAdmin);
+                if (!passwordValid)
+                {
+                    return null;
+                }
 
                 Console.WriteLine(user.CompleteName);
                 return user;
