@@ -11,6 +11,7 @@ using CentralizedApps.Models.Entities;
 using CentralizedApps.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace CentralizedApps.Repositories
 {
@@ -98,15 +99,37 @@ namespace CentralizedApps.Repositories
                 }
                 var random = new Random();
                 int validationCode = random.Next(100000, 999999);
+                string codeString = validationCode.ToString();
 
-                string subject = "Código de recuperación de contraseña";
-                string body = $@"
-            <h3>Recuperación de contraseña</h3>
-            <p>Tu código de validación es:</p>
-            <h2 style='color:#4364CD'>{validationCode}</h2>
-            <p>Este código expira en 10 minutos.</p>";
+                string subject = "¿Olvidaste tu contraseña?, aqui está tu código de validación.";
+                string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", "indexRecoveryCode.html");
 
-                var result = await EmailConfiguration(subject, body, To);
+                if (!File.Exists(templatePath))
+                {
+                 return new ValidationResponseExtraDto
+                 {
+                  CodeStatus = 500,
+                  SentencesError = "Error: No se encontró la plantilla de correo (index.html).",
+                  BooleanStatus = false,
+                  ExtraData = null
+                };
+                }
+
+              // 3. Leer la plantilla HTML
+        string body = await File.ReadAllTextAsync(templatePath);
+
+        // 4. Reemplazar los marcadores de posición
+        body = body.Replace("{{Email}}", To);
+        body = body.Replace("{{Code1}}", codeString[0].ToString());
+        body = body.Replace("{{Code2}}", codeString[1].ToString());
+        body = body.Replace("{{Code3}}", codeString[2].ToString());
+        body = body.Replace("{{Code4}}", codeString[3].ToString());
+        body = body.Replace("{{Code5}}", codeString[4].ToString());
+        body = body.Replace("{{Code6}}", codeString[5].ToString());
+
+        // --- FIN DE MODIFICACIÓN ---
+
+        var result = await EmailConfiguration(subject, body, To);
 
                 return new ValidationResponseExtraDto
                 {
