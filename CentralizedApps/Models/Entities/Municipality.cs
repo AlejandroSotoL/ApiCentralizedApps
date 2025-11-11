@@ -35,6 +35,12 @@ public partial class Municipality
 
     public string? Longitude { get; set; }
 
+    public string? EmailMunicipalities { get; set; }
+
+    public string? EmailPanic { get; set; }
+
+    public string? Phone { get; set; }
+
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
     public virtual Department? Department { get; set; }

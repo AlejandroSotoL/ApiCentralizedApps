@@ -315,6 +315,9 @@ namespace CentralizedApps.Controllers.web
                     response.IsActive = response.IsActive;
                     response.Latitude = municipality.Latitude;
                     response.Longitude = municipality.Longitude;
+                    response.EmailMunicipalities = municipality.EmailMunicipalities;
+                    response.EmailPanic = municipality.EmailPanic;
+                    response.Phone = municipality.Phone;
                 }
                 else
                 {

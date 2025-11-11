@@ -16,6 +16,9 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? DataProcessingPrivacy { get; set; }
         public string? Latitude { get; set; }
         public string? Longitude { get; set; }
+        public string? EmailMunicipalities { get; set; }
+        public string? EmailPanic { get; set; }
+        public string? Phone { get; set; }
         public BankDto? Bank { get; set; }
         public ShieldMunicipalityDto? IdShield { get; set; }
         public DepartmentDto? Department { get; set; }

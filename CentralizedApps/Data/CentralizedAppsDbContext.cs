@@ -172,23 +172,16 @@ public partial class CentralizedAppsDbContext : DbContext
 
             entity.Property(e => e.DataPrivacy).IsUnicode(false);
             entity.Property(e => e.DataProcessingPrivacy).IsUnicode(false);
-            entity.Property(e => e.Domain)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.EntityCode)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Domain).HasMaxLength(100).IsUnicode(false);
+            entity.Property(e => e.EntityCode).HasMaxLength(50).IsUnicode(false);
             entity.Property(e => e.IdBank).HasColumnName("Id_Bank");
             entity.Property(e => e.IdShield).HasColumnName("Id_Shield");
-            entity.Property(e => e.Latitude)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.Longitude)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            entity.Property(e => e.Latitude).HasMaxLength(100).IsUnicode(false);
+            entity.Property(e => e.Longitude).HasMaxLength(100).IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(100).IsUnicode(false);
+            entity.Property(e => e.EmailMunicipalities).IsUnicode(false);
+            entity.Property(e => e.EmailPanic).IsUnicode(false);
+            entity.Property(e => e.Phone).IsUnicode(false);
             entity.Property(e => e.PasswordFintech).IsUnicode(false);
             entity.Property(e => e.UserFintech).IsUnicode(false);
 
