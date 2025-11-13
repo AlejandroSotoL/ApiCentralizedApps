@@ -150,5 +150,98 @@ namespace CentralizedApps.Repositories
                 };
             }
         }
+
+        public async Task<ValidationResponseDto> SendEmailPanic(EmailDtoPanic emailDto)
+        {
+            try
+            {
+                string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", "panicTemplate.html");
+
+                string alertTimestamp = DateTime.Now.ToString("hh:mm tt");
+
+                string body = await File.ReadAllTextAsync(templatePath);
+
+                body = body.Replace("{{userName}}", emailDto.Name);
+                body = body.Replace("{{userEmail}}", emailDto.UserEmail);
+
+                body = body.Replace("{{alertTimestamp}}", alertTimestamp);
+
+                body = body.Replace("{{userPhone}}", emailDto.Phone);
+                body = body.Replace("{{locationCoordinates}}", emailDto.locationCoordinates);
+
+                return await EmailConfiguration(emailDto.Subject, body, emailDto.To);
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 500,
+                    SentencesError = "Error procesando correo de pánico: " + e.Message,
+                    BooleanStatus = false
+                };
+            }
+        }
+
+        public async Task<ValidationResponseDto> SendEmailReservation(EmailDtoReservations emailDto)
+        {
+            try
+            {
+                string fileName = "";
+
+                switch (emailDto.Id)
+                {
+                    case "1":
+                        fileName = "reservationCourseTemplate.html"; 
+                        break;
+                    case "2":
+                        fileName = "reservationSportTemplate.html"; 
+                        break;
+                    default:
+                        return new ValidationResponseDto
+                        {
+                            CodeStatus = 400,
+                            SentencesError = "Error: Tipo de reservación (Id) no válido.",
+                            BooleanStatus = false
+                        };
+                }
+        
+                string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", fileName);
+
+   
+                string alertTimestamp = DateTime.Now.ToString("hh:mm tt");
+                string body = await File.ReadAllTextAsync(templatePath);
+
+          
+                body = body.Replace("{{guestName}}", emailDto.NameUser);
+                body = body.Replace("{{guestEmail}}", emailDto.EmailUser);
+                body = body.Replace("{{guestPhone}}", emailDto.PhoneUser);
+                body = body.Replace("{{receptionTimestamp}}", alertTimestamp);
+
+                string dateText = emailDto.DateReservation.HasValue
+                     ? emailDto.DateReservation.Value.ToString("dd/MM/yyyy HH:mm")
+                     : "Fecha por confirmar";
+
+                body = body.Replace("{{DateReservation}}", dateText);
+
+                body = body.Replace("{{Object}}", emailDto.Type);
+                body = body.Replace("{{guestIdUser}}", emailDto.IdUser);
+                body = body.Replace("{{reservationType}}", emailDto.Type);
+                body = body.Replace("{{headerTitle}}", emailDto.Type);
+
+
+                return await EmailConfiguration(emailDto.Subject, body, emailDto.To);
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    CodeStatus = 500,
+                    SentencesError = "Error procesando correo de reservación: " + e.Message,
+                    BooleanStatus = false
+                };
+            }
+        }
+
+
     }
 }

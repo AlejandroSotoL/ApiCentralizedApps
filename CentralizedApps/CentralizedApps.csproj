@@ -56,5 +56,21 @@
     <None Include="wwwroot\Logos\nuevotramiapp.png" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Update="EmailTemplates\indexRecoveryCode.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\panicTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\reservationCourseTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\reservationSportTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
 
