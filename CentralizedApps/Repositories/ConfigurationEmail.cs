@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
+
 using System.Threading.Tasks;
 using CentralizedApps.Data;
 using CentralizedApps.Models.Dtos;
@@ -12,6 +11,10 @@ using CentralizedApps.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using MimeKit;
+using Humanizer;
+using MailKit.Net.Smtp;
 
 namespace CentralizedApps.Repositories
 {
@@ -26,41 +29,56 @@ namespace CentralizedApps.Repositories
             _Unit = Unit;
         }
 
-        public async Task<ValidationResponseDto> EmailConfiguration(string Subject, string Body, string To)
+        public async Task<ValidationResponseDto> SendEmail(string To, string Subject, string Body)
         {
             try
             {
+
+                //ACTUALIZAR CAMPOS EN LA BD PARA LA CONFIGURACION NUEVA DE EMAILS
 
                 var ExtractConfigurationEmail = await _context.ConfiguracionEmails
                     .Where(x => x.Recurso == "Servicio_Correo")
                     .ToListAsync();
 
                 var createDict = ExtractConfigurationEmail.ToDictionary(y => y.Propiedad.ToLower()
-                    , y => y.Valor);
-
+                            , y => y.Valor);
                 var RemitentEmail = createDict["correo"];
                 var password = createDict["clave"];
                 var alias = createDict["alias"];
                 var host = createDict["host"];
                 var port = int.Parse(createDict["puerto"]);
 
-                var credentials = new NetworkCredential(RemitentEmail, password);
-                using (var email = new MailMessage())
-                using (var credential = new SmtpClient(host, port))
+                int atIndex = To.IndexOf('@');
+                MailboxAddress from = new MailboxAddress("Notificaciones Trami App", "notificacionestramiapp@1cero1.com");
+                MailboxAddress to = new MailboxAddress(To.Substring(0, atIndex), To);
+                //MailboxAddress replyTo = new MailboxAddress(_nameEmailCC, _emailCC);
+
+              
+                MimeMessage msj = new MimeMessage();
+                msj.From.Add(from);
+                msj.To.Add(to);
+                //msj.Cc.Add(replyTo);
+                msj.Subject = Subject;
+
+                msj.ReplyTo.Clear(); // No permitir respuestas
+                msj.Headers.Add("Auto-Submitted", "auto-generated");
+
+                BodyBuilder bodyBuilder = new BodyBuilder
                 {
-                    email.From = new MailAddress(RemitentEmail, alias);
-                    email.Subject = Convert.ToString(Subject);
-                    email.Body = Convert.ToString(Body);
-                    email.IsBodyHtml = true;
-                    email.To.Add(new MailAddress(Convert.ToString(To)));
+                    HtmlBody = Body
+                };
 
-                    credential.Credentials = credentials;
-                    credential.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    credential.UseDefaultCredentials = false;
-                    credential.EnableSsl = true;
+                msj.Body = bodyBuilder.ToMessageBody();
 
-                    credential.Timeout = 10000;
-                    await credential.SendMailAsync(email);
+                string smtpUser = "Notificacionestramiapp@1cero1.com";
+                string smtpPass = "FaseMovil12*";
+
+                using (SmtpClient client = new SmtpClient())
+                {
+                    client.Connect("mail.1cero1.com", 465, true);
+                    client.Authenticate(smtpUser, smtpPass);
+                    client.Send(msj);
+                    client.Disconnect(true);
                 }
 
                 return new ValidationResponseDto
@@ -70,16 +88,17 @@ namespace CentralizedApps.Repositories
                     BooleanStatus = true
                 };
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 return new ValidationResponseDto
                 {
                     CodeStatus = 500,
-                    SentencesError = "An error occurred while processing your request." + e.Message,
-                    BooleanStatus = false
+                    SentencesError = "Error al enviar correo",
+                    BooleanStatus = true
                 };
             }
         }
+
 
         public async Task<ValidationResponseExtraDto> SendEmailValidationCode([FromBody] string To)
         {
@@ -129,7 +148,7 @@ namespace CentralizedApps.Repositories
 
         // --- FIN DE MODIFICACIÓN ---
 
-        var result = await EmailConfiguration(subject, body, To);
+        var result = await SendEmail(To, subject, body);
 
                 return new ValidationResponseExtraDto
                 {
@@ -169,7 +188,7 @@ namespace CentralizedApps.Repositories
                 body = body.Replace("{{userPhone}}", emailDto.Phone);
                 body = body.Replace("{{locationCoordinates}}", emailDto.locationCoordinates);
 
-                return await EmailConfiguration(emailDto.Subject, body, emailDto.To);
+                return await SendEmail(emailDto.To, emailDto.Subject, body);
             }
             catch (Exception e)
             {
@@ -229,7 +248,7 @@ namespace CentralizedApps.Repositories
                 body = body.Replace("{{headerTitle}}", emailDto.Type);
 
 
-                return await EmailConfiguration(emailDto.Subject, body, emailDto.To);
+                return await SendEmail(emailDto.To, emailDto.Subject, body);
             }
             catch (Exception e)
             {

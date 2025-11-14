@@ -63,7 +63,7 @@ namespace CentralizedApps.Controllers
             try
             {
                 return await _unitOfWork.configurationEmail
-                    .EmailConfiguration(emailDto.Subject, emailDto.Body, emailDto.To);
+                    .SendEmail(emailDto.To, emailDto.Subject, emailDto.Body);
             }
             catch (Exception e)
             {
