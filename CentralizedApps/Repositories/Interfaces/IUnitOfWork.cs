@@ -9,12 +9,12 @@ namespace CentralizedApps.Repositories.Interfaces
     {
         IAuthRepository AuthRepositoryUnitOfWork { get; }
         IUserRepository UserRepository { get; }
-        IPaymentHistoryRepository paymentHistoryRepository{ get; }
+        IPaymentHistoryRepository paymentHistoryRepository { get; }
         //Email
         IConfigurationEmail configurationEmail { get; }
 
         IGenericRepository<T> genericRepository<T>() where T : class;
-        
+
         Task<int> SaveChangesAsync();
         IExecutionStrategy GetExecutionStrategy();
         Task<IDbContextTransaction> BeginTransactionAsync();

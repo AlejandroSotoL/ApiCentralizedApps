@@ -23,23 +23,6 @@ namespace CentralizedApps.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpPost("SendEmail")]
-        public async Task<ValidationResponseDto> SendEmail([FromBody] EmailDto emailDto)
-        {
-            try
-            {
-                return await _unitOfWork.configurationEmail
-                    .EmailConfiguration(emailDto.Subject, emailDto.Body, emailDto.To);
-            }
-            catch (Exception e)
-            {
-                return new ValidationResponseDto
-                {
-                    SentencesError = "Error sending email: " + e.Message,
-                    BooleanStatus = false
-                };
-            }
-        }
 
 
         [HttpGet("SendEmail/ValidationCode")]
@@ -72,5 +55,70 @@ namespace CentralizedApps.Controllers
                 };
             }
         }
+
+
+        [HttpPost("SendEmail")]
+        public async Task<ValidationResponseDto> SendEmail([FromBody] EmailDto emailDto)
+        {
+            try
+            {
+                return await _unitOfWork.configurationEmail
+                    .SendEmail(emailDto.To, emailDto.Subject, emailDto.Body);
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    SentencesError = "Error sending email: " + e.Message,
+                    BooleanStatus = false
+                };
+            }
+        }
+
+
+        [HttpPost("SendEmail/Panic")]
+        public async Task<ValidationResponseDto> SendEmailPanic([FromBody] EmailDtoPanic emailDto)
+        {
+            try
+            {
+                if (emailDto == null)
+                {
+                    return new ValidationResponseDto { BooleanStatus = false, SentencesError = "Datos inválidos" };
+                }
+
+                return await _unitOfWork.configurationEmail.SendEmailPanic(emailDto);
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    SentencesError = "Error en endpoint Panic: " + e.Message,
+                    BooleanStatus = false
+                };
+            }
+        }
+
+        [HttpPost("SendEmail/Reservations")]
+        public async Task<ValidationResponseDto> SendEmailReservations([FromBody] EmailDtoReservations emailDto)
+        {
+            try
+            {
+                if (emailDto == null)
+                {
+                    return new ValidationResponseDto { BooleanStatus = false, SentencesError = "Datos inválidos" };
+                }
+
+                return await _unitOfWork.configurationEmail.SendEmailReservation(emailDto);
+            }
+            catch (Exception e)
+            {
+                return new ValidationResponseDto
+                {
+                    SentencesError = "Error en endpoint Reservations: " + e.Message,
+                    BooleanStatus = false
+                };
+            }
+        }
+
     }
 }

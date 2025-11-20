@@ -53,6 +53,11 @@ namespace CentralizedApps.Services.ServicesWeb
                 entity.PasswordFintech = dto.municipality?.PasswordFintech;
                 entity.DataPrivacy = dto.municipality?.DataPrivacy;
                 entity.DataProcessingPrivacy = dto.municipality?.DataProcessingPrivacy;
+                entity.Latitude = dto.municipality?.Latitude;
+                entity.Longitude = dto.municipality?.Longitude;
+                entity.EmailMunicipalities = dto.municipality?.EmailMunicipalities;
+                entity.EmailPanic = dto.municipality?.EmailPanic;
+                entity.Phone = dto.municipality?.Phone;
 
                 repo.Update(entity);
                 await _unitOfWork.SaveChangesAsync();

@@ -1,7 +1,6 @@
 using CentralizedApps.Data;
 using CentralizedApps.FluentValidation;
 using CentralizedApps.HttpClients;
-using CentralizedApps.Middelware;
 using CentralizedApps.Profile_AutoMapper;
 using CentralizedApps.Repositories;
 using CentralizedApps.Repositories.Interfaces;
@@ -88,7 +87,7 @@ builder.Services.AddScoped<IWeb, Web>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login";       // redirección al login si no hay sesión
+        options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
 

@@ -18,6 +18,11 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
         public string? NameBank { get; set; }
         public string? DataPrivacy { get; set; }
         public string? DataProcessingPrivacy { get; set; }
+        public string? Latitude { get; set; }
+        public string? Longitude { get; set; }
+        public string? EmailMunicipalities { get; set; }
+        public string? EmailPanic { get; set; }
+        public string? Phone { get; set; }
 
     }
 }

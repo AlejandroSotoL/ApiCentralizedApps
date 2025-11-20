@@ -6,6 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Models\NewFolder1\**" />
+    <Compile Remove="Models\NewFolder\**" />
+    <Content Remove="Models\NewFolder1\**" />
+    <Content Remove="Models\NewFolder\**" />
+    <EmbeddedResource Remove="Models\NewFolder1\**" />
+    <EmbeddedResource Remove="Models\NewFolder\**" />
+    <None Remove="Models\NewFolder1\**" />
+    <None Remove="Models\NewFolder\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
@@ -13,6 +24,7 @@
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 <PackageReference Include="FluentValidation" Version="11.11.0" />
 <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
+<PackageReference Include="MailKit" Version="4.14.1" />
 <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="9.0.8" />
 <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
 
@@ -28,14 +40,38 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="MimeKit" Version="4.14.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <Folder Include="Models\NewFolder1\" />
-    <Folder Include="Models\NewFolder\" />
+    <Folder Include="wwwroot\Logos\" />
     <Folder Include="wwwroot\Uploads\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="wwwroot\Logos\LogoSvg.svg" />
+    <None Include="wwwroot\Logos\LogoTramiApp.png" />
+    <None Include="wwwroot\Logos\NewTramiAppSvg.svg" />
+    <None Include="wwwroot\Logos\nuevotramiapp.png" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="EmailTemplates\indexRecoveryCode.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\panicTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\reservationCourseTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\reservationSportTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

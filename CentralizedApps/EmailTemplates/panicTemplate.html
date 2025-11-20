@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+  <title>URGENTE: Alerta de Pánico Activada</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f3f4f6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+    }
+    .header {
+      background-color: #dc2626;
+      color: #ffffff;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 10px 0 5px 0;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .alert-icon {
+      font-size: 48px;
+    }
+    .content {
+      padding: 30px 20px;
+    }
+    .alert-box {
+      background-color: #fef2f2;
+      border-left: 4px solid #dc2626;
+      padding: 15px;
+      margin-bottom: 25px;
+    }
+    .alert-box p {
+      margin: 5px 0;
+      color: #991b1b;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .info-section {
+      margin-bottom: 20px;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 20px;
+    }
+    .info-section:last-child {
+      border-bottom: none;
+    }
+    .info-label {
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .info-label .material-icons {
+      font-size: 14px; /* Ajustar tamaño del icono */
+      vertical-align: middle; /* Alinear icono con el texto */
+      margin-right: 4px;
+    }
+    .info-value {
+      color: #111827;
+      font-size: 16px;
+      margin: 0 0 10px 0;
+      line-height: 1.5;
+    }
+    .action-button {
+      display: inline-block;
+      background-color: #059669;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-weight: bold;
+      margin: 10px 0;
+      text-align: center;
+    }
+    .action-button:hover {
+      background-color: #047857;
+    }
+    .footer {
+      background-color: #f9fafb;
+      padding: 20px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .priority-badge {
+      background-color: #991b1b;
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .priority-badge .material-icons, .action-required-box .material-icons {
+      font-size: inherit;
+      vertical-align: text-bottom;
+      margin-right: 4px;
+    }
+    @media only screen and (max-width: 600px) {
+      .content {
+        padding: 20px 15px;
+      }
+      .action-button {
+        display: block;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="alert-icon">⚠️</div>
+      <h1>ALERTA DE PÁNICO ACTIVADA</h1>
+      <p style="margin: 5px 0 0 0; font-size: 14px;">SE REQUIERE ATENCIÓN INMEDIATA</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <div class="priority-badge"> PRIORIDAD CRÍTICA</div>
+      
+      <div class="alert-box">
+        <p><strong>Se ha activado una alerta de pánico y requiere respuesta inmediata.</strong></p>
+      </div>
+
+      <!-- User Information -->
+      <div class="info-section">
+        <div class="info-label">👤 Información del Usuario</div>
+        <p class="info-value">
+          <strong>{{userName}}</strong><br>
+          Correo: {{userEmail}}<br>
+          Teléfono: {{userPhone}}
+        </p>
+      </div>
+
+      <!-- Timestamp -->
+      <div class="info-section">
+        <div class="info-label">🕐 Hora de la Alerta</div>
+        <p class="info-value">{{alertTimestamp}}</p>
+      </div>
+
+      <!-- Location -->
+      <div class="info-section">
+        <div class="info-label">📍 Ubicación</div>
+        <p class="info-value">
+          <br>
+          <span style="color: #6b7280; font-size: 14px;">Coordenadas: {{locationCoordinates}}</span>
+          <br>
+          <a href="https://www.google.com/maps/search/?api=1&query={{locationCoordinates}}" target="_blank" style="color: #059669; text-decoration: underline; font-size: 14px; font-weight: bold;">
+            Ver en Google Maps
+          </a>
+        </p>
+      </div>
+
+      <!-- Additional Information -->
+      <div class="info-section">
+        <div class="info-label">ℹ️ Información Adicional</div>
+        <p class="info-value">El usuario activó el botón de pánico desde su dispositivo móvil</p>
+      </div>
+
+      <!-- Call to Action -->
+      <div style="margin-top: 30px; text-align: center;">
+        <a href="tel:{{userPhone}}" class="action-button">Llamar al Usuario</a>
+      </div>
+
+      <div class="action-required-box" style="margin-top: 25px; padding: 15px; background-color: #fffbeb; border-radius: 5px; border-left: 4px solid #f59e0b;">
+        <p style="margin: 0; color: #92400e; font-size: 14px; line-height: 1.5;">
+          <strong>⚡ Acción Requerida:</strong> Por favor, responda a esta alerta inmediatamente. Contacte a los servicios de emergencia si es necesario y verifique la seguridad del individuo.
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p style="margin: 0 0 10px 0;">
+        Esta es una notificación automática de alerta de pánico enviada desde la Trami App Municipios. No responda a este correo.
+      </p>
+      <p style="margin: 0;">
+        Para soporte técnico, contacte al area de Soporte, al correo soporte@1cero1.com<br>
+        © 101 Software 2025 Sistema de Alertas de Emergencia. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

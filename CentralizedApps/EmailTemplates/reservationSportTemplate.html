@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>Reserva Confirmada - Trami App Municipios</title>
+  <style>
+    /* --- ESTILOS BASE (Modo Claro) --- */
+    body { font-family: Arial, sans-serif; background-color: #f9fafb; padding: 32px; margin: 0; }
+    .container { max-width: 672px; margin: 0 auto; background-color: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); overflow: hidden; }
+    
+    .logo-header { background-color: white; border-bottom: 1px solid #e5e7eb; padding: 24px; text-align: center; }
+    .logo-header img { height: 48px; }
+    
+    .header { background: linear-gradient(to right, #2563eb, #1d4ed8); padding: 32px; color: white; }
+    .header h1 { margin: 0; font-size: 24px; }
+    .header-icon { display: inline-block; width: 32px; height: 32px; vertical-align: middle; margin-right: 12px; }
+    
+    .content { padding: 32px; }
+    .section { border-left: 4px solid #2563eb; padding-left: 16px; padding-top: 8px; padding-bottom: 8px; margin-bottom: 24px; }
+    .section.green { border-left-color: #202020; }
+    .section h2 { color: #6b7280; font-size: 18px; margin-bottom: 16px; }
+    
+    .field { display: flex; margin-bottom: 16px; }
+    .field-icon { color: #9ca3af; margin-right: 12px; width: 20px; }
+    .field-label { color: #6b7280; font-size: 14px; }
+    .field-value { color: #111827; font-size: 16px; margin-top: 4px; }
+    
+    .footer-note { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb; text-align: center; color: #6b7280; }
+    .footer { background-color: #f9fafb; border-top: 1px solid #e5e7eb; padding: 24px 32px; }
+    
+    .partner-logos-container { padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; margin-bottom: 20px; }
+    .partner-logos img { height: 24px; }
+    .divider { width: 1px; height: 32px; background-color: #d1d5db; }
+    
+    .social-media-container { margin-bottom: 20px; }
+    .social-media a { color: #6b7280; text-decoration: none; }
+    
+    .footer-text { text-align: justify; color: #6b7280; font-size: 12px; margin-bottom: 12px; }
+    .copyright { text-align: center; color: #9ca3af; font-size: 14px; }
+
+    /* --- MODO OSCURO (Dark Mode) --- */
+    @media (prefers-color-scheme: dark) {
+        body { background-color: #1a1a1a !important; }
+        .container { background-color: #262626 !important; color: #e5e5e5 !important; }
+        .logo-header { background-color: #262626 !important; border-bottom-color: #404040 !important; }
+        
+        /* Textos */
+        .section h2 { color: #d1d5db !important; }
+        .field-label { color: #9ca3af !important; }
+        .field-value { color: #f3f4f6 !important; }
+        .footer-note { color: #9ca3af !important; border-top-color: #404040 !important; }
+        
+        /* Footer */
+        .footer { background-color: #1f1f1f !important; border-top-color: #404040 !important; }
+        .partner-logos-container { border-bottom-color: #404040 !important; }
+        .divider { background-color: #6b7280 !important; }
+        
+        /* INVERSIÓN DE LOGOS (Negro -> Blanco) */
+        .logo-header img {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .partner-logos img {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        /* Links y Copy */
+        .footer-text { color: #9ca3af !important; }
+        .copyright { color: #6b7280 !important; }
+        a { color: #9ca3af !important; }
+    }
+
+        @media (max-width: 600px) {
+      body { padding: 16px; }
+      .container { border-radius: 0; }
+      .header { padding: 24px 16px; }
+      .header h1 { font-size: 20px; }
+      .content { padding: 24px 16px; }
+      .section { padding-left: 12px; }
+      .section h2 { font-size: 16px; }
+      .field-value { font-size: 15px; }
+      .footer { padding: 24px 16px; }
+      .footer-text { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-header">
+      <img src="https://apicentralizate.1cero1.com/uploads/Logos/nuevotramiapp_20251112_142924.png" alt="Trami App Municipios">
+    </div>
+    <div class="header">
+        <h1>{{headerTitle}}</h1>
+      <p>{{body}}</p>
+    </div>
+    <div class="content">
+      <div class="section">
+        <h2>Detalles del usuario</h2>
+        <div class="field">
+          <div>
+            <div class="field-label">Identificación</div>
+            <div class="field-value">{{guestIdUser}}</div>
+          </div>
+        </div>
+        <div class="field">
+          <div>
+            <div class="field-label">Nombre</div>
+            <div class="field-value">{{guestName}}</div>
+          </div>
+        </div>
+        <div class="field">
+          <div>
+            <div class="field-label">Correo Electrónico</div>
+            <div class="field-value">{{guestEmail}}</div>
+          </div>
+        </div>
+        <div class="field">
+          <div>
+            <div class="field-label">Teléfono</div>
+            <div class="field-value">{{guestPhone}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="section green">
+        <h2>Detalles de la Reserva</h2>
+        <div class="field">
+          <div>
+            <div class="field-label">Fecha y Hora</div>
+            <div class="field-value">{{DateReservation}}</div>
+          </div>
+        </div>
+        <div class="field">
+          <div>
+            <div class="field-label">Tipo de Reserva</div>
+            <div class="field-value">{{reservationType}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">
+        Esta reserva fue recibida el {{receptionTimestamp}}
+      </div>
+    </div>
+    <div class="footer">
+      <div class="partner-logos-container">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation">
+          <tr>
+            <td class="partner-logos">
+              <img alt="101 Software" src="https://apicentralizate.1cero1.com/uploads/Logos/101%20Software_Negro_20251112_142754.png">
+            </td>
+            <td style="width: 20px;"></td>
+            <td><div class="divider"></div></td>
+            <td style="width: 20px;"></td>
+            <td class="partner-logos">
+              <img alt="101 Fintech" src="https://apicentralizate.1cero1.com/uploads/Logos/101%20Fintech_Negro_20251112_142831.png">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="social-media-container">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation">
+          <tr>
+            <td class="social-media">
+              <a href="https://www.facebook.com/1cero1Fintech/?locale=es_LA" target="_blank">
+                <img alt="Facebook" height="24" src="https://e.hypermatic.com/50ba9dfc21e1059cb23a17a0113b7715.png" style="display:block;" width="24">
+              </a>
+            </td>
+            <td style="width: 16px;"></td>
+            <td class="social-media">
+              <a href="https://www.instagram.com/101software?igsh=MXBwb3MxeHE1cTZtcw==" target="_blank">
+                <img alt="Instagram" height="24" src="https://e.hypermatic.com/5bf9d6cddd6b432a8ea609d1c0bdd567.png" style="display:block;" width="24">
+              </a>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="footer-text">
+        Este es un correo electrónico de notificación automática realizada a travéz de la aplicación Trami App Municipios. Por favor, no responda a este mensaje. El contenido de este correo es para uso exclusivo del destinatario indicado. Si usted no es el destinatario intencional, por favor comuníquenoslo de inmediato. Cualquier reproducción, difusión o uso no autorizado está prohibido y puede ser penalizado por la ley. Para más información consulte nuestra 
+        <a href="https://www.1cero1.com/tratamientos.html" target="_blank" style="color: #225ccf;">política de tratamiento de datos</a>.
+      </div>
+      <div class="copyright">
+        © 101 Software 2025 Trami App Municipios. Todos los derechos reservados.
+      </div>
+    </div>
+  </div>
+</body>
+</html>

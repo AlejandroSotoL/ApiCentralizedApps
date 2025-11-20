@@ -171,7 +171,12 @@ namespace CentralizedApps.Services
                                 IdBank = bank.Id,
                                 IdShield = shield.Id,
                                 DataPrivacy = dto.DataPrivacy,
-                                DataProcessingPrivacy = dto.DataProcessingPrivacy
+                                DataProcessingPrivacy = dto.DataProcessingPrivacy,
+                                Latitude = dto.Latitude,
+                                Longitude = dto.Longitude,
+                                EmailMunicipalities = dto.EmailMunicipalities,
+                                EmailPanic = dto.EmailPanic,
+                                Phone = dto.Phone,
                             };
 
                             var municipioRepo = _unitOfWork.genericRepository<Municipality>();

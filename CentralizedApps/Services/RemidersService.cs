@@ -23,32 +23,26 @@ namespace CentralizedApps.Services
             _mapper = mapper;
         }
 
-        public async Task<ValidationResponseDto> createReminders(CreateReminderDto createReminderDto)
+        public async Task<ResponseReminderDto> createReminders(CreateReminderDto createReminderDto)
         {
             try
             {
                 var reminder = _mapper.Map<Reminder>(createReminderDto);
+
+                // Esto se mantiene igual: agregas la entidad y guardas cambios
                 await _unitOfWork.genericRepository<Reminder>().AddAsync(reminder);
                 await _unitOfWork.SaveChangesAsync();
 
-                return new ValidationResponseDto
-                {
-                    BooleanStatus = true,
-                    CodeStatus = 201,
-                    SentencesError = "Recordatorio creado correctamente."
-                };
+                var responseDto = _mapper.Map<ResponseReminderDto>(reminder);
+
+                // 3. Devolvemos el nuevo DTO con los datos del recordatorio creado
+                return responseDto;
             }
             catch (Exception ex)
             {
                 // loguear error
                 Console.WriteLine($"[ERROR] CreateReminders: {ex}");
-
-                return new ValidationResponseDto
-                {
-                    BooleanStatus = false,
-                    CodeStatus = 500,
-                    SentencesError = $"Error al crear el recordatorio: {ex.Message}"
-                };
+                throw;
             }
         }
 

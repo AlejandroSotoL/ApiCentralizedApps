@@ -1,10 +1,12 @@
 ﻿using CentralizedApps.Models.Dtos;
 using CentralizedApps.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 
 namespace CentralizedApps.Controllers.Web
 {
+    [Authorize(Roles = "Administrador")]
     public class TransactionsController : Controller
     {
         private readonly IPaymentHistoryService _paymentHistoryService;
@@ -44,7 +46,10 @@ namespace CentralizedApps.Controllers.Web
             ViewBag.PaymentsByMonth = paymentsByMonth;
             ViewBag.PaymentsByProcedure = paymentsByProcedure;
             var culture = new CultureInfo("es-CO");
-            ViewBag.TotalPayments = model.Sum(p => p.Amount ?? 0).ToString("C0", culture);
+            ViewBag.TotalPayments = model
+                .Where(p => p.StatusType != null && p.StatusType.Id == 1)
+                .Sum(p => p.Amount ?? 0)
+                .ToString("C3", culture);
 
             return View(model ?? new List<CompletePaymentDto>());
         }
