@@ -33,15 +33,12 @@ namespace CentralizedApps.Repositories
         {
             try
             {
-
-                //ACTUALIZAR CAMPOS EN LA BD PARA LA CONFIGURACION NUEVA DE EMAILS
-
                 var ExtractConfigurationEmail = await _context.ConfiguracionEmails
                     .Where(x => x.Recurso == "Servicio_Correo")
                     .ToListAsync();
 
-                var createDict = ExtractConfigurationEmail.ToDictionary(y => y.Propiedad.ToLower()
-                            , y => y.Valor);
+                var createDict = ExtractConfigurationEmail.ToDictionary(y => y.Propiedad.ToLower(), y => y.Valor);
+
                 var RemitentEmail = createDict["correo"];
                 var password = createDict["clave"];
                 var alias = createDict["alias"];
@@ -49,18 +46,17 @@ namespace CentralizedApps.Repositories
                 var port = int.Parse(createDict["puerto"]);
 
                 int atIndex = To.IndexOf('@');
-                MailboxAddress from = new MailboxAddress("Notificaciones Trami App", "notificacionestramiapp@1cero1.com");
-                MailboxAddress to = new MailboxAddress(To.Substring(0, atIndex), To);
-                //MailboxAddress replyTo = new MailboxAddress(_nameEmailCC, _emailCC);
+                string recipientName = atIndex > 0 ? To.Substring(0, atIndex) : To;
 
-              
+                MailboxAddress from = new MailboxAddress(alias, RemitentEmail);
+                MailboxAddress to = new MailboxAddress(recipientName, To);
+
                 MimeMessage msj = new MimeMessage();
                 msj.From.Add(from);
                 msj.To.Add(to);
-                //msj.Cc.Add(replyTo);
                 msj.Subject = Subject;
 
-                msj.ReplyTo.Clear(); // No permitir respuestas
+                msj.ReplyTo.Clear();
                 msj.Headers.Add("Auto-Submitted", "auto-generated");
 
                 BodyBuilder bodyBuilder = new BodyBuilder
@@ -70,13 +66,12 @@ namespace CentralizedApps.Repositories
 
                 msj.Body = bodyBuilder.ToMessageBody();
 
-                string smtpUser = "Notificacionestramiapp@1cero1.com";
-                string smtpPass = "FaseMovil12*";
-
                 using (SmtpClient client = new SmtpClient())
                 {
-                    client.Connect("mail.1cero1.com", 465, true);
-                    client.Authenticate(smtpUser, smtpPass);
+                    client.Connect(host, port, true);
+
+                    client.Authenticate(RemitentEmail, password);
+
                     client.Send(msj);
                     client.Disconnect(true);
                 }
@@ -90,10 +85,11 @@ namespace CentralizedApps.Repositories
             }
             catch (Exception ex)
             {
+         
                 return new ValidationResponseDto
                 {
                     CodeStatus = 500,
-                    SentencesError = "Error al enviar correo",
+                    SentencesError = "Error al enviar correo: " + ex.Message,
                     BooleanStatus = true
                 };
             }
@@ -246,6 +242,7 @@ namespace CentralizedApps.Repositories
                 body = body.Replace("{{guestIdUser}}", emailDto.IdUser);
                 body = body.Replace("{{reservationType}}", emailDto.Type);
                 body = body.Replace("{{headerTitle}}", emailDto.Type);
+                body = body.Replace("{{body}}", emailDto.Body);
 
 
                 return await SendEmail(emailDto.To, emailDto.Subject, body);

@@ -17,5 +17,6 @@ namespace CentralizedApps.Models.EmailDto
         public string PhoneUser { get; set; }
         public DateTime? DateReservation { get; set; }
         public string Type { get; set; }
+        public string Body { get; set; }
     }
 }
