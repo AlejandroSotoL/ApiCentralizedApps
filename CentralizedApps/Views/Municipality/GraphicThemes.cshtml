@@ -1,122 +1,222 @@
 ﻿@model List<CentralizedApps.Models.Entities.Theme>
 
 @{
-    ViewData["Title"] = "Gestión de Temas";
+    ViewData["Title"] = "Temas alcaldías";
+
     Layout = "Layout";
 }
 
-<div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
-    <div class="card w-full p-6 shadow-xl bg-base-100 rounded-2xl">
-        <div class="w-full">
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success mt-4 shadow-md animate-fade-in">
-                    <span>@TempData["Success"]</span>
-                </div>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-error mt-4 shadow-md animate-fade-in">
-                    <span>@TempData["Error"]</span>
-                </div>
-            }
-        </div>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
+    <!-- Formulario de Creación -->
+    <div class="card w-full p-6 shadow-xl bg-base-100 rounded-2xl h-fit sticky top-6">
         <h3 class="mb-6 text-center text-2xl font-extrabold text-black">Crear un nuevo tema</h3>
-        <form asp-controller="Municipality" asp-action="CreateGraphicThemes" method="post" class="space-y-6">
+        <form id="create-theme-form" asp-controller="Municipality" asp-action="CreateGraphicThemes" method="post"
+            class="space-y-6">
             <div>
                 <label class="label font-semibold">Nombre del tema</label>
-                <input type="text" class="input input-bordered w-full" placeholder="Ej: Tema Juvenil" name="NameTheme"
+                <input type="text" class="input input-bordered w-full" placeholder="Ej:DarkBlue" name="NameTheme"
                     required />
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="label font-semibold">Color de fondo</label>
-                    <input type="color" class="input w-full h-12 cursor-pointer" name="BackGroundColor" required />
-                </div>
-                <div>
-                    <label class="label font-semibold">Color primario</label>
-                    <input type="color" class="input w-full h-12 cursor-pointer" name="PrimaryColor" required />
-                </div>
-                <div>
-                    <label class="label font-semibold">Color secundario</label>
-                    <input type="color" class="input w-full h-12 cursor-pointer" name="SecondaryColor" required />
-                </div>
-                <div>
-                    <label class="label font-semibold">Color secundario oscuro</label>
-                    <input type="color" class="input w-full h-12 cursor-pointer" name="SecondaryColorBlack" />
-                </div>
-                <div>
-                    <label class="label font-semibold">Texto en primario (claro)</label>
-                    <input type="color" class="input w-full h-12 cursor-pointer" name="OnPrimaryColorLight" />
-                </div>
-                <div>
-                    <label class="label font-semibold">Texto en primario (oscuro)</label>
-                    <input type="color" class="input w-full h-12 cursor-pointer" name="OnPrimaryColorDark" />
-                </div>
+                @{
+                    RenderColorInput("Color de fondo", "BackGroundColor", null);
+                }
+                @{
+                    RenderColorInput("Color primario", "PrimaryColor", null);
+                }
+                @{
+                    RenderColorInput("Color secundario", "SecondaryColor", null);
+                }
+                @{
+                    RenderColorInput("Color secundario oscuro", "SecondaryColorBlack", null);
+                }
+                @{
+                    RenderColorInput("Texto en primario (claro)", "OnPrimaryColorLight", null);
+                }
+                @{
+                    RenderColorInput("Texto en primario (oscuro)", "OnPrimaryColorDark", null);
+                }
             </div>
 
-            <button type="submit" class="btn btn-outline btn-success w-full hover:scale-105 transition-transform">💾 Guardar
-                Tema</button>
+            <button type="submit" class="btn btn-outline btn-success w-full hover:scale-105 transition-transform">
+                💾 Guardar Tema
+            </button>
         </form>
     </div>
 
+    <!-- Lista de Temas -->
     <div class="card p-6 shadow-xl bg-base-100 rounded-2xl">
         <h3 class="mb-6 text-center text-2xl font-extrabold text-black">Temas existentes</h3>
 
-        <form asp-action="FilterGraphicThemes" asp-controller="Municipality" method="get" class="mb-6 flex gap-3">
+        <form id="search-form" asp-action="FilterGraphicThemes" asp-controller="Municipality" method="get"
+            class="mb-6 flex gap-3">
             <input name="filter" type="text" class="input input-bordered flex-1" placeholder="Ejemplo: GreenDark"
                 value="@Context.Request.Query["filter"]" />
             <button type="submit" class="btn btn-success hover:scale-105 transition-transform">🔍 Filtrar</button>
         </form>
 
-        @if (Model.Any())
-        {
-            @for (int i = 0; i < Model.Count; i++)
+        <div id="themes-list">
+            @if (Model.Any())
             {
-                <form asp-controller="Municipality" asp-action="UpdateGraphicTheme" method="post" class="mb-6">
-                    <div
-                        class="rounded-xl border border-base-300 bg-base-200 p-4 shadow-md hover:shadow-xl transition-all duration-300">
-                        <input type="hidden" name="Id" value="@Model[i].Id" />
+                @foreach (var theme in Model)
+
+                {
+                    <form asp-controller="Municipality" asp-action="UpdateGraphicTheme" method="post"
+                        class="mb-6 update-theme-form">
+                        <div
+                            class="rounded-xl border border-base-300 bg-base-200 p-4 shadow-md hover:shadow-xl transition-all duration-300">
+                            <input type="hidden" name="Id" value="@theme.Id" />
+
+                            <div class="mb-4">
+                                <label class="label font-semibold">Nombre del tema</label>
+                                <input type="text" class="input input-bordered w-full" name="NameTheme"
+                                    value="@theme.NameTheme" />
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-3 mb-4">
+                                @{
+                                    RenderColorInput("Fondo", "BackGroundColor", theme.BackGroundColor);
+                                }
+                                @{
+                                    RenderColorInput("Primario", "PrimaryColor", theme.PrimaryColor);
+                                }
+                                @{
+                                    RenderColorInput("Secundario", "SecondaryColor", theme.SecondaryColor);
+                                }
+                                @{
+                                    RenderColorInput("Sec. Oscuro", "SecondaryColorBlack", theme.SecondaryColorBlack);
+                                }
+                                @{
+                                    RenderColorInput("Texto Claro", "OnPrimaryColorLight", theme.OnPrimaryColorLight);
+                                }
+                                @{
+                                    RenderColorInput("Texto Oscuro", "OnPrimaryColorDark", theme.OnPrimaryColorDark);
+                                }
+                            </div>
+
+                            <button type="submit"
+                                class="btn btn-outline btn-success w-full hover:scale-105 transition-transform">
+                                💾 Guardar cambios
+                            </button>
+                        </div>
+                    </form>
+                }
+            }
+            else
+            {
+                <h2 id="no-themes-msg" class="text-center text-gray-500">⚠️ No hay temas registrados aún</h2>
+            }
+        </div>
+    </div>
+</div>
+
+@functions {
+    public static string FormatColor(string? color)
+
+    {
+
+        return color?.Replace("0xFF", "#") ?? "#000000";
+
+    }
+
+
+
+    void RenderColorInput(string label, string name, string? value)
+
+    {
+
+        var colorValue = FormatColor(value);
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text text-xs font-semibold">@label</span>
+            </label>
+            <div class="flex items-center gap-2">
+                <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" value="@colorValue" />
+                <input type="text" class="input input-bordered input-sm w-full uppercase color-text" name="@name"
+                    value="@colorValue" maxlength="7" />
+            </div>
+        </div>
+    }
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const createForm = document.getElementById('create-theme-form');
+        const searchForm = document.getElementById('search-form');
+        const themesList = document.getElementById('themes-list');
+
+        // --- Color Sync Logic ---
+        const initColorSync = (container) => {
+            const pickers = container.querySelectorAll('.color-picker');
+            const texts = container.querySelectorAll('.color-text');
+
+            pickers.forEach((picker, index) => {
+                const text = texts[index];
+
+                // Picker -> Text
+                picker.addEventListener('input', (e) => {
+                    text.value = e.target.value.toUpperCase();
+                });
+
+                // Text -> Picker
+                text.addEventListener('input', (e) => {
+                    let val = e.target.value;
+                    if (val.length === 7 && val.startsWith('#')) {
+                        picker.value = val;
+                    }
+                });
+            });
+        };
+
+        // Initialize for existing elements
+        initColorSync(document);
+
+
+        // --- Helper Functions ---
+        const formatColor = (color) => {
+            if (!color) return '#000000';
+            return color.replace('0xFF', '#');
+        };
+
+        const renderColorInputJS = (label, name, value) => {
+            const colorVal = formatColor(value);
+            return `
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs font-semibold">${label}</span>
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" 
+                               value="${colorVal}" />
+                        <input type="text" class="input input-bordered input-sm w-full uppercase color-text" 
+                               name="${name}" value="${colorVal}" maxlength="7" />
+                    </div>
+                </div>
+            `;
+        };
+
+        const createThemeCard = (theme) => {
+            const cardHtml = `
+                <form action="/Municipality/UpdateGraphicTheme" method="post" class="mb-6 update-theme-form">
+                    <div class="rounded-xl border border-base-300 bg-base-200 p-4 shadow-md hover:shadow-xl transition-all duration-300 animate-fade-in">
+                        <input type="hidden" name="Id" value="${theme.id}" />
 
                         <div class="mb-4">
                             <label class="label font-semibold">Nombre del tema</label>
-                            <input type="text" class="input input-bordered w-full" name="NameTheme"
-                                value="@Model[i].NameTheme" />
+                            <input type="text" class="input input-bordered w-full" name="NameTheme" value="${theme.nameTheme || ''}" />
                         </div>
 
                         <div class="grid grid-cols-3 gap-3 mb-4">
-                            <div class="flex flex-col items-center">
-                                <label class="text-sm">Fondo</label>
-                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer" name="BackGroundColor"
-                                    value="@Model[i].BackGroundColor?.Replace("0xFF", "#")" />
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <label class="text-sm">Primario</label>
-                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer" name="PrimaryColor"
-                                    value="@Model[i].PrimaryColor?.Replace("0xFF", "#")" />
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <label class="text-sm">Secundario</label>
-                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer" name="SecondaryColor"
-                                    value="@Model[i].SecondaryColor?.Replace("0xFF", "#")" />
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <label class="text-sm">Secundario oscuro</label>
-                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer"
-                                    name="SecondaryColorBlack" value="@Model[i].SecondaryColorBlack?.Replace("0xFF", "#")" />
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <label class="text-sm">Texto claro</label>
-                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer"
-                                    name="OnPrimaryColorLight" value="@Model[i].OnPrimaryColorLight?.Replace("0xFF", "#")" />
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <label class="text-sm">Texto oscuro</label>
-                                <input type="color" class="w-12 h-12 rounded-lg shadow cursor-pointer" name="OnPrimaryColorDark"
-                                    value="@Model[i].OnPrimaryColorDark?.Replace("0xFF", "#")" />
-                            </div>
+                            ${renderColorInputJS("Fondo", "BackGroundColor", theme.backGroundColor)}
+                            ${renderColorInputJS("Primario", "PrimaryColor", theme.primaryColor)}
+                            ${renderColorInputJS("Secundario", "SecondaryColor", theme.secondaryColor)}
+                            ${renderColorInputJS("Sec. Oscuro", "SecondaryColorBlack", theme.secondaryColorBlack)}
+                            ${renderColorInputJS("Texto Claro", "OnPrimaryColorLight", theme.onPrimaryColorLight)}
+                            ${renderColorInputJS("Texto Oscuro", "OnPrimaryColorDark", theme.onPrimaryColorDark)}
                         </div>
 
                         <button type="submit" class="btn btn-outline btn-success w-full hover:scale-105 transition-transform">
@@ -124,24 +224,118 @@
                         </button>
                     </div>
                 </form>
+            `;
+
+            // We need to return the HTML string, but we also need to init sync after insertion.
+            // Since this function just returns string, the caller must handle init.
+            return cardHtml;
+        };
+
+
+        // --- Search Handler ---
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(searchForm);
+            const query = new URLSearchParams(formData).toString();
+
+            try {
+                const response = await fetch(`${searchForm.action}?${query}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    themesList.innerHTML = ''; // Clear list
+
+                    if (result.data.length === 0) {
+                        themesList.innerHTML = '<h2 id="no-themes-msg" class="text-center text-gray-500">⚠️ No se encontraron temas</h2>';
+                    } else {
+                        result.data.forEach(theme => {
+                            themesList.insertAdjacentHTML('beforeend', createThemeCard(theme));
+                        });
+                        // Re-init color sync for new elements
+                        initColorSync(themesList);
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Error al buscar temas.' });
             }
-        }
-        else
-        {
-            <h2 class="text-center text-gray-500">⚠️ No hay temas registrados aún</h2>
-        }
-    </div>
-</div>
+        });
+
+
+        // --- Create Handler ---
+        createForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(createForm);
+
+            try {
+                const response = await fetch(createForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    Swal.fire({ icon: 'success', title: '¡Éxito!', text: result.message, timer: 2000, showConfirmButton: false });
+
+                    const noMsg = document.getElementById('no-themes-msg');
+                    if (noMsg) noMsg.remove();
+
+                    themesList.insertAdjacentHTML('afterbegin', createThemeCard(result.data));
+                    initColorSync(themesList.firstElementChild); // Init sync for new card
+
+                    createForm.reset();
+                    // Reset pickers in create form
+                    createForm.querySelectorAll('.color-picker').forEach(p => p.value = '#000000');
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: result.message });
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error inesperado.' });
+            }
+        });
+
+        // --- Update Handler ---
+        themesList.addEventListener('submit', async (e) => {
+            if (e.target.matches('.update-theme-form')) {
+                e.preventDefault();
+                const form = e.target;
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        Swal.fire({ icon: 'success', title: 'Actualizado', text: result.message, timer: 2000, showConfirmButton: false });
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Error', text: result.message });
+                    }
+                } catch (error) {
+                    console.error(error);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error inesperado.' });
+                }
+            }
+        });
+    });
+</script>
 
 <style>
     .animate-fade-in {
-        animation: fadeIn 0.3s ease-in-out;
+        animation: fadeIn 0.5s ease-out;
     }
 
     @@keyframes fadeIn {
         from {
             opacity: 0;
-            transform: translateY(-5px);
+            transform: translateY(-10px);
         }
 
         to {

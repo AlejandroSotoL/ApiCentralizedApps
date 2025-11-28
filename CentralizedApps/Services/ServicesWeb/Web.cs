@@ -48,31 +48,8 @@ namespace CentralizedApps.Services.ServicesWeb
             };
 
         }
-        public async Task<CourseWebDto> courses(int? id)
-        {
-            var response = _unitOfWork.genericRepository<Course>();
-            var Entity = await response.GetAllWithNestedIncludesAsync(query =>
-                query
-                    .Include(msm => msm.Municipality)
 
-            );
-
-            var filtro = id.HasValue
-                ? Entity.Where(m => m.MunicipalityId == id.Value).ToList()
-                : new List<Course>();
-
-            return new CourseWebDto
-            {
-                municipality = id.HasValue
-                    ? await _municipalityServices.JustGetMunicipalityWithRelations(id.Value)
-                    : null,
-                courses = filtro,
-                municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync()
-
-            };
-
-        }
-        public async Task<QueryFieldWeb>  QueryField(int? id)
+        public async Task<QueryFieldWeb> QueryField(int? id)
         {
             var response = _unitOfWork.genericRepository<QueryField>();
             var Entity = await response.GetAllWithNestedIncludesAsync(query =>
@@ -91,30 +68,6 @@ namespace CentralizedApps.Services.ServicesWeb
                     ? await _municipalityServices.JustGetMunicipalityWithRelations(id.Value)
                     : null,
                 queryFields = filtro,
-                municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync()
-
-            };
-
-        }
-        public async Task<SportsFacilitiesWebDto> SportsFacilities(int? id)
-        {
-            var response = _unitOfWork.genericRepository<SportsFacility>();
-            var Entity = await response.GetAllWithNestedIncludesAsync(query =>
-                query
-                    .Include(msm => msm.Municipality)
-
-            );
-
-            var filtro = id.HasValue
-                ? Entity.Where(m => m.MunicipalityId == id.Value).ToList()
-                : new List<SportsFacility>();
-
-            return new SportsFacilitiesWebDto
-            {
-                municipality = id.HasValue
-                    ? await _municipalityServices.JustGetMunicipalityWithRelations(id.Value)
-                    : null,
-                sportsFacilities = filtro,
                 municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync()
 
             };
@@ -226,9 +179,35 @@ namespace CentralizedApps.Services.ServicesWeb
 
             };
         }
-        
 
-        
+        public async Task<ProceduresWebDto> Procedures(int? id)
+        {
+            var coursesResponse = _unitOfWork.genericRepository<Course>();
+            var coursesEntity = await coursesResponse.GetAllWithNestedIncludesAsync(query =>
+                query.Include(msm => msm.Municipality));
+
+            var sportsResponse = _unitOfWork.genericRepository<SportsFacility>();
+            var sportsEntity = await sportsResponse.GetAllWithNestedIncludesAsync(query =>
+                query.Include(msm => msm.Municipality));
+
+            var coursesFiltro = id.HasValue
+                ? coursesEntity.Where(m => m.MunicipalityId == id.Value).ToList()
+                : new List<Course>();
+
+            var sportsFiltro = id.HasValue
+                ? sportsEntity.Where(m => m.MunicipalityId == id.Value).ToList()
+                : new List<SportsFacility>();
+
+            return new ProceduresWebDto
+            {
+                municipality = id.HasValue
+                    ? await _municipalityServices.JustGetMunicipalityWithRelations(id.Value)
+                    : null,
+                courses = coursesFiltro,
+                sportsFacilities = sportsFiltro,
+                municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync()
+            };
+        }
 
     }
 }
