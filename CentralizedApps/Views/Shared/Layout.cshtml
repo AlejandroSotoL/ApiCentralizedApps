@@ -12,12 +12,13 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 
-<body class="bg-base-200 text-base-content min-h-screen">
+<body class="bg-base-200 text-base-content">
     <div class="drawer">
         <input id="my-drawer" type="checkbox" class="drawer-toggle" />
 
-        <div class="drawer-content flex flex-col">
-            <header class="navbar bg-base-100 shadow-md">
+        <div class="drawer-content flex flex-col min-h-screen">
+            <!-- Navbar -->
+            <header class="navbar bg-base-100 shadow-md sticky top-0 z-50">
                 <label for="my-drawer" class="btn btn-square btn-ghost">
                     <span class="material-icons-outlined text-xl">menu</span>
                 </label>
@@ -34,165 +35,182 @@
                 </div>
             </header>
 
-            @RenderSection("Scripts", required: false)
-
-            <main class="flex-1 p-6">
+            <!-- Main Content -->
+            <main class="flex-1 p-8">
                 @RenderBody()
             </main>
 
-            <footer class="footer footer-center bg-base-300 text-base-content p-4 text-center">
-                <p>&copy; 2025 - 1cero1 Software - CENTRALIZACION</p>
+            <!-- Footer -->
+            <footer class="footer footer-center bg-base-300 text-base-content p-6 mt-8">
+                <div>
+                    <p class="font-semibold">&copy; 2025 - 1cero1 Software - CENTRALIZACION</p>
+                </div>
             </footer>
         </div>
 
         @if (User.IsInRole("Administrador"))
         {
-            <div class="drawer-side">
-                <label for="my-drawer" class="drawer-overlay"></label>
-                <div class="bg-base-100 text-base-content min-h-full w-64 p-4">
-                    <div class="mb-4 flex items-center gap-4">
+            <div class="drawer-side z-40">
+                <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+                <div class="bg-base-100 text-base-content min-h-full w-80 p-4">
+                    <div class="mb-6 flex items-center gap-4 p-2">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwr_zZjgvmu4BccwDNIHic8K5dyehw7cSYA&s"
-                            alt="Logo" class="h-16" />
-                        <h2 class="text-lg font-bold">Bienvenido @User?.Identity?.Name</h2>
+                            alt="Logo" class="h-16 w-16 rounded-lg" />
+                        <div class="flex-1">
+                            <h2 class="text-lg font-bold">Bienvenido</h2>
+                            <p class="text-sm text-base-content/70">@User?.Identity?.Name</p>
+                        </div>
                     </div>
 
-                    <ul class="menu space-y-1">
-                        <li class="menu-title">Administración</li>
+                    <ul class="menu space-y-2 px-2">
+                        <li class="menu-title">
+                            <span class="text-base font-bold">Administración</span>
+                        </li>
                         <li>
-                            <a href="/" class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                            <a href="/" class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">dashboard</span>
-                                Administración Centralización
+                                <span class="flex-1">Administración Centralización</span>
                             </a>
                         </li>
 
-                        <li class="menu-title">Procesos</li>
+                        <li class="menu-title mt-4">
+                            <span class="text-base font-bold">Procesos</span>
+                        </li>
                         <li>
                             <a href="/Transactions/Index"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">sync_alt</span>
-                                Transacciones Generales
+                                <span class="flex-1">Transacciones Generales</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/GeneralProcedures/Index"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">schema</span>
-                                Procesos y sus tipos
+                                <span class="flex-1">Procesos y sus tipos</span>
                             </a>
                         </li>
 
-                        <li class="menu-title">Municipios</li>
+                        <li class="menu-title mt-4">
+                            <span class="text-base font-bold">Municipios</span>
+                        </li>
                         <li>
                             <a href="/Municipality/BankIndex"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">account_balance</span>
-                                Bancos
+                                <span class="flex-1">Bancos</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Municipality/GraphicThemes"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">palette</span>
-                                Temas Gráficos
+                                <span class="flex-1">Temas Gráficos</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Web/SubirImagen"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">image</span>
-                                Escudos de las Alcaldías
+                                <span class="flex-1">Escudos de las Alcaldías</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Municipality/deparmentIndex"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">apartment</span>
-                                Departamentos
+                                <span class="flex-1">Departamentos</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Municipality/Index"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">location_city</span>
-                                Alcaldías
+                                <span class="flex-1">Alcaldías</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Municipality/QueryFieldIndex"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">manage_search</span>
-                                Campo Consulta
+                                <span class="flex-1">Campo Consulta</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Municipality/MunicipalitySocialMediaIndex"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">share</span>
-                                Redes Sociales
+                                <span class="flex-1">Redes Sociales</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Municipality/ProceduresIndex"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">assignment</span>
-                                Gestión de Trámites
+                                <span class="flex-1">Gestión de Trámites</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Municipality/NewsMunicipalityIndex"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">newspaper</span>
-                                Noticias
+                                <span class="flex-1">Noticias</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Municipality/DocomentTypeIndex"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200">
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-base-200">
                                 <span class="material-icons-outlined text-lg">description</span>
-                                Tipos de Documento
+                                <span class="flex-1">Tipos de Documento</span>
                             </a>
                         </li>
 
-                        <li class="pt-2">
-                            <a href="/Account/Logout"
-                                class="flex items-center gap-3 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-100">
-                                <span class="material-icons-outlined text-lg">logout</span>
-                                Cerrar Sesión
-                            </a>
-                        </li>
+                        <div class="divider my-4"></div>
 
-                        <li class="pt-2">
+                        <li>
                             <button onclick="my_modal.showModal()"
-                                class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-primary transition hover:bg-primary/10">
+                                class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-primary transition hover:bg-primary/10">
                                 <span class="material-icons-outlined text-lg">person_add</span>
-                                Agregar Administrador
+                                <span class="flex-1">Agregar Administrador</span>
                             </button>
                         </li>
 
-                        <hr class="mt-10" />
+                        <li>
+                            <a href="/Account/Logout"
+                                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-error transition hover:bg-error/10">
+                                <span class="material-icons-outlined text-lg">logout</span>
+                                <span class="flex-1">Cerrar Sesión</span>
+                            </a>
+                        </li>
+
+                        <div class="divider my-4"></div>
+
+                        <li class="menu-title">
+                            <span class="text-sm">Próximamente</span>
+                        </li>
                         <li>
                             <a href="/Web/EnDesarrollo"
-                                class="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                class="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 opacity-50 transition">
                                 <span class="material-icons-outlined text-lg">credit_card</span>
-                                Estado de los pagos (Próximamente)
+                                <span class="flex-1">Estado de los pagos</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/Web/EnDesarrollo"
-                                class="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 opacity-70 transition hover:bg-base-200">
+                                class="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 opacity-50 transition">
                                 <span class="material-icons-outlined text-lg">groups</span>
-                                Personas naturales - Invitados
+                                <span class="flex-1">Personas naturales - Invitados</span>
                             </a>
                         </li>
                     </ul>
@@ -265,7 +283,21 @@
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         });
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const button = event.target;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                button.textContent = 'Ocultar';
+            } else {
+                passwordInput.type = 'password';
+                button.textContent = 'Mostrar';
+            }
+        }
     </script>
+
+    @RenderSection("Scripts", required: false)
 </body>
 
 </html>

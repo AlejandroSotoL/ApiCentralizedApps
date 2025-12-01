@@ -33,7 +33,8 @@ namespace CentralizedApps.Controllers.web
             {
                 var structs = new CreateMunicipalityProcedures_Web
                 {
-                    Municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync(),
+                    Municipalities = await _unitOfWork.genericRepository<Municipality>()
+                                            .GetAllWithIncludesAsync(x => x.IdShieldNavigation, x => x.Department),
                     Procedures = await _unitOfWork.genericRepository<Procedure>().GetAllAsync(),
                 };
                 return View(structs);
@@ -92,5 +93,54 @@ namespace CentralizedApps.Controllers.web
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> GetProceduresByMunicipality(int id)
+        {
+            try
+            {
+                var response = await _GeneralProcedure.MunicipalityProcedures(id);
+                return Ok(response ?? new List<MunicipalityProcedureDto_Reminders>());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error al cargar los procedimientos.");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddMunicipalityProcedure([FromBody] MunicipalityProcedureAddDto dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest(new { success = false, message = "Datos inválidos." });
+            }
+
+            try
+            {
+                // Check if procedure already exists for this municipality
+                var existing = await _unitOfWork.genericRepository<MunicipalityProcedure>()
+                    .FindAsync_Predicate(x => x.MunicipalityId == dto.MunicipalityId && x.ProceduresId == dto.ProceduresId);
+
+                if (existing != null)
+                {
+                    return BadRequest(new { success = false, message = "Este proceso ya está asignado a la alcaldía seleccionada." });
+                }
+
+                var result = await _ProcedureServices.AsingProccessToMunicipality(dto);
+                
+                if (result.BooleanStatus)
+                {
+                     return Ok(new { success = true, message = "Proceso agregado correctamente." });
+                }
+                else
+                {
+                     return BadRequest(new { success = false, message = result.SentencesError });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Error interno del servidor: " + ex.Message });
+            }
+        }
     }
 }
