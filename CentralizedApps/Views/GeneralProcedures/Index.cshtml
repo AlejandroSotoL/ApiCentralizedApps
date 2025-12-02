@@ -154,7 +154,7 @@
     </section>
 
     <!-- Add Procedure Form -->
-    <div class="rounded-3xl bg-base-100 p-8 shadow-xl">
+    <section class="rounded-xl bg-base-100 p-6 shadow-lg">
         <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
             <span class="bg-blue-100 text-blue-600 p-2 rounded-full">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -201,7 +201,7 @@
                 Agregar Proceso
             </button>
         </div>
-    </div>
+    </section>
 
     <!-- Procedures List -->
     <div class="bg-base-100 rounded-xl p-6 shadow-lg">
@@ -231,41 +231,41 @@
 
 <!-- Edit Modal -->
 <dialog id="edit_modal" class="modal">
-    <div class="modal-box rounded-xl p-0 overflow-hidden">
-        <div class="bg-base-200 px-6 py-4 border-b border-base-300 flex justify-between items-center">
+    <div class="modal-box rounded-xl p-0 overflow-hidden custom-card">
+        <div class="px-16 py-4 flex justify-between items-center">
             <h3 class="font-bold text-lg text-base-content">Editar Proceso</h3>
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost">✕</button>
             </form>
         </div>
-        <div class="p-6 space-y-4">
+        <div class="px-16 py-6 space-y-5">
             <input type="hidden" id="editId">
             <input type="hidden" id="editMunicipalityId">
             
             <div>
-                <label class="block text-xs font-medium opacity-70 mb-1">Proceso</label>
+                <label class="block text-sm font-medium opacity-70 mb-2">Proceso</label>
                 <input type="hidden" id="editProcedureId">
                 <input type="text" id="editProcedureName" readonly 
-                       class="w-full rounded-lg border border-base-300 bg-base-200 p-2.5 text-sm opacity-60 cursor-not-allowed">
+                       class="w-full rounded-lg border border-base-300 bg-base-200 p-4 opacity-60 cursor-not-allowed">
             </div>
             
             <div>
-                <label class="block text-xs font-medium opacity-70 mb-1">Tipo de Integración</label>
+                <label class="block text-sm font-medium opacity-70 mb-2">Tipo de Integración</label>
                 <input type="text" id="editIntegrationType" 
-                       class="w-full rounded-lg border border-base-300 p-2.5 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                       class="w-full rounded-lg border border-base-300 p-4 focus:ring-2 focus:ring-blue-400 focus:outline-none">
             </div>
             
-            <div class="flex items-center gap-3 p-3 bg-base-200 rounded-lg border border-base-300">
+            <div class="flex items-center gap-3 p-4 bg-base-200 rounded-lg border border-base-300">
                 <span class="text-sm font-medium">Estado:</span>
                 <input type="checkbox" id="editIsActive" class="toggle toggle-success toggle-sm" />
                 <span id="editStatusText" class="text-xs opacity-60"></span>
             </div>
         </div>
-        <div class="bg-base-200 px-6 py-4 border-t border-base-300 flex justify-end gap-2">
+        <div class="px-16 py-4 flex justify-end gap-3">
             <form method="dialog">
-                <button class="btn btn-sm btn-ghost">Cancelar</button>
+                <button class="btn btn-sm bg-white border border-base-300 hover:bg-base-100" style="min-width: 100px; height: 32px;">Cancelar</button>
             </form>
-            <button onclick="saveEdit()" class="btn btn-sm bg-blue-600 hover:bg-blue-700 text-white border-none shadow-sm">Guardar Cambios</button>
+            <button onclick="saveEdit()" class="custom-action-btn" style="width: 140px; height: 32px; font-size: 12px;">Guardar Cambios</button>
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">
@@ -341,22 +341,25 @@
         const container = document.getElementById('municipalityCardsContainer');
         container.innerHTML = `
             <div class="col-span-full flex justify-center animate-fade-in">
-                <div class="custom-card w-full max-w-sm rounded-3xl border-2 border-blue-600 p-6 shadow-2xl flex flex-col items-center relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-2 bg-blue-600"></div>
-
-                    <div class="w-full h-32 rounded-2xl border border-blue-100 bg-blue-50/30 mb-5 flex items-center justify-center p-4">
+                <div class="custom-card w-full max-w-sm rounded-2xl p-6 shadow-lg flex flex-col items-center">
+                    <div class="w-full h-24 rounded-2xl bg-base-200 mb-3 flex items-center justify-center p-2">
                         ${m.ShieldUrl 
-                            ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-24 w-auto object-contain drop-shadow-md" />` 
-                            : `<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
+                            ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-16 w-auto object-contain drop-shadow-sm" />` 
+                            : `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
                         }
                     </div>
 
-                    <h4 class="font-extrabold text-2xl text-base-content text-center mb-1">${m.Name}</h4>
-                    <span class="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                        ${m.DepartmentName}
-                    </span>
+                    <div class="flex-grow flex flex-col justify-between w-full">
+                        <div>
+                            <h4 class="font-bold text-base-content text-center text-sm leading-tight mb-1">${m.Name}</h4>
+                            <div class="flex justify-center my-1">
+                                <div class="h-0.5 w-6 bg-base-300 rounded-full"></div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] font-bold opacity-60 text-center uppercase tracking-wider">${m.DepartmentName}</p>
+                    </div>
                     
-                    <button onclick="handleSearchSelection()" class="mt-6 text-xs opacity-60 hover:opacity-100 underline cursor-pointer">
+                    <button onclick="document.getElementById('municipalitySearch').value = ''; handleSearchSelection();" class="custom-action-btn mt-4" style="width: 140px; height: 32px; font-size: 12px;">
                         Cambiar selección
                     </button>
                 </div>

@@ -4,6 +4,51 @@
     Layout = "Layout";
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    body, .nunito-font {
+        font-family: 'Nunito Sans', sans-serif !important;
+        font-weight: 700;
+    }
+
+    .custom-action-btn {
+        background-color: #516FE9 !important;
+        width: 159px;
+        height: 40px;
+        color: white !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: transform 0.1s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+    .custom-action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(81, 111, 233, 0.4);
+    }
+
+    .custom-action-btn:active {
+        transform: scale(0.98);
+    }
+
+    .custom-card {
+        background-color: #F5F6FA !important;
+        border: 1px solid #E5E7EB;
+    }
+
+    /* Dark theme compatibility */
+    [data-theme="dark"] .custom-card {
+        background-color: #1f2937 !important;
+        border: 1px solid #374151;
+    }
+</style>
+
 <div class="card bg-base-200 rounded-box p-0 md:p-6">
     <h1 class="font-bold text-3xl text-center mb-6">Gestión de Procedimientos</h1>
 
@@ -11,7 +56,7 @@
     <div class="card bg-base-300 grid p-6 mb-6">
         <h2 class="font-bold text-2xl text-center mb-6">Crear Procedimiento</h2>
         <form id="createProcedureForm">
-            <div class="grid md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4">
                 <fieldset class="fieldset w-full">
                     <legend class="fieldset-legend">Municipio</legend>
                     <select id="municipalitySelect" name="MunicipalityId" class="select w-full" required>
@@ -26,21 +71,13 @@
 
                 <fieldset class="fieldset w-full">
                     <legend class="fieldset-legend">Tipo de Procedimiento</legend>
-                    <div class="flex gap-4 mt-2">
-                        <label class="cursor-pointer label">
-                            <span class="label-text mr-2">Curso</span>
-                            <input type="radio" name="ProcedureType" class="radio radio-primary" value="Course"
-                                checked />
-                        </label>
-                        <label class="cursor-pointer label">
-                            <span class="label-text mr-2">Escenario Deportivo</span>
-                            <input type="radio" name="ProcedureType" class="radio radio-primary"
-                                value="SportsFacility" />
-                        </label>
-                    </div>
+                    <select id="procedureTypeSelect" name="ProcedureType" class="select w-full" required>
+                        <option value="Course" selected>Curso</option>
+                        <option value="SportsFacility">Escenario Deportivo</option>
+                    </select>
                 </fieldset>
 
-                <fieldset class="fieldset w-full md:col-span-2">
+                <fieldset class="fieldset w-full">
                     <legend class="fieldset-legend">Base URL</legend>
                     <input type="text" id="baseUrlInput" class="input w-full" placeholder="https://api.example.com/v1"
                         required />
@@ -57,17 +94,16 @@
                 <input type="hidden" name="CalendaryPost" id="calendaryPostInput" /> <!-- For Sports -->
                 <input type="hidden" name="ReservationPost" id="reservationPostInput" /> <!-- For Sports -->
 
-                <div class="mt-4 flex justify-self-center md:col-span-2">
+                <div class="flex justify-center">
                     <label class="flex items-center gap-6">
                         <span>Estado</span>
                         <input type="checkbox" name="IsActive" class="toggle toggle-success" value="true" checked />
                         <input type="hidden" name="IsActive" value="false" />
                     </label>
                 </div>
-            </div>
-
-            <div class="w-full flex justify-end my-6">
-                <button type="submit" class="btn btn-soft btn-accent w-full md:w-1/6 justify-self-center">Crear</button>
+                <div class="w-full flex justify-center">
+                    <button type="submit" class="custom-action-btn">Crear</button>
+                </div>
             </div>
         </form>
     </div>
@@ -110,7 +146,7 @@
                 <h3 class="font-bold text-xl text-center mb-4">Cursos</h3>
                 @foreach (var course in Model?.courses ?? new List<Course>())
                 {
-                    <form class="update-form mb-6 border-b border-base-100 pb-4" data-type="Course"
+                    <form class="update-form mb-6 pb-4" data-type="Course"
                         action="@Url.Action("updateCourse", "Municipality")">
                         <input type="hidden" name="Id" value="@course.Id">
                         <input type="hidden" name="MunicipalityId" value="@course.MunicipalityId">
@@ -135,7 +171,7 @@
                                     @(course.IsActive == true ? "checked" : "") />
                                     <input type="hidden" name="IsActive" value="false" />
                                 </label>
-                                <button type="submit" class="btn btn-sm btn-accent">Guardar</button>
+                                <button type="submit" class="custom-action-btn" style="width: 100px; height: 30px; font-size: 12px;">Guardar</button>
                             </div>
                         </div>
                     </form>
@@ -151,7 +187,7 @@
                 <h3 class="font-bold text-xl text-center mb-4">Escenarios Deportivos</h3>
                 @foreach (var facility in Model?.sportsFacilities ?? new List<SportsFacility>())
                 {
-                    <form class="update-form mb-6 border-b border-base-100 pb-4" data-type="SportsFacility"
+                    <form class="update-form mb-6 pb-4" data-type="SportsFacility"
                         action="@Url.Action("UpdateSportFacilities", "Municipality")">
                         <input type="hidden" name="Id" value="@facility.Id">
                         <input type="hidden" name="MunicipalityId" value="@facility.MunicipalityId">
@@ -182,7 +218,7 @@
                                     @(facility.IsActive == true ? "checked" : "") />
                                     <input type="hidden" name="IsActive" value="false" />
                                 </label>
-                                <button type="submit" class="btn btn-sm btn-accent">Guardar</button>
+                                <button type="submit" class="custom-action-btn" style="width: 100px; height: 30px; font-size: 12px;">Guardar</button>
                             </div>
                         </div>
                     </form>
@@ -206,7 +242,7 @@
         const municipalityId = municipalitySelect.value;
         const municipalityName = municipalitySelect.options[municipalitySelect.selectedIndex].text;
         const baseUrl = document.getElementById('baseUrlInput').value;
-        const type = document.querySelector('input[name="ProcedureType"]:checked').value;
+        const type = document.getElementById('procedureTypeSelect').value;
 
         if (!municipalityId || !baseUrl) {
             Swal.fire('Error', 'Por favor complete todos los campos requeridos', 'error');
@@ -216,16 +252,16 @@
         // Auto-generate values
         const name = type === 'Course' ? `Curso ${municipalityId}` : `Escenario ${municipalityId}`;
         document.getElementById('nameInput').value = name;
-        document.getElementById('getInput').value = `${baseUrl}/Get`;
+        document.getElementById('getInput').value = baseUrl;
 
         let url = '';
 
         if (type === 'Course') {
-            document.getElementById('postInput').value = `${baseUrl}/Post`;
+            document.getElementById('postInput').value = baseUrl;
             url = '@Url.Action("createCourse", "Municipality")';
         } else {
-            document.getElementById('calendaryPostInput').value = `${baseUrl}/CalendaryPost`;
-            document.getElementById('reservationPostInput').value = `${baseUrl}/ReservationPost`;
+            document.getElementById('calendaryPostInput').value = baseUrl;
+            document.getElementById('reservationPostInput').value = baseUrl;
             url = '@Url.Action("createSportsFacilities", "Municipality")';
         }
 
