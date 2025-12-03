@@ -68,7 +68,8 @@ namespace CentralizedApps.Services.ServicesWeb
                     ? await _municipalityServices.JustGetMunicipalityWithRelations(id.Value)
                     : null,
                 queryFields = filtro,
-                municipalities = await _unitOfWork.genericRepository<Municipality>().GetAllAsync()
+                municipalities = await _unitOfWork.genericRepository<Municipality>()
+                    .GetAllWithNestedIncludesAsync(q => q.Include(m => m.Department))
 
             };
 

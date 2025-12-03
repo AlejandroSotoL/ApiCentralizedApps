@@ -1,117 +1,474 @@
 ﻿@model CentralizedApps.Models.Dtos.QueryFieldWeb
+
 @{
-    ViewData["Title"] = "Formulario de campo consulda";
+    ViewData["Title"] = "Gestión de campo consulta";
     Layout = "Layout";
 }
-@if (TempData["Message"] != null)
-{
-    <div id="tempMessage"
-        class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error")">
-        @TempData["Message"]
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    body, .nunito-font {
+        font-family: 'Nunito Sans', sans-serif !important;
+        font-weight: 700;
+    }
+
+    .custom-action-btn {
+        background-color: #516FE9 !important;
+        width: 159px;
+        height: 40px;
+        color: white !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: transform 0.1s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+    .custom-action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(81, 111, 233, 0.4);
+    }
+
+    .custom-action-btn:active {
+        transform: scale(0.98);
+    }
+
+    .custom-card {
+        background-color: #F5F6FA !important;
+        border: 1px solid #E5E7EB;
+    }
+
+    /* Dark theme compatibility */
+    [data-theme="dark"] .custom-card {
+        background-color: #1f2937 !important;
+        border: 1px solid #374151;
+    }
+
+    .search-bar-custom {
+        padding: 16px !important;
+        width: 100%;
+        min-height: 48px;
+    }
+
+    .custom-input {
+        min-height: 48px;
+    }
+
+    .edit-btn-icon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+    }
+</style>
+
+<!-- Main Content Wrapper -->
+<div class="w-full max-w-7xl mx-auto space-y-6">
+    <!-- Header -->
+    <h1 class="font-bold text-3xl text-center mb-6">Gestión de Campos de Consulta</h1>
+
+    <!-- Alert Messages -->
+    @if (TempData["Message"] != null)
+    {
+        <div id="tempMessage" class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error") animate-fade-in shadow-md">
+            <span>@TempData["Message"]</span>
+        </div>
+    }
+
+    <!-- Municipality Selection Section -->
+    <section class="rounded-xl bg-base-100 p-6 shadow-lg">
+
+        <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
+            Seleccionar Alcaldía
+        </h3>
+
+        <p class="mb-4 text-sm opacity-70">
+            Busca y selecciona una alcaldía para gestionar sus campos de consulta.
+        </p>
+        
+        <!-- Search Dropdown -->
+        <div class="mb-8">
+            <div class="relative w-full max-w-2xl mx-auto">
+                <select id="municipalitySearch" 
+                        class="search-bar-custom block rounded-full border-0 bg-base-200 text-base-content shadow-sm ring-1 ring-inset ring-base-300 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all cursor-pointer" 
+                        onchange="handleSearchSelection()">
+                    <option value="" selected>Buscar alcaldía...</option>
+                    @if (Model?.municipalities != null)
+                    {
+                        foreach (var m in Model.municipalities.OrderBy(x => x.Name))
+                        {
+                            <option value="@m.Id">@m.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        
+        <!-- Municipality Cards -->
+        <div id="municipalityCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            @if (Model?.municipalities != null)
+            {
+                foreach (var m in Model.municipalities.TakeLast(3))
+                {
+                    <div onclick="selectMunicipality(@m.Id, '@m.Name')" 
+                         class="custom-card group cursor-pointer rounded-xl p-4 hover:border-blue-400 hover:shadow-lg transition-all duration-300 flex flex-col items-center justify-center h-full min-h-[100px]">
+                        
+                        <div class="text-center w-full">
+                            <h4 class="font-bold text-base-content text-lg leading-tight mb-1 group-hover:text-blue-600 line-clamp-2">@m.Name</h4>
+                            <div class="flex justify-center my-2">
+                                <div class="h-0.5 w-8 bg-base-300 rounded-full group-hover:bg-blue-200 transition-colors"></div>
+                            </div>
+                            <p class="text-[11px] font-bold opacity-60 uppercase tracking-wider">@(m.Department?.Name ?? "Sin Dpto")</p>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </section>
+
+    <!-- Create Query Field Form -->
+    <section class="rounded-xl bg-base-100 p-6 shadow-lg">
+
+        <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
+            Crear Campo Consulta
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label class="block text-sm font-semibold opacity-80 mb-2 ml-2">Campo Consulta</label>
+                <input type="text" id="newFieldName" placeholder="Ej. Identificacion" 
+                       class="custom-input block w-full rounded-full border-0 bg-base-200 py-3.5 px-5 text-base-content shadow-sm ring-1 ring-inset ring-base-300 placeholder:opacity-50 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold opacity-80 mb-2 ml-2">Nombre Visible</label>
+                <input type="text" id="newQueryFieldType" placeholder="Ej. Cédula de Ciudadanía" 
+                       class="custom-input block w-full rounded-full border-0 bg-base-200 py-3.5 px-5 text-base-content shadow-sm ring-1 ring-inset ring-base-300 placeholder:opacity-50 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all">
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end pt-4 border-t border-base-300">
+            <button onclick="createQueryField()" class="custom-action-btn shadow-sm hover:shadow-md">
+                Crear Campo
+            </button>
+        </div>
+    </section>
+
+    <!-- Query Fields List -->
+    <div class="bg-base-100 rounded-xl p-6 shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-base-content flex items-center gap-2">
+                <span id="selectedMunicipalityName" class="text-blue-600">Selecciona una alcaldía</span>
+                <span class="opacity-60 text-sm font-normal" id="queryFieldCount"></span>
+            </h3>
+            <button onclick="loadQueryFields(currentMunicipalityId)" id="refreshBtn" class="btn btn-ghost btn-xs btn-circle hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            </button>
+        </div>
+
+        <div id="queryFieldsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Cards will be injected here -->
+            <div class="col-span-full text-center py-10 opacity-60 bg-base-200 rounded-xl border-2 border-dashed border-base-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                <p>Selecciona una alcaldía para ver sus campos de consulta</p>
+            </div>
+        </div>
     </div>
-}
+</div>
 
-<div class="card bg-base-200 rounded-box p-0 md:p-6">
-            <h1 class="mb-6 text-center text-3xl font-bold">Campo consulta</h1>
-            <div class="card bg-base-200 rounded-box grid grid-cols-1 gap-y-6 p-2 md:grid-rows-1">
-                
-     
-                    <div class="card bg-base-300 grid p-6">
-            <h2 class="mb-6 text-center text-2xl font-bold">Crear campo consulta</h2>
-                <form asp-action="createQueryField"  asp-controller="Municipality" method="post">
-                        <div class="grid gap-4 md:grid-cols-2">
-                        <fieldset class="fieldset w-full">
-                    <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                    <select  name="MunicipalityId" class="select w-full" required>
-                        <option disabled selected value="">Municipios</option>
-                        @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
-                        {
-                            <option value="@municipality.Id">@municipality.Name</option>
-                        }
-                    </select>
-                </fieldset>
-                            <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Campo consulta</legend>
-                                <input type="text"  name="FieldName" class="input w-full" placeholder="Identificacion" required />
-                            </fieldset>
-                            <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Nombre</legend>
-                                <input type="text" name="QueryFieldType" class="input w-full" placeholder="Cédula de Ciudadanía" required />
-                            </fieldset>
-                        </div>
-                        <div class="my-6 flex w-full justify-end">
-                        <button type="submit" class="btn btn-soft btn-accent w-full justify-self-center md:w-1/6">Crear</button>
-                        </div>
-                </form>
-                    </div>
-                
-
-
-
-<div class="card bg-base-300 grid p-6">
-            
-            <h2 class="mb-6 text-center text-2xl font-bold">Actualizar Campo Consulta</h2>
-            <form asp-action="SelectQueryField" asp-controller="Municipality" method="post">
-                <fieldset class="fieldset w-full md:w-1/3">
-                    <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                    <select  name="id" class="select w-full" onchange="this.form.submit()" required>
-                        <option disabled selected value="">Municipios</option>
-                        @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
-                        {
-                            <option value="@municipality.Id">@municipality.Name</option>
-                        }
-                    </select>
-                </fieldset>
+<!-- Edit Modal -->
+<dialog id="edit_modal" class="modal">
+    <div class="modal-box rounded-xl p-6 overflow-hidden custom-card">
+        <div class="px-20 py-4 flex justify-between items-center">
+            <h3 class="font-bold text-lg text-base-content">Editar Campo Consulta</h3>
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost">✕</button>
             </form>
-        <div class="my-10 flex flex-col items-center justify-center">
-                    <div class="avatar">
-                        <div class="mask mask-squircle h-24 w-24">
-                            <img 
-                            src="@Model?.municipality?.IdShield?.Url" 
-                            alt="escudo municipio" />
+        </div>
+        <div class="px-16 py-6 space-y-5">
+            <input type="hidden" id="editId">
+            <input type="hidden" id="editMunicipalityId">
+            
+            <div>
+                <label class="block text-sm font-medium opacity-70 mb-2">Campo Consulta</label>
+                <input type="text" id="editFieldName" 
+                       class="w-full rounded-lg border border-base-300 p-4 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium opacity-70 mb-2">Nombre Visible</label>
+                <input type="text" id="editQueryFieldType" 
+                       class="w-full rounded-lg border border-base-300 p-4 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+            </div>
+        </div>
+        <div class="px-16 py-4 flex justify-end gap-3">
+            <form method="dialog">
+                <button class="btn btn-sm bg-white border border-base-300 hover:bg-base-100" style="min-width: 100px; height: 32px;">Cancelar</button>
+            </form>
+            <button onclick="saveEdit()" class="custom-action-btn" style="width: 140px; height: 32px; font-size: 12px;">Guardar Cambios</button>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Serialize municipalities to JSON for client-side access
+    const allMunicipalities = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.municipalities.Select(m => new { 
+        m.Id, 
+        m.Name, 
+        DepartmentName = m.Department?.Name ?? "Sin Departamento", 
+        ShieldUrl = m.IdShieldNavigation?.Url 
+    })));
+
+    let currentMunicipalityId = null;
+
+    function handleSearchSelection() {
+        const select = document.getElementById('municipalitySearch');
+        const id = parseInt(select.value);
+        if (id) {
+            const municipality = allMunicipalities.find(m => m.Id === id);
+            if (municipality) {
+                renderSingleMunicipalityCard(municipality);
+                selectMunicipality(id, municipality.Name);
+            }
+        } else {
+            renderLast3Municipalities();
+            document.getElementById('selectedMunicipalityName').innerText = "Selecciona una alcaldía";
+            document.getElementById('queryFieldsContainer').innerHTML = `
+                <div class="col-span-full text-center py-10 opacity-60 bg-base-200 rounded-xl border-2 border-dashed border-base-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    <p>Selecciona una alcaldía para ver sus campos de consulta</p>
+                </div>`;
+            document.getElementById('queryFieldCount').innerText = "";
+            currentMunicipalityId = null;
+        }
+    }
+
+    function renderLast3Municipalities() {
+        const container = document.getElementById('municipalityCardsContainer');
+        const last3 = allMunicipalities.slice(-3); 
+        
+        container.innerHTML = last3.map(m => `
+            <div onclick="selectMunicipality(${m.Id}, '${m.Name.replace(/'/g, "\\\\'")}')" 
+                 class="custom-card group cursor-pointer rounded-xl p-4 hover:border-blue-400 hover:shadow-lg transition-all duration-300 flex flex-col items-center justify-center h-full min-h-[100px]">
+                
+                <div class="text-center w-full">
+                    <h4 class="font-bold text-base-content text-lg leading-tight mb-1 group-hover:text-blue-600 line-clamp-2">${m.Name}</h4>
+                    <div class="flex justify-center my-2">
+                        <div class="h-0.5 w-8 bg-base-300 rounded-full group-hover:bg-blue-200 transition-colors"></div>
+                    </div>
+                    <p class="text-[11px] font-bold opacity-60 uppercase tracking-wider">${m.DepartmentName}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderSingleMunicipalityCard(m) {
+        const container = document.getElementById('municipalityCardsContainer');
+        container.innerHTML = `
+            <div class="col-span-full flex justify-center animate-fade-in">
+                <div class="custom-card w-full max-w-sm rounded-xl p-6 shadow-lg flex flex-col items-center text-center">
+                    
+                    <div class="w-full">
+                        <h4 class="font-bold text-base-content text-2xl leading-tight mb-2">${m.Name}</h4>
+                        <div class="flex justify-center my-3">
+                            <div class="h-1 w-12 bg-blue-500 rounded-full"></div>
+                        </div>
+                        <p class="text-xs font-bold opacity-60 uppercase tracking-wider mb-4">${m.DepartmentName}</p>
+                    </div>
+                    
+                    <button onclick="document.getElementById('municipalitySearch').value = ''; handleSearchSelection();" class="custom-action-btn mt-4" style="width: 140px; height: 32px; font-size: 12px;">
+                        Cambiar selección
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function selectMunicipality(id, name) {
+        currentMunicipalityId = id;
+        document.getElementById('selectedMunicipalityName').innerText = name;
+        document.getElementById('refreshBtn').classList.remove('hidden');
+        
+        const select = document.getElementById('municipalitySearch');
+        if (select.value != id) {
+            select.value = id;
+            const municipality = allMunicipalities.find(m => m.Id === id);
+            if (municipality) {
+                renderSingleMunicipalityCard(municipality);
+            }
+        }
+
+        loadQueryFields(id);
+    }
+
+    async function loadQueryFields(id) {
+        if (!id) return;
+        
+        const container = document.getElementById('queryFieldsContainer');
+        container.innerHTML = '<div class="col-span-full flex justify-center p-10"><span class="loading loading-spinner loading-lg text-blue-500"></span></div>';
+        
+        try {
+            const response = await fetch(`@Url.Action("GetQueryFieldsByMunicipality", "Municipality")?id=${id}`);
+            if (!response.ok) throw new Error('Error al cargar');
+            const data = await response.json();
+            renderQueryFields(data);
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = `<div class="col-span-full text-center text-red-500 p-4">Error al cargar los campos de consulta.</div>`;
+        }
+    }
+
+    function renderQueryFields(fields) {
+        const container = document.getElementById('queryFieldsContainer');
+        const countSpan = document.getElementById('queryFieldCount');
+        
+        if (!fields || fields.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-10 opacity-60 bg-base-200 rounded-xl border-2 border-dashed border-base-300">
+                    <p>No hay campos de consulta asignados a esta alcaldía.</p>
+                </div>`;
+            countSpan.innerText = '(0 campos)';
+            return;
+        }
+
+        countSpan.innerText = `(${fields.length} campos)`;
+        container.innerHTML = fields.map(f => `
+            <div class="custom-card shadow-md hover:shadow-lg transition-shadow rounded-xl">
+                <div class="card-body p-5">
+                    <div class="flex justify-center items-center text-center">
+                        <h4 class="card-title text-sm font-bold text-base-content line-clamp-2" title="${f.queryFieldType}">
+                            ${f.queryFieldType}
+                        </h4>
+                    </div>
+                    
+                    <div class="mt-3 text-xs opacity-70">
+                        <p class="font-semibold mb-1">Campo Interno:</p>
+                        <div class="bg-base-200 p-2 rounded border border-base-300 truncate">
+                            ${f.fieldName}
                         </div>
                     </div>
-                    <div class="text-center">
-                        <h1 class="text-2xl font-bold">@Model?.municipality?.Name</h1>
-                        <p class="text-sm opacity-70">@Model?.municipality?.Department?.Name</p>
+
+                    <div class="card-actions justify-end mt-4">
+                        <button onclick='openEditModal(${JSON.stringify(f).replace(/'/g, "&#39;")})' 
+                                class="custom-action-btn shadow-sm hover:shadow-md"
+                                style="width: 100px; height: 30px; font-size: 12px; padding: 0 8px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="edit-btn-icon mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                            <span>Editar</span>
+                        </button>
                     </div>
                 </div>
+            </div>
+        `).join('');
+    }
 
+    async function createQueryField() {
+        if (!currentMunicipalityId) {
+            Swal.fire({ icon: 'warning', title: 'Atención', text: 'Debes seleccionar una alcaldía primero.' });
+            return;
+        }
 
-            @foreach (var queryField in Model?.queryFields ?? new List<QueryField>())
-            {
-                   
-                <form asp-action="updateQueryField"  asp-controller="Municipality" method="post">
-                        <div class="grid gap-4 md:grid-cols-2">
-                        <input type="hidden" name="id" value=@queryField.Id>
-                        <input type="hidden" name="MunicipalityId" value=@queryField.MunicipalityId >
+        const fieldName = document.getElementById('newFieldName').value;
+        const queryFieldType = document.getElementById('newQueryFieldType').value;
 
-                            <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Campo Consulta</legend>
-                                <input type="text" name="FieldName" class="input w-full" placeholder="Identificacion" value=@queryField.FieldName required />
-                            </fieldset>
-                            <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Nombre</legend>
-                                <input type="text" name="QueryFieldType" class="input w-full" placeholder="Cédula de Ciudadanía" value=@queryField.QueryFieldType required />
-                            </fieldset >
-                        </div>
-                        <div class="my-6 flex w-full justify-center md:justify-end">
-                        <button type="submit" class="btn btn-soft btn-accent w-full justify-self-center md:w-1/6">Guardar
-                            cambios</button>
-                        </div>
-                </form>
+        if (!fieldName || !queryFieldType) {
+            Swal.fire({ icon: 'warning', title: 'Atención', text: 'Todos los campos son obligatorios.' });
+            return;
+        }
 
+        const formData = new FormData();
+        formData.append('MunicipalityId', currentMunicipalityId);
+        formData.append('FieldName', fieldName);
+        formData.append('QueryFieldType', queryFieldType);
+
+        try {
+            const response = await fetch('@Url.Action("createQueryField", "Municipality")', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                Swal.fire({ icon: 'success', title: 'Éxito', text: result.message, timer: 1500, showConfirmButton: false });
+                loadQueryFields(currentMunicipalityId);
+                document.getElementById('newFieldName').value = "";
+                document.getElementById('newQueryFieldType').value = "";
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: result.message || 'No se pudo crear el campo.' });
             }
-</div>
-</div>
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error inesperado.' });
+        }
+    }
 
-<script>
+    function openEditModal(field) {
+        document.getElementById('editId').value = field.id;
+        document.getElementById('editMunicipalityId').value = field.municipalityId;
+        document.getElementById('editFieldName').value = field.fieldName;
+        document.getElementById('editQueryFieldType').value = field.queryFieldType;
+        
+        document.getElementById('edit_modal').showModal();
+    }
+
+    async function saveEdit() {
+        const id = document.getElementById('editId').value;
+        const municipalityId = document.getElementById('editMunicipalityId').value;
+        const fieldName = document.getElementById('editFieldName').value;
+        const queryFieldType = document.getElementById('editQueryFieldType').value;
+
+        const formData = new FormData();
+        formData.append('Id', id);
+        formData.append('MunicipalityId', municipalityId);
+        formData.append('FieldName', fieldName);
+        formData.append('QueryFieldType', queryFieldType);
+
+        try {
+            const response = await fetch('@Url.Action("updateQueryField", "Municipality")', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                document.getElementById('edit_modal').close();
+                Swal.fire({ icon: 'success', title: 'Actualizado', text: result.message, timer: 1500, showConfirmButton: false });
+                loadQueryFields(currentMunicipalityId);
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: result.message || 'No se pudo actualizar.' });
+            }
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión.' });
+        }
+    }
+
+    // Initial load of last 3 municipalities
+    renderLast3Municipalities();
+    
+    // Auto-dismiss temp messages
     setTimeout(() => {
-            const msg = document.getElementById("tempMessage");
-            if (msg) {
-                msg.style.transition = "opacity 0.5s";
-                msg.style.opacity = "0";
-                setTimeout(() => msg.remove(), 500);
-            }
-        }, 2000);
+        const msg = document.getElementById("tempMessage");
+        if (msg) {
+            msg.style.transition = "opacity 0.5s";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500);
+        }
+    }, 2000);
 </script>

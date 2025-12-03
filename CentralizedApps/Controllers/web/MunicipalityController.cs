@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Linq;
 using CentralizedApps.Models;
 using CentralizedApps.Models.Dtos;
 using CentralizedApps.Models.Dtos.PrincipalsDtos;
@@ -378,39 +379,7 @@ namespace CentralizedApps.Controllers.web
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> createQueryField(QueryFieldDto queryFieldDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                TempData["message"] = "No se pudo crear el campo cosulta, hay campos vacíos o inválidos.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
-            }
-            try
-            {
-                if (queryFieldDto == null || queryFieldDto.MunicipalityId <= 0
-                    || string.IsNullOrWhiteSpace(queryFieldDto.FieldName)
-                    || string.IsNullOrWhiteSpace(queryFieldDto.QueryFieldType))
-                {
-                    TempData["message"] = "No se pudo crear el campo cosulta, hay campos vacíos o inválidos.";
-                    TempData["MessageType"] = "error";
 
-                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto?.MunicipalityId });
-                }
-                await _ProcedureServices.createQueryField(queryFieldDto);
-
-                TempData["message"] = "Se creo el campo cosulta correctamente.";
-                TempData["MessageType"] = "success";
-                return RedirectToAction("QueryFieldIndex");
-            }
-            catch (Exception)
-            {
-                TempData["message"] = $"no se puedo crear el campo cosulta del municipio.";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("QueryFieldIndex");
-            }
-        }
 
         [HttpPost]
         public async Task<IActionResult> createNewsMunicipality(NewsByMunicipalityDto newsByMunicipalityDto)
@@ -717,44 +686,92 @@ namespace CentralizedApps.Controllers.web
                 return RedirectToAction("ProceduresIndex", new { id = updateCourseDto.MunicipalityId });
             }
         }
-        [HttpPost]
-        public async Task<IActionResult> updateQueryField(int id, QueryFieldDto queryFieldDto)
+        [HttpGet]
+        public async Task<IActionResult> QueryFieldIndex(int? id)
         {
+            var response = await _web.QueryField(id);
+            return View(response);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> GetQueryFieldsByMunicipality(int id)
+        {
             try
             {
-                _logger.LogInformation("Id: {Id}, FieldName: {FieldName}, MunicipalityId: {MunicipalityId}, QueryFieldType: {QueryFieldType}",
-        id, queryFieldDto.FieldName, queryFieldDto.MunicipalityId, queryFieldDto.QueryFieldType);
-
-                if (queryFieldDto.MunicipalityId <= 0 || string.IsNullOrEmpty(queryFieldDto.FieldName) || string.IsNullOrEmpty(queryFieldDto.QueryFieldType))
+                var response = await _web.QueryField(id);
+                
+                if (response?.queryFields == null)
                 {
-                    TempData["message"] = "no se puedo Actualizar el campo consulta, campos vacios";
-                    TempData["MessageType"] = "error";
-                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
+                    return Ok(new List<object>());
                 }
 
-                var result = await _ProcedureServices.updateQueryField(id, queryFieldDto);
-
-                if (!result.BooleanStatus)
+                var fields = response.queryFields.Select(q => new 
                 {
-                    TempData["message"] = "no se puedo Actualizar el campo consulta.";
-                    TempData["MessageType"] = "error";
-                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
-                }
-                else
-                {
-                    TempData["message"] = "Se Actualizar el campo consulta correctamente.";
-                    TempData["MessageType"] = "success";
-                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
-                }
+                    q.Id,
+                    q.MunicipalityId,
+                    q.FieldName,
+                    q.QueryFieldType
+                }).ToList();
+                
+                return Ok(fields);
             }
             catch (Exception)
             {
-                TempData["message"] = "no se puedo Actualizar el campo consulta. comunicate con el desarrollador";
+                return BadRequest("Error al cargar los campos de consulta.");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> createQueryField(QueryFieldDto queryFieldDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "No se pudo crear el campo consulta, hay campos vacíos o inválidos." });
+                }
+                TempData["message"] = "No se pudo crear el campo consulta, hay campos vacíos o inválidos.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto.MunicipalityId });
             }
+            try
+            {
+                if (queryFieldDto == null || queryFieldDto.MunicipalityId <= 0
+                    || string.IsNullOrWhiteSpace(queryFieldDto.FieldName)
+                    || string.IsNullOrWhiteSpace(queryFieldDto.QueryFieldType))
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "No se pudo crear el campo consulta, hay campos vacíos o inválidos." });
+                    }
+                    TempData["message"] = "No se pudo crear el campo consulta, hay campos vacíos o inválidos.";
+                    TempData["MessageType"] = "error";
+
+                    return RedirectToAction("QueryFieldIndex", new { id = queryFieldDto?.MunicipalityId });
+                }
+                await _ProcedureServices.createQueryField(queryFieldDto);
+
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, message = "Se creó el campo consulta correctamente." });
+                }
+                TempData["message"] = "Se creó el campo consulta correctamente.";
+                TempData["MessageType"] = "success";
+                return RedirectToAction("QueryFieldIndex");
+            }
+            catch (Exception)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "No se pudo crear el campo consulta del municipio." });
+                }
+                TempData["message"] = $"no se puedo crear el campo consulta del municipio.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("QueryFieldIndex");
+            }
         }
+
+
         [HttpPost]
         public async Task<IActionResult> updateNewsMunicipality(int id, NewsByMunicipalityDto newsByMunicipalityDto)
         {
@@ -905,6 +922,104 @@ namespace CentralizedApps.Controllers.web
                 TempData["MessageType"] = "error";
                 return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> NewsMunicipalityIndex(int? id)
+        {
+            try
+            {
+                var municipalities = await _MunicipalityServices.GetAllMunicipalityWithRelationsWeb(null);
+                var model = new NewsMunicipalityDto
+                {
+                    municipalities = municipalities?.Select(m => new Municipality 
+                    { 
+                        Id = m.Id, 
+                        Name = m.Name,
+                        Department = m.Department != null ? new Department { Name = m.Department.Name } : null,
+                        IdShieldNavigation = m.IdShield != null ? new ShieldMunicipality { Url = m.IdShield.Url } : null
+                    }).ToList() ?? new List<Municipality>()
+                };
+
+                if (id.HasValue && id > 0)
+                {
+                    var municipalityDto = await _MunicipalityServices.JustGetMunicipalityWithRelationsWeb(id.Value);
+                    if (municipalityDto != null && municipalityDto.municipality != null)
+                    {
+                        model.municipality = new GetMunicipalitysDto
+                        {
+                            Id = municipalityDto.municipality.Id,
+                            Name = municipalityDto.municipality.Name,
+                            Department = municipalityDto.municipality.Department,
+                            IdShield = municipalityDto.municipality.IdShield
+                        };
+                        model.newsByMunicipalities = municipalityDto.NewsByMunicipalities != null 
+                            ? new List<NewsByMunicipality> { municipalityDto.NewsByMunicipalities } 
+                            : new List<NewsByMunicipality>();
+                    }
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading NewsMunicipalityIndex");
+                return View(new NewsMunicipalityDto());
+            }
+        }
+
+        [HttpPost]
+        public IActionResult SelectNewsMunicipality(int id)
+        {
+            return RedirectToAction("NewsMunicipalityIndex", new { id = id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> deparmentIndex()
+        {
+            try
+            {
+                var departmentsDto = await _departmentService.GetAllDepartments();
+                var departments = departmentsDto?.Select(d => new Department { Id = d.Id, Name = d.Name }).ToList() ?? new List<Department>();
+                return View(departments);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading deparmentIndex");
+                return View(new List<Department>());
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> createDeparment(CreateDepartmentDto departmentDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid || string.IsNullOrEmpty(departmentDto.Name))
+                {
+                    TempData["message"] = "Datos inválidos para crear el departamento.";
+                    TempData["MessageType"] = "error";
+                    return RedirectToAction("deparmentIndex");
+                }
+
+                var result = await _departmentService.createDepartment(departmentDto);
+                if (result != null)
+                {
+                    TempData["message"] = "Departamento creado correctamente.";
+                    TempData["MessageType"] = "success";
+                }
+                else
+                {
+                    TempData["message"] = "No se pudo crear el departamento.";
+                    TempData["MessageType"] = "error";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating department");
+                TempData["message"] = "Error al crear el departamento.";
+                TempData["MessageType"] = "error";
+            }
+            return RedirectToAction("deparmentIndex");
         }
     }
 }

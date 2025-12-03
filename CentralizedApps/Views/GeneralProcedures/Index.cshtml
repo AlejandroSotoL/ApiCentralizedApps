@@ -1,7 +1,7 @@
 ﻿@model CentralizedApps.Models.Dtos.CreateMunicipalityProcedures_Web
 
 @{
-    ViewData["Title"] = "Trámites de una Alcaldía";
+    ViewData["Title"] = "Gestión de Trámites";
     Layout = "~/Views/Shared/Layout.cshtml";
 }
 
@@ -69,10 +69,10 @@
 <!-- Main Content Wrapper -->
 <div class="w-full max-w-7xl mx-auto space-y-6">
     <!-- Header -->
-    <header class="flex justify-center rounded-lg bg-stone-400 p-10 shadow-md">
-        <h2 class="text-3xl font-bold tracking-wide text-white">
-            Asignar y Editar Trámites de una Alcaldía
-        </h2>
+    <header class="flex justify-center rounded-lg bg-base-100 p-10 shadow-md">
+        <h1 class="font-bold text-3xl text-center mb-6">
+            Gestión de Trámites
+        </h1>
     </header>
 
     <!-- Alert Messages -->
@@ -153,6 +153,29 @@
         </div>
     </section>
 
+    <!-- Create New Procedure Type Section -->
+    <section class="rounded-xl bg-base-100 p-6 shadow-lg">
+        <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
+            <span class="bg-purple-100 text-purple-600 p-2 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+            </span>
+            Crear Nuevo Tipo de Proceso
+        </h3>
+
+        <div class="flex flex-col md:flex-row gap-4 items-end">
+            <div class="w-full">
+                <label class="block text-sm font-semibold opacity-80 mb-2 ml-2">Nombre del Nuevo Proceso</label>
+                <input type="text" id="newProcedureTypeName" placeholder="Ej. Pago de Impuestos" 
+                       class="custom-input block w-full rounded-full border-0 bg-base-200 py-3.5 px-5 text-base-content shadow-sm ring-1 ring-inset ring-base-300 placeholder:opacity-50 focus:bg-base-100 focus:ring-2 focus:ring-purple-500 sm:text-sm transition-all">
+            </div>
+            <button onclick="createNewProcedureType()" class="custom-action-btn shadow-sm hover:shadow-md bg-purple-600 hover:bg-purple-700 !bg-purple-600 mb-1">
+                Crear Tipo
+            </button>
+        </div>
+    </section>
+
     <!-- Add Procedure Form -->
     <section class="rounded-xl bg-base-100 p-6 shadow-lg">
         <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
@@ -161,7 +184,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </span>
-            Agregar Nuevo Proceso
+            Asignar Proceso a Alcaldía
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -231,7 +254,7 @@
 
 <!-- Edit Modal -->
 <dialog id="edit_modal" class="modal">
-    <div class="modal-box rounded-xl p-0 overflow-hidden custom-card">
+    <div class="modal-box rounded-xl p-6 overflow-hidden custom-card">
         <div class="px-16 py-4 flex justify-between items-center">
             <h3 class="font-bold text-lg text-base-content">Editar Proceso</h3>
             <form method="dialog">
@@ -534,6 +557,35 @@
                 loadProcedures(currentMunicipalityId);
             } else {
                 Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar.' });
+            }
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión.' });
+        }
+    }
+
+    async function createNewProcedureType() {
+        const nameInput = document.getElementById('newProcedureTypeName');
+        const name = nameInput.value.trim();
+
+        if (!name) {
+            Swal.fire({ icon: 'warning', title: 'Atención', text: 'Ingresa un nombre para el nuevo proceso.' });
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/Process/Create/NewTypeProcedure', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Name: name })
+            });
+
+            const result = await response.json();
+
+            if (result.booleanStatus) { // Note: DTO uses lowercase camelCase in JSON usually, check DTO definition if needed. Assuming standard serialization.
+                Swal.fire({ icon: 'success', title: 'Creado', text: result.sentencesError, timer: 1500, showConfirmButton: false })
+                    .then(() => location.reload()); // Reload to update dropdown list
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: result.sentencesError });
             }
         } catch (error) {
             Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión.' });
