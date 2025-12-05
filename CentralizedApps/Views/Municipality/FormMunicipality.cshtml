@@ -1,194 +1,551 @@
 ﻿@using CentralizedApps.Models.Dtos.PrincipalsDtos
 @model CentralizedApps.Models.ToAlcaldiaWeb
+@using Newtonsoft.Json
 
 @{
     ViewData["Title"] = "Gestión de Municipios";
     Layout = "Layout";
+    // Serialize Escudos to JSON for client-side lookup
+    var escudosJson = JsonConvert.SerializeObject(Model.Escudos.Select(e => new { e.Id, e.Url }));
 }
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Nunito Sans', sans-serif !important;
+    }
+    .custom-card {
+        background-color: #F5F6FA !important;
+        border: 1px solid #E5E7EB;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        height: 100%;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    [data-theme="dark"] .custom-card {
+        background-color: #1f2937 !important;
+        border: 1px solid #374151;
+    }
+
+    .custom-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .custom-icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #516FE9; /* Updated color */
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .custom-icon-btn:hover {
+        background-color: #3b55c5;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .custom-input {
+        background-color: #f5f6fa !important;
+        border-color: #E5E7EB;
+    }
+    
+    [data-theme="dark"] .custom-input {
+        background-color: #374151 !important;
+        border-color: #4B5563;
+    }
+
+    .custom-submit-btn {
+        background-color: #516FE9 !important;
+        border-color: #516FE9 !important;
+        color: white !important;
+    }
+    
+    .custom-submit-btn:hover {
+        background-color: #3b55c5 !important;
+        border-color: #3b55c5 !important;
+    }
+</style>
 
 <form asp-action="SaveAlcadia" asp-controller="Municipality" method="post" class="w-full" data-ajax="true">
     <input type="hidden" asp-for="Alcaldia.Id" />
 
-    <div class="w-full">
+    <div class="w-full max-w-7xl mx-auto space-y-6">
         @if (TempData["Success"] != null)
         {
-            <div class="alert alert-success animate-fade-in mt-4 shadow-md">
+            <div class="alert alert-success animate-fade-in shadow-md">
                 <span>@TempData["Success"]</span>
             </div>
         }
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-error animate-fade-in mt-4 shadow-md">
+            <div class="alert alert-error animate-fade-in shadow-md">
                 <span>@TempData["Error"]</span>
             </div>
         }
-    </div>
 
-    <div class="card bg-base-100 w-full rounded-2xl p-6 shadow-xl">
-        <div class="flex w-full flex-col items-center justify-center gap-3 p-6">
-            <div class="avatar">
-                <div class="mask mask-squircle h-24 w-24">
-                    <img id="previewEscudo"
-                        src="@(Model?.Alcaldia?.IdShieldNavigation?.Url ?? "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png")"
-                        alt="escudo municipio" />
+        <!-- Header Card with Avatar -->
+        <div class="card bg-base-100 w-full rounded-2xl p-6 shadow-xl">
+            <div class="flex w-full flex-col items-center justify-center gap-3">
+                <div class="avatar">
+                    <div class="mask mask-squircle h-24 w-24">
+                        <img id="previewEscudo"
+                            src="@(Model?.Alcaldia?.IdShieldNavigation?.Url ?? "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png")"
+                            alt="escudo municipio" />
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h1 class="text-2xl font-bold">@(Model?.Alcaldia?.Name ?? "En Creación")</h1>
+                    <p class="text-sm opacity-70">@(Model?.Alcaldia?.Department?.Name ?? "En Creación")</p>
                 </div>
             </div>
-            <div class="text-center">
-                <h1 class="text-2xl font-bold">@(Model?.Alcaldia?.Name ?? "En Creación")</h1>
-                <p class="text-sm opacity-70">@(Model?.Alcaldia?.Department?.Name ?? "En Creación")</p>
-            </div>
-        </div>
+            
+            <div class="divider"></div>
 
-        <h2 class="mb-6 text-center text-2xl font-bold">Tienes que analizár esto.</h2>
-        <p class="mb-8 text-center opacity-70">
-            Antes de registrar la información del municipio, primero debes crear o seleccionar
-            un <strong>Tema</strong>, un <strong>Departamento</strong> y un <strong>Banco</strong>.
-        </p>
+            <h2 class="mb-2 text-center text-2xl font-bold">Configuración Inicial</h2>
+            <p class="mb-8 text-center opacity-70">
+                Seleccione o cree las dependencias necesarias para el municipio.
+            </p>
 
-        <div class="card bg-base-300 rounded-box mb-6 p-6">
-            <h3 class="mb-4 text-xl font-bold">¡Cambiar o dejar!</h3>
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Seleccionar tema existente</legend>
-                    <select class="select w-full" asp-for="Alcaldia.ThemeId"
-                        asp-items="@(new SelectList(Model.Themas, "Id", "NameTheme", Model.Alcaldia.ThemeId))" required>
-                        <option value="">Seleccione un tema</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Seleccione el banco existente</legend>
-                    <select class="select w-full" asp-for="Alcaldia.IdBank"
-                        asp-items="@(new SelectList(Model.Bancos, "Id", "NameBank", Model.Alcaldia.IdBank))" required>
-                        <option value="">Seleccione el banco</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Seleccione un escudo existente</legend>
-                    <select class="select w-full" asp-for="Alcaldia.IdShield"
-                        asp-items="@(new SelectList(Model.Escudos, "Id", "NameOfMunicipality", Model.Alcaldia.IdShield))"
-                        required>
-                        <option value="">Seleccione un escudo</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Seleccione el Departamento</legend>
-                    <select class="select w-full" asp-for="Alcaldia.DepartmentId"
-                        asp-items="@(new SelectList(Model.Departamentos, "Id", "Name", Model.Alcaldia.DepartmentId))"
-                        required>
-                        <option value="">Seleccione un departamento</option>
-                    </select>
-                </fieldset>
-            </div>
-        </div>
-
-        <div class="card bg-base-300 rounded-box mb-6 p-6">
-            <h2 class="mb-6 text-center text-2xl font-bold">Información General</h2>
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Código</legend>
-                    <input asp-for="Alcaldia.EntityCode" class="input w-full" required />
-                </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Dominio</legend>
-                    <div class="flex items-center gap-2">
-                        <input asp-for="Alcaldia.Domain" class="input w-full" required />
-                        <a class="btn btn-primary" href="@Model?.Alcaldia.Domain" target="_blank"
-                            title="Abrir dominio">Observar</a>
-                    </div>
-                </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Escudo</legend>
-                    <div class="flex items-center gap-2">
-                        <input type="text" class="file-input w-full" name="EscudoFile" onchange="previewEscudo(event)"
-                            value="@(Model?.Alcaldia?.IdShieldNavigation?.Url ?? string.Empty)" required />
-                        <button type="button" class="btn btn-secondary" onclick="openEscudo()" title="Vista previa">
-                            Observar
+            <!-- 2x2 Grid for Dependencies -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                
+                <!-- Theme Card -->
+                <div class="custom-card">
+                    <h3 class="section-title">
+                        <span class="bg-purple-100 text-purple-600 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
+                        </span>
+                        Tema Gráfico
+                    </h3>
+                    <div class="flex gap-2 items-end">
+                        <div class="w-full">
+                            <label class="label"><span class="label-text">Seleccionar Tema</span></label>
+                            <select id="ThemeSelect" class="select select-bordered w-full custom-input" asp-for="Alcaldia.ThemeId"
+                                asp-items="@(new SelectList(Model.Themas, "Id", "NameTheme"))" required>
+                                <option value="">Seleccione un tema</option>
+                            </select>
+                        </div>
+                        <button type="button" class="custom-icon-btn tooltip" data-tip="Crear nuevo tema" onclick="document.getElementById('create_theme_modal').showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                         </button>
                     </div>
+                </div>
+
+                <!-- Department Card -->
+                <div class="custom-card">
+                    <h3 class="section-title">
+                        <span class="bg-blue-100 text-blue-600 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </span>
+                        Departamento
+                    </h3>
+                    <div class="flex gap-2 items-end">
+                        <div class="w-full">
+                            <label class="label"><span class="label-text">Seleccionar Departamento</span></label>
+                            <select id="DepartmentSelect" class="select select-bordered w-full custom-input" asp-for="Alcaldia.DepartmentId"
+                                asp-items="@(new SelectList(Model.Departamentos, "Id", "Name"))" required>
+                                <option value="">Seleccione un departamento</option>
+                            </select>
+                        </div>
+                        <button type="button" class="custom-icon-btn tooltip" data-tip="Crear nuevo departamento" onclick="document.getElementById('create_department_modal').showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bank Card -->
+                <div class="custom-card">
+                    <h3 class="section-title">
+                        <span class="bg-green-100 text-green-600 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>
+                        </span>
+                        Banco
+                    </h3>
+                    <div class="flex gap-2 items-end">
+                        <div class="w-full">
+                            <label class="label"><span class="label-text">Seleccionar Banco</span></label>
+                            <select id="BankSelect" class="select select-bordered w-full custom-input" asp-for="Alcaldia.IdBank"
+                                asp-items="@(new SelectList(Model.Bancos, "Id", "NameBank"))" required>
+                                <option value="">Seleccione el banco</option>
+                            </select>
+                        </div>
+                        <button type="button" class="custom-icon-btn tooltip" data-tip="Crear nuevo banco" onclick="document.getElementById('create_bank_modal').showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Shield Card -->
+                <div class="custom-card">
+                    <h3 class="section-title">
+                        <span class="bg-yellow-100 text-yellow-600 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                        </span>
+                        Escudo
+                    </h3>
+                    <div class="flex gap-2 items-end">
+                        <div class="w-full">
+                            <label class="label"><span class="label-text">Seleccionar Escudo</span></label>
+                            <select id="ShieldSelect" class="select select-bordered w-full custom-input" asp-for="Alcaldia.IdShield"
+                                asp-items="@(new SelectList(Model.Escudos, "Id", "NameOfMunicipality"))" required>
+                                <option value="">Seleccione un escudo</option>
+                            </select>
+                        </div>
+                        <button type="button" class="custom-icon-btn tooltip" data-tip="Subir nuevo escudo" onclick="document.getElementById('create_shield_modal').showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Datos Principales Section -->
+        <div class="card bg-base-100 w-full rounded-2xl p-6 shadow-xl">
+            <h2 class="mb-6 text-2xl font-bold border-b pb-2">Datos Principales</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend font-semibold">Nombre Alcaldía</legend>
+                    <input asp-for="Alcaldia.Name" class="input input-bordered w-full custom-input" required />
                 </fieldset>
 
                 <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Nombre Alcaldía</legend>
-                    <input asp-for="Alcaldia.Name" class="input w-full" required />
+                    <legend class="fieldset-legend font-semibold">Código Entidad</legend>
+                    <input asp-for="Alcaldia.EntityCode" class="input input-bordered w-full custom-input" required />
                 </fieldset>
 
                 <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Usuario Fintech</legend>
-                    <input asp-for="Alcaldia.UserFintech" class="input w-full" required />
+                    <legend class="fieldset-legend font-semibold">Dominio</legend>
+                    <input asp-for="Alcaldia.Domain" class="input input-bordered w-full custom-input" required />
                 </fieldset>
 
                 <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Contraseña Fintech</legend>
-                    <input value="@Model.Alcaldia.PasswordFintech" name="Alcaldia.PasswordFintech" type="text"
-                        class="input w-full" required />
+                    <legend class="fieldset-legend font-semibold">Estado</legend>
+                    <div class="form-control w-full">
+                        <label class="label cursor-pointer justify-start gap-4">
+                            <span class="label-text">¿Municipio Activo?</span> 
+                            <input type="checkbox" class="toggle toggle-success" name="Alcaldia.IsActive" value="true" @(Model.Alcaldia.Id == 0 || Model.Alcaldia.IsActive == true ? "checked" : "") />
+                            <input type="hidden" name="Alcaldia.IsActive" value="false" />
+                        </label>
+                    </div>
                 </fieldset>
 
                 <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Latitud</legend>
-                    <input asp-for="Alcaldia.Latitude" class="input w-full" />
+                    <legend class="fieldset-legend font-semibold">Latitud</legend>
+                    <input asp-for="Alcaldia.Latitude" class="input input-bordered w-full custom-input" />
                 </fieldset>
 
                 <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Longitud</legend>
-                    <input asp-for="Alcaldia.Longitude" class="input w-full" />
+                    <legend class="fieldset-legend font-semibold">Longitud</legend>
+                    <input asp-for="Alcaldia.Longitude" class="input input-bordered w-full custom-input" />
                 </fieldset>
 
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Email del Municipio</legend>
-                    <input asp-for="Alcaldia.EmailMunicipalities" class="input w-full" />
+                <fieldset class="fieldset md:col-span-2">
+                    <legend class="fieldset-legend font-semibold">Política de Privacidad</legend>
+                    <textarea asp-for="Alcaldia.DataPrivacy" class="textarea textarea-bordered w-full custom-input" rows="3" required></textarea>
                 </fieldset>
 
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Email de Panico</legend>
-                    <input asp-for="Alcaldia.EmailPanic" class="input w-full" />
-                </fieldset>
-
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Telefono del Municipio</legend>
-                    <input asp-for="Alcaldia.Phone" class="input w-full" />
-                </fieldset>
-
-                <fieldset class="fieldset col-span-3">
-                    <legend class="fieldset-legend">Política de Privacidad</legend>
-                    <textarea asp-for="Alcaldia.DataPrivacy" class="textarea w-full" required></textarea>
-                </fieldset>
-
-                <fieldset class="fieldset col-span-3">
-                    <legend class="fieldset-legend">Términos y Condiciones</legend>
-                    <textarea asp-for="Alcaldia.DataProcessingPrivacy" class="textarea w-full" required></textarea>
+                <fieldset class="fieldset md:col-span-2">
+                    <legend class="fieldset-legend font-semibold">Términos y Condiciones</legend>
+                    <textarea asp-for="Alcaldia.DataProcessingPrivacy" class="textarea textarea-bordered w-full custom-input" rows="3" required></textarea>
                 </fieldset>
             </div>
         </div>
 
-        @if (Model?.Alcaldia?.Id > 0)
-        {
-            <button type="submit" class="btn btn-success w-max">Guardar cambios</button>
-        }
-        else
-        {
-            <button type="submit" class="btn btn-success w-max">Crear</button>
-        }
+        <!-- Información Adicional Section -->
+        <div class="card bg-base-100 w-full rounded-2xl p-6 shadow-xl">
+            <h2 class="mb-6 text-2xl font-bold border-b pb-2">Información Adicional</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend font-semibold">Usuario Fintech</legend>
+                    <input asp-for="Alcaldia.UserFintech" class="input input-bordered w-full custom-input" required />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend font-semibold">Contraseña Fintech</legend>
+                    <input value="@Model.Alcaldia.PasswordFintech" name="Alcaldia.PasswordFintech" type="text"
+                        class="input input-bordered w-full custom-input" required />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend font-semibold">Email del Municipio</legend>
+                    <input asp-for="Alcaldia.EmailMunicipalities" class="input input-bordered w-full custom-input" />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend font-semibold">Email de Pánico</legend>
+                    <input asp-for="Alcaldia.EmailPanic" class="input input-bordered w-full custom-input" />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend font-semibold">Teléfono del Municipio</legend>
+                    <input asp-for="Alcaldia.Phone" class="input input-bordered w-full custom-input" />
+                </fieldset>
+
+            </div>
+
+            <div class="card-actions justify-end mt-8">
+                @if (Model?.Alcaldia?.Id > 0)
+                {
+                    <button type="submit" class="btn custom-submit-btn px-8">Guardar cambios</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn custom-submit-btn px-8">Crear Municipio</button>
+                }
+            </div>
+        </div>
     </div>
 </form>
 
+
+<!-- Modals -->
+
+<!-- Create Theme Modal -->
+<dialog id="create_theme_modal" class="modal">
+    <div class="modal-box w-11/12 max-w-3xl">
+        <h3 class="font-bold text-lg mb-4">Crear Nuevo Tema</h3>
+        <form id="createThemeForm" onsubmit="submitTheme(event)">
+            <div class="grid grid-cols-1 gap-4">
+                <div class="form-control">
+                    <label class="label font-semibold">Nombre del tema</label>
+                    <input type="text" class="input input-bordered w-full custom-input" name="NameTheme" required placeholder="Ej: DarkBlue" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Colors -->
+                    <div class="form-control">
+                        <label class="label"><span class="label-text text-xs font-semibold">Color de fondo</span></label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" value="#FFFFFF" />
+                            <input type="text" class="input input-bordered input-sm w-full uppercase color-text custom-input" name="BackGroundColor" value="#FFFFFF" maxlength="7" />
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text text-xs font-semibold">Color primario</span></label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" value="#000000" />
+                            <input type="text" class="input input-bordered input-sm w-full uppercase color-text custom-input" name="PrimaryColor" value="#000000" maxlength="7" />
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text text-xs font-semibold">Color secundario</span></label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" value="#000000" />
+                            <input type="text" class="input input-bordered input-sm w-full uppercase color-text custom-input" name="SecondaryColor" value="#000000" maxlength="7" />
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text text-xs font-semibold">Color secundario oscuro</span></label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" value="#000000" />
+                            <input type="text" class="input input-bordered input-sm w-full uppercase color-text custom-input" name="SecondaryColorBlack" value="#000000" maxlength="7" />
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text text-xs font-semibold">Texto en primario (claro)</span></label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" value="#FFFFFF" />
+                            <input type="text" class="input input-bordered input-sm w-full uppercase color-text custom-input" name="OnPrimaryColorLight" value="#FFFFFF" maxlength="7" />
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text text-xs font-semibold">Texto en primario (oscuro)</span></label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" value="#000000" />
+                            <input type="text" class="input input-bordered input-sm w-full uppercase color-text custom-input" name="OnPrimaryColorDark" value="#000000" maxlength="7" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-action">
+                <button type="button" class="btn" onclick="document.getElementById('create_theme_modal').close()">Cancelar</button>
+                <button type="submit" class="btn custom-submit-btn">Guardar</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<!-- Create Bank Modal -->
+<dialog id="create_bank_modal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">Crear Nuevo Banco</h3>
+        <form id="createBankForm" onsubmit="submitBank(event)">
+            <div class="form-control">
+                <label class="label font-semibold">Nombre del Banco</label>
+                <input type="text" class="input input-bordered w-full custom-input" name="NameBank" required placeholder="Ej: Banco Agrario" />
+            </div>
+            <div class="modal-action">
+                <button type="button" class="btn" onclick="document.getElementById('create_bank_modal').close()">Cancelar</button>
+                <button type="submit" class="btn custom-submit-btn">Guardar</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<!-- Create Department Modal -->
+<dialog id="create_department_modal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">Crear Nuevo Departamento</h3>
+        <form id="createDepartmentForm" onsubmit="submitDepartment(event)">
+            <div class="form-control">
+                <label class="label font-semibold">Nombre del Departamento</label>
+                <input type="text" class="input input-bordered w-full custom-input" name="Name" required placeholder="Ej: Cundinamarca" />
+            </div>
+            <div class="modal-action">
+                <button type="button" class="btn" onclick="document.getElementById('create_department_modal').close()">Cancelar</button>
+                <button type="submit" class="btn custom-submit-btn">Guardar</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<!-- Create Shield Modal -->
+<dialog id="create_shield_modal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">Subir Nuevo Escudo</h3>
+        <form id="createShieldForm" onsubmit="submitShield(event)">
+            <div class="form-control mb-4">
+                <label class="label font-semibold">Nombre del Municipio (para el escudo)</label>
+                <input type="text" class="input input-bordered w-full custom-input" name="municipio" required placeholder="Ej: Bogota" />
+            </div>
+            <div class="form-control mb-4">
+                <label class="label font-semibold">Imagen del Escudo</label>
+                <input type="file" class="file-input file-input-bordered w-full custom-input" name="archivo" accept="image/*" required />
+            </div>
+            <div class="modal-action">
+                <button type="button" class="btn" onclick="document.getElementById('create_shield_modal').close()">Cancelar</button>
+                <button type="submit" class="btn custom-submit-btn">Subir</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function previewEscudo(event) {
-        const reader = new FileReader();
-        reader.onload = function () {
-            document.getElementById('previewEscudo').src = reader.result;
+    // Shield Data from Server
+    const escudosData = @Html.Raw(escudosJson);
+
+    // Color Sync Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const initColorSync = (container) => {
+            const pickers = container.querySelectorAll('.color-picker');
+            const texts = container.querySelectorAll('.color-text');
+            pickers.forEach((picker, index) => {
+                const text = texts[index];
+                picker.addEventListener('input', (e) => text.value = e.target.value.toUpperCase());
+                text.addEventListener('input', (e) => {
+                    let val = e.target.value;
+                    if (val.length === 7 && val.startsWith('#')) picker.value = val;
+                });
+            });
         };
-        reader.readAsDataURL(event.target.files[0]);
+        initColorSync(document.getElementById('create_theme_modal'));
+
+        // Shield select change listener to update preview
+        const shieldSelect = document.getElementById('ShieldSelect');
+        if(shieldSelect) {
+            shieldSelect.addEventListener('change', function() {
+                const selectedId = parseInt(this.value);
+                const shield = escudosData.find(s => s.Id === selectedId);
+                const preview = document.getElementById('previewEscudo');
+                if (shield && shield.Url) {
+                    preview.src = shield.Url;
+                } else {
+                    preview.src = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png";
+                }
+            });
+        }
+    });
+
+    async function submitForm(event, url, successMsg, selectId, textKey, valueKey = 'id') {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                Swal.fire({ icon: 'success', title: 'Éxito', text: result.message, timer: 1500, showConfirmButton: false });
+
+                // Update Select
+                if (selectId && result.data) {
+                    const select = document.getElementById(selectId);
+                    const option = document.createElement('option');
+                    option.value = result.data[valueKey] || result.data.id || result.data.Id;
+                    // Handle different casing or property names
+                    let text = result.data[textKey] || result.data.name || result.data.Name;
+                    if(textKey === 'NameTheme') text = result.data.nameTheme || result.data.NameTheme;
+                    if(textKey === 'NameBank') text = result.data.nameBank || result.data.NameBank;
+                    if(textKey === 'NameOfMunicipality') text = result.data.nameOfMunicipality || result.data.NameOfMunicipality;
+
+                    option.text = text;
+                    option.selected = true;
+                    select.add(option);
+
+                    // Trigger change event
+                    select.dispatchEvent(new Event('change'));
+
+                    // Special handling for shield preview if possible
+                    if(selectId === 'ShieldSelect') {
+                         const url = result.data.url || result.data.Url;
+                         if(url) {
+                             document.getElementById('previewEscudo').src = url;
+                             // Update local data for future selects
+                             escudosData.push({ Id: result.data.id || result.data.Id, Url: url });
+                         }
+                    }
+                }
+
+                // Close modal
+                form.closest('dialog').close();
+                form.reset();
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: result.message });
+            }
+        } catch (error) {
+            console.error(error);
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error inesperado.' });
+        }
     }
 
-    function openEscudo() {
-        const src = document.getElementById('previewEscudo').src;
-        if (src) window.open(src, '_blank');
+    function submitTheme(e) {
+        submitForm(e, '@Url.Action("CreateGraphicThemes", "Municipality")', 'Tema creado correctamente', 'ThemeSelect', 'NameTheme');
+    }
+
+    function submitBank(e) {
+        submitForm(e, '@Url.Action("createBank", "Municipality")', 'Banco creado correctamente', 'BankSelect', 'NameBank');
+    }
+
+    function submitDepartment(e) {
+        submitForm(e, '@Url.Action("createDeparment", "Municipality")', 'Departamento creado correctamente', 'DepartmentSelect', 'Name');
+    }
+
+    function submitShield(e) {
+        submitForm(e, '@Url.Action("createShield", "Municipality")', 'Escudo creado correctamente', 'ShieldSelect', 'NameOfMunicipality');
     }
 </script>

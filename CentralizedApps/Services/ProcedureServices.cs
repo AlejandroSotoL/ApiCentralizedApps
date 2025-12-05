@@ -785,7 +785,12 @@ namespace CentralizedApps.Services
                         SentencesError = "Municipio no encontrado."
                     };
                 }
-                _mapper.Map(newsByMunicipalityDto, existidNew);
+
+                // FIX: Set properties directly instead of using AutoMapper on detached entity
+                existidNew.GetUrlNew = newsByMunicipalityDto.GetUrlNew;
+                existidNew.IdMunicipality = newsByMunicipalityDto.IdMunicipality;
+
+                // FIX: FindAsync_Predicate uses AsNoTracking(), so we must explicitly mark for update
                 _unitOfWork.genericRepository<NewsByMunicipality>().Update(existidNew);
 
                 var rows = await _unitOfWork.SaveChangesAsync();

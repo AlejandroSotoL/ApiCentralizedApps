@@ -23,8 +23,10 @@ namespace CentralizedApps.Controllers.web
         private readonly IBank _bank;
         private readonly IWeb _web;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _env;
         private readonly ILogger<MunicipalityController> _logger;
-        public MunicipalityController(ILogger<MunicipalityController> logger, IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork, IDepartmentService departmentService, IWeb web, IBank bank, IMapper mapper)
+
+        public MunicipalityController(ILogger<MunicipalityController> logger, IMunicipalityServices MunicipalityServices, IProcedureServices ProcedureServices, IUnitOfWork unitOfWork, IDepartmentService departmentService, IWeb web, IBank bank, IMapper mapper, IWebHostEnvironment env)
         {
             _MunicipalityServices = MunicipalityServices;
             _ProcedureServices = ProcedureServices;
@@ -34,6 +36,7 @@ namespace CentralizedApps.Controllers.web
             _bank = bank;
             _logger = logger;
             _mapper = mapper;
+            _env = env;
         }
 
         [HttpGet]
@@ -54,6 +57,31 @@ namespace CentralizedApps.Controllers.web
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetMunicipalitySocialMedia(int id)
+        {
+            try
+            {
+                var response = await _web.MunicipalitiesAndSocialMediaType(id);
+                
+                // Create a simplified DTO for the response
+                var socialMediaData = response.municipalitySocialMedia.Select(m => new 
+                {
+                    m.Id,
+                    m.MunicipalityId,
+                    m.SocialMediaTypeId,
+                    m.Url,
+                    m.IsActive
+                }).ToList();
+
+                return Json(new { success = true, data = socialMediaData });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error al cargar redes sociales: {ex.Message}" });
+            }
+        }
+
         [HttpPost]
         public IActionResult SelectMunicipalitySocialMedia(int id)
         {
@@ -65,6 +93,10 @@ namespace CentralizedApps.Controllers.web
         {
             if (dto.MunicipalityId <= 0 || dto.SocialMediaTypeId <= 0 || string.IsNullOrEmpty(dto.Url))
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "No se pudo crear la red social, campo vacío." });
+                }
                 TempData["message"] = "No se puedo crear la red social, campo vacio.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("MunicipalitySocialMediaIndex");
@@ -73,9 +105,18 @@ namespace CentralizedApps.Controllers.web
             var result = await _ProcedureServices.AddMuncipalitySocialMediaToMunicipality(dto);
             if (!result)
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "No se pudo crear la red social." });
+                }
                 TempData["message"] = "No se puedo crear la red social.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("MunicipalitySocialMediaIndex");
+            }
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return Json(new { success = true, message = "La red social fue creada correctamente." });
             }
 
             TempData["message"] = "la red social fue creada correctamente.";
@@ -128,7 +169,55 @@ namespace CentralizedApps.Controllers.web
         public async Task<IActionResult> MunicipalitySocialMediaIndex(int? id)
         {
             var response = await _web.MunicipalitiesAndSocialMediaType(id);
+            
+            // Get the last added municipality
+            var lastMunicipality = await _unitOfWork.genericRepository<Municipality>()
+                .GetAllAsync();
+            
+            if (lastMunicipality != null && lastMunicipality.Any())
+            {
+                var last = lastMunicipality.OrderByDescending(m => m.Id).FirstOrDefault();
+                ViewBag.LastMunicipalityId = last?.Id;
+                ViewBag.LastMunicipalityName = last?.Name;
+            }
+
             return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
+        {
+            try
+            {
+                if (updateMunicipalitySocialMediumDto.MunicipalityId <= 0 || updateMunicipalitySocialMediumDto.SocialMediaTypeId <= 0)
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "Datos inválidos." });
+                    }
+                     return RedirectToAction("MunicipalitySocialMediaIndex");
+                }
+
+                var result = await _ProcedureServices.updateMunicipalitySocialMedium(id, updateMunicipalitySocialMediumDto);
+
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { 
+                        success = result.BooleanStatus, 
+                        message = result.BooleanStatus ? "Actualizado correctamente" : result.SentencesError 
+                    });
+                }
+
+                return RedirectToAction("MunicipalitySocialMediaIndex");
+            }
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
+                return RedirectToAction("MunicipalitySocialMediaIndex");
+            }
         }
 
         [HttpGet]
@@ -473,18 +562,36 @@ namespace CentralizedApps.Controllers.web
             {
                 if (string.IsNullOrEmpty(bankAccountDto.NameBank))
                 {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "No se puede crear el banco, campo vacío." });
+                    }
                     TempData["message"] = "No se puedo crear el banco, campo vacio.";
                     TempData["MessageType"] = "error";
                     return RedirectToAction("BankIndex");
                 }
                 await _bank.CreateBank(bankAccountDto);
+
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    // Fetch the created bank to return it (or just return success and let client fetch)
+                    // Assuming CreateBank doesn't return ID, we might need to fetch it by name or just return success.
+                    // Ideally we return the created object. For now, let's try to fetch it.
+                    var createdBank = await _unitOfWork.genericRepository<Bank>().FindAsync_Predicate(b => b.NameBank == bankAccountDto.NameBank);
+                    return Json(new { success = true, message = "El banco fue creado correctamente.", data = createdBank });
+                }
+
                 TempData["message"] = "El banco fue creado correctamente.";
                 TempData["MessageType"] = "success";
                 return RedirectToAction("BankIndex");
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = $"No se pudo crear el banco: {ex.Message}" });
+                }
                 TempData["message"] = "No se puedo crear el banco.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("BankIndex");
@@ -889,40 +996,7 @@ namespace CentralizedApps.Controllers.web
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> updateMunicipalitySocialMedium(int id, CreateMunicipalitySocialMediumDto updateMunicipalitySocialMediumDto)
-        {
-            try
-            {
-                if (updateMunicipalitySocialMediumDto.MunicipalityId <= 0 || updateMunicipalitySocialMediumDto.SocialMediaTypeId <= 0 || string.IsNullOrEmpty(updateMunicipalitySocialMediumDto.Url))
-                {
-                    TempData["message"] = "no se puedo actulizar la red social del municipio.";
-                    TempData["MessageType"] = "error";
-                    return RedirectToAction("MunicipalitySocialMediaIndex");
-                }
 
-                var result = await _ProcedureServices.updateMunicipalitySocialMedium(id, updateMunicipalitySocialMediumDto);
-
-                if (!result.BooleanStatus)
-                {
-                    TempData["message"] = "no se puedo actulizar la red social del municipio.";
-                    TempData["MessageType"] = "error";
-                    return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
-                }
-                else
-                {
-                    TempData["message"] = "la red social se actualizo correctamente.";
-                    TempData["MessageType"] = "success";
-                    return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
-                }
-            }
-            catch (Exception ex)
-            {
-                TempData["message"] = $"no se puedo actulizar la red social del municipio. -> {ex.Message}";
-                TempData["MessageType"] = "error";
-                return RedirectToAction("MunicipalitySocialMediaIndex", new { id = updateMunicipalitySocialMediumDto.MunicipalityId });
-            }
-        }
         [HttpGet]
         public async Task<IActionResult> NewsMunicipalityIndex(int? id)
         {
@@ -996,6 +1070,10 @@ namespace CentralizedApps.Controllers.web
             {
                 if (!ModelState.IsValid || string.IsNullOrEmpty(departmentDto.Name))
                 {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "Datos inválidos para crear el departamento." });
+                    }
                     TempData["message"] = "Datos inválidos para crear el departamento.";
                     TempData["MessageType"] = "error";
                     return RedirectToAction("deparmentIndex");
@@ -1004,11 +1082,21 @@ namespace CentralizedApps.Controllers.web
                 var result = await _departmentService.createDepartment(departmentDto);
                 if (result != null)
                 {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                         // Fetch the created department
+                        var createdDept = await _unitOfWork.genericRepository<Department>().FindAsync_Predicate(d => d.Name == departmentDto.Name);
+                        return Json(new { success = true, message = "Departamento creado correctamente.", data = createdDept });
+                    }
                     TempData["message"] = "Departamento creado correctamente.";
                     TempData["MessageType"] = "success";
                 }
                 else
                 {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "No se pudo crear el departamento." });
+                    }
                     TempData["message"] = "No se pudo crear el departamento.";
                     TempData["MessageType"] = "error";
                 }
@@ -1016,10 +1104,147 @@ namespace CentralizedApps.Controllers.web
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating department");
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = $"Error al crear el departamento: {ex.Message}" });
+                }
                 TempData["message"] = "Error al crear el departamento.";
                 TempData["MessageType"] = "error";
             }
             return RedirectToAction("deparmentIndex");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> createShield(string municipio, IFormFile archivo)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(municipio))
+                {
+                    return Json(new { success = false, message = "El nombre del escudo es obligatorio." });
+                }
+
+                if (archivo == null || archivo.Length == 0)
+                {
+                    return Json(new { success = false, message = "Debes seleccionar una imagen." });
+                }
+
+                municipio = municipio.Trim();
+                foreach (var c in Path.GetInvalidFileNameChars())
+                    municipio = municipio.Replace(c, '_');
+
+                string carpetaBase = Path.Combine(_env.WebRootPath, "Uploads");
+                string pathCarpeta = Path.Combine(carpetaBase, municipio);
+
+                if (!Directory.Exists(pathCarpeta))
+                    Directory.CreateDirectory(pathCarpeta);
+
+                var extension = Path.GetExtension(archivo.FileName).ToLowerInvariant();
+                string[] permitidos = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+
+                if (!permitidos.Contains(extension))
+                {
+                    return Json(new { success = false, message = "Tipo de archivo no permitido." });
+                }
+
+                string nombreBase = Path.GetFileNameWithoutExtension(archivo.FileName);
+                string nombreArchivo = $"{nombreBase}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}";
+                string pathArchivo = Path.Combine(pathCarpeta, nombreArchivo);
+
+                using (var stream = new FileStream(pathArchivo, FileMode.Create))
+                    await archivo.CopyToAsync(stream);
+
+                string url = $"{Request.Scheme}://{Request.Host}/uploads/{municipio}/{nombreArchivo}";
+
+                var shieldMunicipality = new ShieldMunicipality
+                {
+                    NameOfMunicipality = municipio,
+                    Url = url,
+                };
+
+                await _unitOfWork.genericRepository<ShieldMunicipality>().AddAsync(shieldMunicipality);
+                await _unitOfWork.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Escudo creado correctamente.", data = shieldMunicipality });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error al crear el escudo: {ex.Message}" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveAlcadia(ToAlcaldiaWeb model)
+        {
+            try
+            {
+                if (model?.Alcaldia == null)
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                        return Json(new { success = false, message = "Datos inválidos." });
+                    TempData["Error"] = "Datos inválidos.";
+                    return RedirectToAction("Index");
+                }
+
+                var municipality = model.Alcaldia;
+
+                if (municipality.Id == 0)
+                {
+                    // Create
+                    await _unitOfWork.genericRepository<Municipality>().AddAsync(municipality);
+                    await _unitOfWork.SaveChangesAsync();
+                    
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                        return Json(new { success = true, message = "Municipio creado correctamente." });
+                    TempData["Success"] = "Municipio creado correctamente.";
+                }
+                else
+                {
+                    // Update
+                    var existing = await _unitOfWork.genericRepository<Municipality>().GetByIdAsync(municipality.Id);
+                    if (existing == null)
+                    {
+                        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                            return Json(new { success = false, message = "Municipio no encontrado." });
+                        TempData["Error"] = "Municipio no encontrado.";
+                        return RedirectToAction("Index");
+                    }
+
+                    // Map properties
+                    existing.Name = municipality.Name;
+                    existing.EntityCode = municipality.EntityCode;
+                    existing.DepartmentId = municipality.DepartmentId;
+                    existing.ThemeId = municipality.ThemeId;
+                    existing.Domain = municipality.Domain;
+                    existing.UserFintech = municipality.UserFintech;
+                    existing.PasswordFintech = municipality.PasswordFintech;
+                    existing.IdBank = municipality.IdBank;
+                    existing.IdShield = municipality.IdShield;
+                    existing.DataPrivacy = municipality.DataPrivacy;
+                    existing.DataProcessingPrivacy = municipality.DataProcessingPrivacy;
+                    existing.Latitude = municipality.Latitude;
+                    existing.Longitude = municipality.Longitude;
+                    existing.EmailMunicipalities = municipality.EmailMunicipalities;
+                    existing.EmailPanic = municipality.EmailPanic;
+                    existing.Phone = municipality.Phone;
+                    
+                    _unitOfWork.genericRepository<Municipality>().Update(existing);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                        return Json(new { success = true, message = "Municipio actualizado correctamente." });
+                    TempData["Success"] = "Municipio actualizado correctamente.";
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    return Json(new { success = false, message = $"Error al guardar: {ex.Message}" });
+                TempData["Error"] = $"Error al guardar: {ex.Message}";
+                return RedirectToAction("Index");
+            }
         }
     }
 }

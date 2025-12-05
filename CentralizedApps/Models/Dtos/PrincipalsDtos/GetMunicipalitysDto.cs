@@ -52,6 +52,7 @@ namespace CentralizedApps.Models.Dtos.PrincipalsDtos
 
     public class NewsByMunicipalityDto
     {
+        public int Id { get; set; }
         public string? GetUrlNew { get; set; }
         public int? IdMunicipality { get; set; }
     }
