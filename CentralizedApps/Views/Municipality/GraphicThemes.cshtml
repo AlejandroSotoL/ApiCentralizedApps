@@ -6,138 +6,867 @@
     Layout = "Layout";
 }
 
+<!-- Google Fonts - Nunito Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
-    <!-- Formulario de Creación -->
-    <div class="card w-full p-6 shadow-xl bg-base-100 rounded-2xl h-fit sticky top-6">
-        <h3 class="mb-6 text-center text-2xl font-extrabold text-black">Crear un nuevo tema</h3>
-        <form id="create-theme-form" asp-controller="Municipality" asp-action="CreateGraphicThemes" method="post"
-            class="space-y-6">
-            <div>
-                <label class="label font-semibold">Nombre del tema</label>
-                <input type="text" class="input input-bordered w-full" placeholder="Ej:DarkBlue" name="NameTheme"
-                    required />
-            </div>
+<style>
+    * {
+        font-family: 'Nunito Sans', sans-serif;
+    }
 
-            <div class="grid grid-cols-2 gap-4">
-                @{
-                    RenderColorInput("Color de fondo", "BackGroundColor", null);
-                }
-                @{
-                    RenderColorInput("Color primario", "PrimaryColor", null);
-                }
-                @{
-                    RenderColorInput("Color secundario", "SecondaryColor", null);
-                }
-                @{
-                    RenderColorInput("Color secundario oscuro", "SecondaryColorBlack", null);
-                }
-                @{
-                    RenderColorInput("Texto en primario (claro)", "OnPrimaryColorLight", null);
-                }
-                @{
-                    RenderColorInput("Texto en primario (oscuro)", "OnPrimaryColorDark", null);
-                }
-            </div>
+    .theme-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
 
-            <button type="submit" class="btn btn-outline btn-success w-full hover:scale-105 transition-transform">
-                💾 Guardar Tema
-            </button>
-        </form>
+    /* Create Card Styles */
+    .create-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .create-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        padding-bottom: 1rem;
+    }
+
+    .create-card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1c1c1c;
+        margin: 0;
+    }
+
+    .toggle-icon {
+        transition: transform 0.3s ease;
+        color: #516FE9;
+    }
+
+    .toggle-icon.collapsed {
+        transform: rotate(-90deg);
+    }
+
+    .create-card-body {
+        overflow: hidden;
+        transition: max-height 0.3s ease, opacity 0.3s ease;
+    }
+
+    .create-card-body.collapsed {
+        max-height: 0;
+        opacity: 0;
+        padding: 0;
+    }
+
+    /* Filter Bar Styles */
+    .filter-section {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .filter-icon {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #1c1c1c;
+        font-weight: 600;
+    }
+
+    .filter-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .filter-select,
+    .filter-input {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        background: white;
+        min-width: 150px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .filter-select:focus,
+    .filter-input:focus {
+        outline: none;
+        border-color: #516FE9;
+        box-shadow: 0 0 0 3px rgba(81, 111, 233, 0.1);
+    }
+
+    /* Custom Dropdown Styles */
+    .custom-dropdown {
+        position: relative;
+        min-width: 170px;
+    }
+
+    .dropdown-selected {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        background: white;
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .dropdown-selected:hover {
+        border-color: #516FE9;
+    }
+
+    .dropdown-arrow {
+        margin-left: auto;
+        transition: transform 0.2s ease;
+    }
+
+    .custom-dropdown.open .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+
+    .selected-color-circle {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+    }
+
+    .dropdown-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-top: 4px;
+        max-height: 250px;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+    }
+
+    .custom-dropdown.open .dropdown-options {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dropdown-option {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.625rem 1rem;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+        font-size: 0.875rem;
+    }
+
+    .dropdown-option:hover {
+        background: #f8f9fb;
+    }
+
+    .dropdown-option:first-child {
+        border-radius: 8px 8px 0 0;
+    }
+
+    .dropdown-option:last-child {
+        border-radius: 0 0 8px 8px;
+    }
+
+    .option-color-circle {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .reset-filter-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .reset-filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    }
+
+    /* Theme List Table Styles */
+    .themes-table-container {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .themes-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .themes-table thead {
+        background: #f8f9fa;
+    }
+
+    .themes-table th {
+        padding: 1rem 1.5rem;
+        text-align: left;
+        font-weight: 700;
+        color: #1c1c1c;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .themes-table td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        color: #495057;
+        font-size: 0.9rem;
+    }
+
+    .themes-table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    .themes-table tbody tr:hover {
+        background: #f8f9fb;
+    }
+
+    .color-swatch {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .color-preview {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: 2px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .color-hex {
+        font-family: 'Monaco', 'Consolas', monospace;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .action-btn.edit {
+        background: rgba(81, 111, 233, 0.1);
+        color: #516FE9;
+    }
+
+    .action-btn.edit:hover {
+        background: #516FE9;
+        color: white;
+    }
+
+    /* Pagination Styles */
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .pagination-info {
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+
+    .pagination-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .page-btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e0e0e0;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .page-btn:hover:not(:disabled) {
+        border-color: #516FE9;
+        color: #516FE9;
+    }
+
+    .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .page-btn.active {
+        background: #516FE9;
+        color: white;
+        border-color: #516FE9;
+    }
+
+    /* Edit Modal Styles */
+    .edit-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .edit-modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .edit-modal {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        transform: translateY(-20px);
+        transition: transform 0.3s ease;
+    }
+
+    .edit-modal-overlay.active .edit-modal {
+        transform: translateY(0);
+    }
+
+    .edit-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .edit-modal-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1c1c1c;
+    }
+
+    .close-modal-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #6c757d;
+        transition: color 0.2s ease;
+    }
+
+    .close-modal-btn:hover {
+        color: #1c1c1c;
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #1c1c1c;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #516FE9;
+        box-shadow: 0 0 0 3px rgba(81, 111, 233, 0.1);
+    }
+
+    .color-input-group {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .color-picker-input {
+        width: 48px;
+        height: 48px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .color-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 0.875rem;
+        background: #516FE9;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .submit-btn:hover {
+        background: #4058c7;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(81, 111, 233, 0.4);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Animations */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    /* ==================== DARK MODE STYLES ==================== */
+    [data-theme="dark"] .theme-container {
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .create-card,
+    [data-theme="dark"] .filter-section,
+    [data-theme="dark"] .themes-table-container,
+    [data-theme="dark"] .edit-modal {
+        background: #1e1e2e;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="dark"] .create-card-title,
+    [data-theme="dark"] .edit-modal-title {
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .filter-icon {
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .filter-select,
+    [data-theme="dark"] .filter-input,
+    [data-theme="dark"] .form-input {
+        background: #2a2a3e;
+        border-color: #3a3a4e;
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .filter-select:focus,
+    [data-theme="dark"] .filter-input:focus,
+    [data-theme="dark"] .form-input:focus {
+        border-color: #516FE9;
+        box-shadow: 0 0 0 3px rgba(81, 111, 233, 0.2);
+    }
+
+    [data-theme="dark"] .dropdown-selected {
+        background: #2a2a3e;
+        border-color: #3a3a4e;
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .dropdown-options {
+        background: #2a2a3e;
+        border-color: #3a3a4e;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    [data-theme="dark"] .dropdown-option {
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .dropdown-option:hover {
+        background: #3a3a4e;
+    }
+
+    [data-theme="dark"] .themes-table thead {
+        background: #2a2a3e;
+    }
+
+    [data-theme="dark"] .themes-table th {
+        color: #e0e0e0;
+        border-bottom-color: #3a3a4e;
+    }
+
+    [data-theme="dark"] .themes-table td {
+        color: #c0c0c0;
+        border-bottom-color: #3a3a4e;
+    }
+
+    [data-theme="dark"] .themes-table tbody tr:hover {
+        background: #2a2a3e;
+    }
+
+    [data-theme="dark"] .color-hex {
+        color: #a0a0b0;
+    }
+
+    [data-theme="dark"] .color-preview {
+        border-color: #4a4a5e;
+    }
+
+    [data-theme="dark"] .action-btn.edit {
+        background: rgba(81, 111, 233, 0.2);
+        color: #7b93f0;
+    }
+
+    [data-theme="dark"] .action-btn.edit:hover {
+        background: #516FE9;
+        color: white;
+    }
+
+    [data-theme="dark"] .pagination-container {
+        background: #2a2a3e;
+        border-top-color: #3a3a4e;
+    }
+
+    [data-theme="dark"] .pagination-info {
+        color: #a0a0b0;
+    }
+
+    [data-theme="dark"] .page-btn {
+        background: #1e1e2e;
+        border-color: #3a3a4e;
+        color: #c0c0c0;
+    }
+
+    [data-theme="dark"] .page-btn:hover:not(:disabled) {
+        border-color: #516FE9;
+        color: #7b93f0;
+    }
+
+    [data-theme="dark"] .page-btn.active {
+        background: #516FE9;
+        color: white;
+        border-color: #516FE9;
+    }
+
+    [data-theme="dark"] .form-label {
+        color: #c0c0c0;
+    }
+
+    [data-theme="dark"] .empty-state {
+        color: #a0a0b0;
+    }
+
+    [data-theme="dark"] .close-modal-btn {
+        color: #a0a0b0;
+    }
+
+    [data-theme="dark"] .close-modal-btn:hover {
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .edit-modal-overlay {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    [data-theme="dark"] .option-color-circle,
+    [data-theme="dark"] .selected-color-circle {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    [data-theme="dark"] .color-picker-input {
+        border: 1px solid #3a3a4e;
+    }
+</style>
+
+<div class="theme-container">
+    <!-- Create Theme Card -->
+    <div class="create-card">
+        <div class="create-card-header" onclick="toggleCreateCard()">
+            <h3 class="create-card-title">+ Crear un nuevo tema</h3>
+            <svg class="toggle-icon" id="toggle-icon" viewBox="0 0 24 24" width="24" height="24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+        <div class="create-card-body" id="create-card-body">
+            <form id="create-theme-form" asp-controller="Municipality" asp-action="CreateGraphicThemes" method="post">
+                <div class="form-group">
+                    <label class="form-label">Nombre del tema</label>
+                    <input type="text" class="form-input" placeholder="Ej: DarkBlue" name="NameTheme" required />
+                </div>
+
+                <div class="color-grid">
+                    @{
+                        RenderColorInput("Color de fondo", "BackGroundColor", "#ffffff");
+                    }
+                    @{
+                        RenderColorInput("Color primario", "PrimaryColor", null);
+                    }
+                    @{
+                        RenderColorInput("Color secundario", "SecondaryColor", null);
+                    }
+                    @{
+                        RenderColorInput("Color secundario oscuro", "SecondaryColorBlack", "#1c1c1c");
+                    }
+                    @{
+                        RenderColorInput("Texto en primario (claro)", "OnPrimaryColorLight", "#f5f5f5");
+                    }
+                    @{
+                        RenderColorInput("Texto en primario (oscuro)", "OnPrimaryColorDark", "#ffffff");
+                    }
+                </div>
+
+                <button type="submit" class="submit-btn" style="margin-top: 1.5rem;">
+                    💾 Guardar Tema
+                </button>
+            </form>
+        </div>
     </div>
 
-    <!-- Lista de Temas -->
-    <div class="card p-6 shadow-xl bg-base-100 rounded-2xl">
-        <h3 class="mb-6 text-center text-2xl font-extrabold text-black">Temas existentes</h3>
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <div class="filter-bar">
+            <div class="filter-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+                <span>Filtrar por</span>
+            </div>
 
-        <form id="search-form" asp-action="FilterGraphicThemes" asp-controller="Municipality" method="get"
-            class="mb-6 flex gap-3">
-            <input name="filter" type="text" class="input input-bordered flex-1" placeholder="Ejemplo: GreenDark"
-                value="@Context.Request.Query["filter"]" />
-            <button type="submit" class="btn btn-success hover:scale-105 transition-transform">🔍 Filtrar</button>
-        </form>
+            <input type="text" class="filter-input" id="filter-name" placeholder="Buscar por nombre..." />
 
-        <div id="themes-list">
-            @if (Model.Any())
-            {
-                @foreach (var theme in Model)
+            <!-- Custom Primary Color Dropdown -->
+            <div class="custom-dropdown" id="primary-color-dropdown">
+                <div class="dropdown-selected" onclick="toggleDropdown('primary-color-dropdown')">
+                    <span class="selected-color-circle" id="primary-selected-circle" style="display: none;"></span>
+                    <span class="selected-text" id="primary-selected-text">Color Primario</span>
+                    <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="dropdown-options" id="primary-color-options">
+                    <div class="dropdown-option" data-value=""
+                        onclick="selectColorOption('primary', '', 'Color Primario')">
+                        <span>Color Primario (Todos)</span>
+                    </div>
+                    <!-- Options populated by JS -->
+                </div>
+            </div>
+            <input type="hidden" id="filter-primary-color" value="" />
 
-                {
-                    <form asp-controller="Municipality" asp-action="UpdateGraphicTheme" method="post"
-                        class="mb-6 update-theme-form">
-                        <div
-                            class="rounded-xl border border-base-300 bg-base-200 p-4 shadow-md hover:shadow-xl transition-all duration-300">
-                            <input type="hidden" name="Id" value="@theme.Id" />
+            <!-- Custom Secondary Color Dropdown -->
+            <div class="custom-dropdown" id="secondary-color-dropdown">
+                <div class="dropdown-selected" onclick="toggleDropdown('secondary-color-dropdown')">
+                    <span class="selected-color-circle" id="secondary-selected-circle" style="display: none;"></span>
+                    <span class="selected-text" id="secondary-selected-text">Color Secundario</span>
+                    <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="dropdown-options" id="secondary-color-options">
+                    <div class="dropdown-option" data-value=""
+                        onclick="selectColorOption('secondary', '', 'Color Secundario')">
+                        <span>Color Secundario (Todos)</span>
+                    </div>
+                    <!-- Options populated by JS -->
+                </div>
+            </div>
+            <input type="hidden" id="filter-secondary-color" value="" />
 
-                            <div class="mb-4">
-                                <label class="label font-semibold">Nombre del tema</label>
-                                <input type="text" class="input input-bordered w-full" name="NameTheme"
-                                    value="@theme.NameTheme" />
-                            </div>
+            <select class="filter-select" id="filter-sort">
+                <option value="latest">Más recientes</option>
+                <option value="oldest">Más antiguos</option>
+                <option value="a-z">A - Z</option>
+                <option value="z-a">Z - A</option>
+            </select>
 
-                            <div class="grid grid-cols-3 gap-3 mb-4">
-                                @{
-                                    RenderColorInput("Fondo", "BackGroundColor", theme.BackGroundColor);
-                                }
-                                @{
-                                    RenderColorInput("Primario", "PrimaryColor", theme.PrimaryColor);
-                                }
-                                @{
-                                    RenderColorInput("Secundario", "SecondaryColor", theme.SecondaryColor);
-                                }
-                                @{
-                                    RenderColorInput("Sec. Oscuro", "SecondaryColorBlack", theme.SecondaryColorBlack);
-                                }
-                                @{
-                                    RenderColorInput("Texto Claro", "OnPrimaryColorLight", theme.OnPrimaryColorLight);
-                                }
-                                @{
-                                    RenderColorInput("Texto Oscuro", "OnPrimaryColorDark", theme.OnPrimaryColorDark);
-                                }
-                            </div>
-
-                            <button type="submit"
-                                class="btn btn-outline btn-success w-full hover:scale-105 transition-transform">
-                                💾 Guardar cambios
-                            </button>
-                        </div>
-                    </form>
-                }
-            }
-            else
-            {
-                <h2 id="no-themes-msg" class="text-center text-gray-500">⚠️ No hay temas registrados aún</h2>
-            }
+            <button class="reset-filter-btn" onclick="resetFilters()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                </svg>
+                Limpiar Filtros
+            </button>
         </div>
+    </div>
+
+    <!-- Themes Table -->
+    <div class="themes-table-container">
+        <table class="themes-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Color Primario</th>
+                    <th>Color Secundario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="themes-table-body">
+                <!-- Populated by JavaScript -->
+            </tbody>
+        </table>
+
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">⚠️</div>
+            <p>No hay temas registrados aún</p>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container" id="pagination-container">
+            <div class="pagination-info" id="pagination-info">
+                Mostrando 1-10 de 0
+            </div>
+            <div class="pagination-controls" id="pagination-controls">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="edit-modal-overlay" id="edit-modal">
+    <div class="edit-modal">
+        <div class="edit-modal-header">
+            <h3 class="edit-modal-title">✏️ Editar Tema</h3>
+            <button class="close-modal-btn" onclick="closeEditModal()">&times;</button>
+        </div>
+        <form id="edit-theme-form" asp-controller="Municipality" asp-action="UpdateGraphicTheme" method="post">
+            <input type="hidden" name="Id" id="edit-theme-id" />
+
+            <div class="form-group">
+                <label class="form-label">Nombre del tema</label>
+                <input type="text" class="form-input" name="NameTheme" id="edit-theme-name" required />
+            </div>
+
+            <div class="color-grid" id="edit-color-grid">
+                <!-- Populated by JavaScript -->
+            </div>
+
+            <button type="submit" class="submit-btn" style="margin-top: 1.5rem;">
+                💾 Guardar Cambios
+            </button>
+        </form>
     </div>
 </div>
 
 @functions {
     public static string FormatColor(string? color)
-
     {
 
-        return color?.Replace("0xFF", "#") ?? "#000000";
+        if (string.IsNullOrEmpty(color)) return "#000000";
+        return color.Replace("0xFF", "#");
 
     }
 
-
-
     void RenderColorInput(string label, string name, string? value)
-
     {
 
-        var colorValue = FormatColor(value);
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text text-xs font-semibold">@label</span>
-            </label>
-            <div class="flex items-center gap-2">
-                <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" value="@colorValue" />
-                <input type="text" class="input input-bordered input-sm w-full uppercase color-text" name="@name"
-                    value="@colorValue" maxlength="7" />
+        var colorValue = string.IsNullOrEmpty(value) ? "#000000" : (value.StartsWith("#") ? value : FormatColor(value));
+        <div class="form-group">
+            <label class="form-label">@label</label>
+            <div class="color-input-group">
+                <input type="color" class="color-picker-input color-picker" value="@colorValue" />
+                <input type="text" class="form-input color-text" name="@name" value="@colorValue" maxlength="7"
+                    style="text-transform: uppercase;" />
             </div>
         </div>
     }
@@ -145,24 +874,263 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const createForm = document.getElementById('create-theme-form');
-        const searchForm = document.getElementById('search-form');
-        const themesList = document.getElementById('themes-list');
+        // All themes data from Model
+        const allThemes = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(t => new
 
-        // --- Color Sync Logic ---
+        {
+            id = t.Id,
+            nameTheme = t.NameTheme,
+            backGroundColor = t.BackGroundColor,
+            primaryColor = t.PrimaryColor,
+            secondaryColor = t.SecondaryColor,
+            secondaryColorBlack = t.SecondaryColorBlack,
+            onPrimaryColorLight = t.OnPrimaryColorLight,
+            onPrimaryColorDark = t.OnPrimaryColorDark,
+            createdAt = t.Id // Using Id as proxy for creation order
+        })));
+
+        let filteredThemes = [...allThemes];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        // DOM Elements
+        const tableBody = document.getElementById('themes-table-body');
+        const emptyState = document.getElementById('empty-state');
+        const paginationInfo = document.getElementById('pagination-info');
+        const paginationControls = document.getElementById('pagination-controls');
+        const filterName = document.getElementById('filter-name');
+        const filterPrimaryColor = document.getElementById('filter-primary-color');
+        const filterSecondaryColor = document.getElementById('filter-secondary-color');
+        const filterSort = document.getElementById('filter-sort');
+        const createForm = document.getElementById('create-theme-form');
+        const editModal = document.getElementById('edit-modal');
+        const editForm = document.getElementById('edit-theme-form');
+
+        // Helper function to format color
+        const formatColor = (color) => {
+            if (!color) return '#000000';
+            return color.replace('0xFF', '#');
+        };
+
+        // Populate color filter dropdowns with color circles
+        const populateColorFilters = () => {
+            const primaryColors = [...new Set(allThemes.map(t => formatColor(t.primaryColor)))];
+            const secondaryColors = [...new Set(allThemes.map(t => formatColor(t.secondaryColor)))];
+
+            const primaryOptionsContainer = document.getElementById('primary-color-options');
+            const secondaryOptionsContainer = document.getElementById('secondary-color-options');
+
+            primaryColors.forEach(color => {
+                const option = document.createElement('div');
+                option.className = 'dropdown-option';
+                option.setAttribute('data-value', color);
+                option.onclick = () => selectColorOption('primary', color, color.toUpperCase());
+                option.innerHTML = `
+                    <span class="option-color-circle" style="background-color: ${color}"></span>
+                    <span>${color.toUpperCase()}</span>
+                `;
+                primaryOptionsContainer.appendChild(option);
+            });
+
+            secondaryColors.forEach(color => {
+                const option = document.createElement('div');
+                option.className = 'dropdown-option';
+                option.setAttribute('data-value', color);
+                option.onclick = () => selectColorOption('secondary', color, color.toUpperCase());
+                option.innerHTML = `
+                    <span class="option-color-circle" style="background-color: ${color}"></span>
+                    <span>${color.toUpperCase()}</span>
+                `;
+                secondaryOptionsContainer.appendChild(option);
+            });
+        };
+
+        // Toggle dropdown open/close
+        window.toggleDropdown = (dropdownId) => {
+            const dropdown = document.getElementById(dropdownId);
+            const isOpen = dropdown.classList.contains('open');
+
+            // Close all dropdowns first
+            document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('open'));
+
+            // Toggle the clicked one
+            if (!isOpen) {
+                dropdown.classList.add('open');
+            }
+        };
+
+        // Select color option
+        window.selectColorOption = (type, value, text) => {
+            const hiddenInput = document.getElementById(`filter-${type}-color`);
+            const selectedText = document.getElementById(`${type}-selected-text`);
+            const selectedCircle = document.getElementById(`${type}-selected-circle`);
+            const dropdown = document.getElementById(`${type}-color-dropdown`);
+
+            hiddenInput.value = value;
+            selectedText.textContent = text;
+
+            if (value) {
+                selectedCircle.style.display = 'inline-block';
+                selectedCircle.style.backgroundColor = value;
+            } else {
+                selectedCircle.style.display = 'none';
+            }
+
+            dropdown.classList.remove('open');
+            applyFilters();
+        };
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.custom-dropdown')) {
+                document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('open'));
+            }
+        });
+
+        // Apply filters and sorting
+        const applyFilters = () => {
+            const nameFilter = filterName.value.toLowerCase();
+            const primaryColorFilter = filterPrimaryColor.value;
+            const secondaryColorFilter = filterSecondaryColor.value;
+            const sortBy = filterSort.value;
+
+            filteredThemes = allThemes.filter(theme => {
+                const matchesName = !nameFilter || (theme.nameTheme && theme.nameTheme.toLowerCase().includes(nameFilter));
+                const matchesPrimary = !primaryColorFilter || formatColor(theme.primaryColor) === primaryColorFilter;
+                const matchesSecondary = !secondaryColorFilter || formatColor(theme.secondaryColor) === secondaryColorFilter;
+                return matchesName && matchesPrimary && matchesSecondary;
+            });
+
+            // Sort
+            switch (sortBy) {
+                case 'latest':
+                    filteredThemes.sort((a, b) => b.id - a.id);
+                    break;
+                case 'oldest':
+                    filteredThemes.sort((a, b) => a.id - b.id);
+                    break;
+                case 'a-z':
+                    filteredThemes.sort((a, b) => (a.nameTheme || '').localeCompare(b.nameTheme || ''));
+                    break;
+                case 'z-a':
+                    filteredThemes.sort((a, b) => (b.nameTheme || '').localeCompare(a.nameTheme || ''));
+                    break;
+            }
+
+            currentPage = 1;
+            renderTable();
+        };
+
+        // Render table with pagination
+        const renderTable = () => {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageThemes = filteredThemes.slice(startIndex, endIndex);
+
+            tableBody.innerHTML = '';
+
+            if (filteredThemes.length === 0) {
+                emptyState.style.display = 'block';
+                document.querySelector('.themes-table').style.display = 'none';
+                document.getElementById('pagination-container').style.display = 'none';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            document.querySelector('.themes-table').style.display = 'table';
+            document.getElementById('pagination-container').style.display = 'flex';
+
+            pageThemes.forEach(theme => {
+                const row = document.createElement('tr');
+                row.className = 'animate-fade-in';
+                row.innerHTML = `
+                    <td><strong>${theme.nameTheme || 'Sin nombre'}</strong></td>
+                    <td>
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background-color: ${formatColor(theme.primaryColor)}"></div>
+                            <span class="color-hex">${formatColor(theme.primaryColor).toUpperCase()}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background-color: ${formatColor(theme.secondaryColor)}"></div>
+                            <span class="color-hex">${formatColor(theme.secondaryColor).toUpperCase()}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="action-btn edit" onclick="openEditModal(${theme.id})" title="Editar">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            renderPagination();
+        };
+
+        // Render pagination controls
+        const renderPagination = () => {
+            const totalPages = Math.ceil(filteredThemes.length / itemsPerPage);
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, filteredThemes.length);
+
+            paginationInfo.textContent = `Mostrando ${startItem}-${endItem} de ${filteredThemes.length}`;
+
+            paginationControls.innerHTML = '';
+
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.textContent = '← Anterior';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => { currentPage--; renderTable(); };
+            paginationControls.appendChild(prevBtn);
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (totalPages > 7 && i > 2 && i < totalPages - 1 && Math.abs(i - currentPage) > 1) {
+                    if (i === 3 || i === totalPages - 2) {
+                        const dots = document.createElement('span');
+                        dots.textContent = '...';
+                        dots.style.padding = '0.5rem';
+                        paginationControls.appendChild(dots);
+                    }
+                    continue;
+                }
+
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => { currentPage = i; renderTable(); };
+                paginationControls.appendChild(pageBtn);
+            }
+
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.textContent = 'Siguiente →';
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+            nextBtn.onclick = () => { currentPage++; renderTable(); };
+            paginationControls.appendChild(nextBtn);
+        };
+
+        // Color sync logic
         const initColorSync = (container) => {
             const pickers = container.querySelectorAll('.color-picker');
             const texts = container.querySelectorAll('.color-text');
 
             pickers.forEach((picker, index) => {
                 const text = texts[index];
+                if (!text) return;
 
-                // Picker -> Text
                 picker.addEventListener('input', (e) => {
                     text.value = e.target.value.toUpperCase();
                 });
 
-                // Text -> Picker
                 text.addEventListener('input', (e) => {
                     let val = e.target.value;
                     if (val.length === 7 && val.startsWith('#')) {
@@ -172,99 +1140,85 @@
             });
         };
 
-        // Initialize for existing elements
-        initColorSync(document);
+        // Open edit modal
+        window.openEditModal = (themeId) => {
+            const theme = allThemes.find(t => t.id === themeId);
+            if (!theme) return;
 
+            document.getElementById('edit-theme-id').value = theme.id;
+            document.getElementById('edit-theme-name').value = theme.nameTheme || '';
 
-        // --- Helper Functions ---
-        const formatColor = (color) => {
-            if (!color) return '#000000';
-            return color.replace('0xFF', '#');
+            const colorGrid = document.getElementById('edit-color-grid');
+            colorGrid.innerHTML = `
+                ${renderColorInputJS("Color de fondo", "BackGroundColor", theme.backGroundColor)}
+                ${renderColorInputJS("Color primario", "PrimaryColor", theme.primaryColor)}
+                ${renderColorInputJS("Color secundario", "SecondaryColor", theme.secondaryColor)}
+                ${renderColorInputJS("Color secundario oscuro", "SecondaryColorBlack", theme.secondaryColorBlack)}
+                ${renderColorInputJS("Texto en primario (claro)", "OnPrimaryColorLight", theme.onPrimaryColorLight)}
+                ${renderColorInputJS("Texto en primario (oscuro)", "OnPrimaryColorDark", theme.onPrimaryColorDark)}
+            `;
+
+            initColorSync(colorGrid);
+            editModal.classList.add('active');
         };
 
+        // Close edit modal
+        window.closeEditModal = () => {
+            editModal.classList.remove('active');
+        };
+
+        // Render color input (JS version)
         const renderColorInputJS = (label, name, value) => {
             const colorVal = formatColor(value);
             return `
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text text-xs font-semibold">${label}</span>
-                    </label>
-                    <div class="flex items-center gap-2">
-                        <input type="color" class="w-10 h-10 p-0 border-0 rounded-lg cursor-pointer color-picker" 
-                               value="${colorVal}" />
-                        <input type="text" class="input input-bordered input-sm w-full uppercase color-text" 
-                               name="${name}" value="${colorVal}" maxlength="7" />
+                <div class="form-group">
+                    <label class="form-label">${label}</label>
+                    <div class="color-input-group">
+                        <input type="color" class="color-picker-input color-picker" value="${colorVal}" />
+                        <input type="text" class="form-input color-text" name="${name}" value="${colorVal}" maxlength="7" style="text-transform: uppercase;" />
                     </div>
                 </div>
             `;
         };
 
-        const createThemeCard = (theme) => {
-            const cardHtml = `
-                <form action="/Municipality/UpdateGraphicTheme" method="post" class="mb-6 update-theme-form">
-                    <div class="rounded-xl border border-base-300 bg-base-200 p-4 shadow-md hover:shadow-xl transition-all duration-300 animate-fade-in">
-                        <input type="hidden" name="Id" value="${theme.id}" />
+        // Event listeners for filters
+        filterName.addEventListener('input', applyFilters);
+        filterPrimaryColor.addEventListener('change', applyFilters);
+        filterSecondaryColor.addEventListener('change', applyFilters);
+        filterSort.addEventListener('change', applyFilters);
 
-                        <div class="mb-4">
-                            <label class="label font-semibold">Nombre del tema</label>
-                            <input type="text" class="input input-bordered w-full" name="NameTheme" value="${theme.nameTheme || ''}" />
-                        </div>
+        // Reset filters
+        window.resetFilters = () => {
+            filterName.value = '';
+            filterPrimaryColor.value = '';
+            filterSecondaryColor.value = '';
+            filterSort.value = 'latest';
 
-                        <div class="grid grid-cols-3 gap-3 mb-4">
-                            ${renderColorInputJS("Fondo", "BackGroundColor", theme.backGroundColor)}
-                            ${renderColorInputJS("Primario", "PrimaryColor", theme.primaryColor)}
-                            ${renderColorInputJS("Secundario", "SecondaryColor", theme.secondaryColor)}
-                            ${renderColorInputJS("Sec. Oscuro", "SecondaryColorBlack", theme.secondaryColorBlack)}
-                            ${renderColorInputJS("Texto Claro", "OnPrimaryColorLight", theme.onPrimaryColorLight)}
-                            ${renderColorInputJS("Texto Oscuro", "OnPrimaryColorDark", theme.onPrimaryColorDark)}
-                        </div>
+            // Reset custom dropdown UI
+            document.getElementById('primary-selected-text').textContent = 'Color Primario';
+            document.getElementById('primary-selected-circle').style.display = 'none';
+            document.getElementById('secondary-selected-text').textContent = 'Color Secundario';
+            document.getElementById('secondary-selected-circle').style.display = 'none';
 
-                        <button type="submit" class="btn btn-outline btn-success w-full hover:scale-105 transition-transform">
-                            💾 Guardar cambios
-                        </button>
-                    </div>
-                </form>
-            `;
-
-            // We need to return the HTML string, but we also need to init sync after insertion.
-            // Since this function just returns string, the caller must handle init.
-            return cardHtml;
+            applyFilters();
         };
 
+        // Toggle create card
+        window.toggleCreateCard = () => {
+            const body = document.getElementById('create-card-body');
+            const icon = document.getElementById('toggle-icon');
+            body.classList.toggle('collapsed');
+            icon.classList.toggle('collapsed');
+        };
 
-        // --- Search Handler ---
-        searchForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(searchForm);
-            const query = new URLSearchParams(formData).toString();
-
-            try {
-                const response = await fetch(`${searchForm.action}?${query}`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    themesList.innerHTML = ''; // Clear list
-
-                    if (result.data.length === 0) {
-                        themesList.innerHTML = '<h2 id="no-themes-msg" class="text-center text-gray-500">⚠️ No se encontraron temas</h2>';
-                    } else {
-                        result.data.forEach(theme => {
-                            themesList.insertAdjacentHTML('beforeend', createThemeCard(theme));
-                        });
-                        // Re-init color sync for new elements
-                        initColorSync(themesList);
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Error al buscar temas.' });
+        // Close modal on overlay click
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                closeEditModal();
             }
         });
 
-
-        // --- Create Handler ---
+        // Create form handler
         createForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(createForm);
@@ -280,15 +1234,17 @@
                 if (result.success) {
                     Swal.fire({ icon: 'success', title: '¡Éxito!', text: result.message, timer: 2000, showConfirmButton: false });
 
-                    const noMsg = document.getElementById('no-themes-msg');
-                    if (noMsg) noMsg.remove();
-
-                    themesList.insertAdjacentHTML('afterbegin', createThemeCard(result.data));
-                    initColorSync(themesList.firstElementChild); // Init sync for new card
+                    // Add new theme to array
+                    allThemes.unshift(result.data);
+                    populateColorFilters();
+                    applyFilters();
 
                     createForm.reset();
-                    // Reset pickers in create form
-                    createForm.querySelectorAll('.color-picker').forEach(p => p.value = '#000000');
+                    // Reset to default colors
+                    const colorPickers = createForm.querySelectorAll('.color-picker');
+                    const colorTexts = createForm.querySelectorAll('.color-text');
+                    const defaultColors = ['#ffffff', '#000000', '#000000', '#1c1c1c', '#f5f5f5', '#ffffff'];
+                    colorPickers.forEach((p, i) => { p.value = defaultColors[i]; colorTexts[i].value = defaultColors[i].toUpperCase(); });
                 } else {
                     Swal.fire({ icon: 'error', title: 'Error', text: result.message });
                 }
@@ -298,49 +1254,42 @@
             }
         });
 
-        // --- Update Handler ---
-        themesList.addEventListener('submit', async (e) => {
-            if (e.target.matches('.update-theme-form')) {
-                e.preventDefault();
-                const form = e.target;
-                const formData = new FormData(form);
+        // Edit form handler
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(editForm);
 
-                try {
-                    const response = await fetch(form.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    });
-                    const result = await response.json();
+            try {
+                const response = await fetch(editForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const result = await response.json();
 
-                    if (result.success) {
-                        Swal.fire({ icon: 'success', title: 'Actualizado', text: result.message, timer: 2000, showConfirmButton: false });
-                    } else {
-                        Swal.fire({ icon: 'error', title: 'Error', text: result.message });
+                if (result.success) {
+                    Swal.fire({ icon: 'success', title: 'Actualizado', text: result.message, timer: 2000, showConfirmButton: false });
+
+                    // Update theme in array
+                    const index = allThemes.findIndex(t => t.id === parseInt(formData.get('Id')));
+                    if (index !== -1 && result.data) {
+                        allThemes[index] = result.data;
+                        applyFilters();
                     }
-                } catch (error) {
-                    console.error(error);
-                    Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error inesperado.' });
+
+                    closeEditModal();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: result.message });
                 }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error inesperado.' });
             }
         });
+
+        // Initialize
+        initColorSync(createForm);
+        populateColorFilters();
+        applyFilters();
     });
 </script>
-
-<style>
-    .animate-fade-in {
-        animation: fadeIn 0.5s ease-out;
-    }
-
-    @@keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>

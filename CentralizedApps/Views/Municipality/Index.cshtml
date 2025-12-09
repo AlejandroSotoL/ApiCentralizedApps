@@ -4,16 +4,19 @@
 @{
     ViewData["Title"] = "Gestion de Municipios";
     Layout = "Layout";
-    
+
     // Extract unique departments and banks for filters
-    var departments = Model?.Select(m => m.Department?.Name).Where(d => !string.IsNullOrEmpty(d)).Distinct().OrderBy(d => d).ToList() ?? new List<string?>();
-    var banks = Model?.Select(m => m.Bank?.NameBank).Where(b => !string.IsNullOrEmpty(b)).Distinct().OrderBy(b => b).ToList() ?? new List<string?>();
+    var departments = Model?.Select(m => m.Department?.Name).Where(d => !string.IsNullOrEmpty(d)).Distinct().OrderBy(d =>
+    d).ToList() ?? new List<string?>();
+    var banks = Model?.Select(m => m.Bank?.NameBank).Where(b => !string.IsNullOrEmpty(b)).Distinct().OrderBy(b =>
+    b).ToList() ?? new List<string?>();
 }
 
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-    body, .nunito-font {
+    body,
+    .nunito-font {
         font-family: 'Nunito Sans', sans-serif !important;
     }
 
@@ -88,7 +91,8 @@
         opacity: 0.7;
     }
 
-    .filter-select, .filter-input {
+    .filter-select,
+    .filter-input {
         padding: 0.5rem 1rem;
         border-radius: 8px;
         border: 1px solid var(--color-base-300);
@@ -99,7 +103,8 @@
         min-height: 40px;
     }
 
-    .filter-select:focus, .filter-input:focus {
+    .filter-select:focus,
+    .filter-input:focus {
         outline: none;
         border-color: #516FE9;
         box-shadow: 0 0 0 3px rgba(81, 111, 233, 0.15);
@@ -216,7 +221,7 @@
         height: 20px;
         border-radius: 50%;
         border: 2px solid var(--color-base-100);
-        box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
     }
 
     .theme-name {
@@ -360,7 +365,8 @@
             flex-direction: column;
         }
 
-        .filter-group, .search-wrapper {
+        .filter-group,
+        .search-wrapper {
             width: 100%;
             min-width: 100%;
         }
@@ -405,9 +411,10 @@
     <div class="page-header">
         <h1 class="page-title">Gestión De Municipios</h1>
         <form asp-controller="Municipality" asp-action="FormMunicipalityUpdate" method="get">
-            <input type="hidden" name="id" value="0"/>
+            <input type="hidden" name="id" value="0" />
             <button type="submit" class="btn-create">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
@@ -463,11 +470,14 @@
             <div class="search-wrapper">
                 <label class="filter-label">&nbsp;</label>
                 <div style="position: relative;">
-                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" id="searchInput" class="filter-input search" placeholder="Buscar municipio..." oninput="applyFilters()">
+                    <input type="text" id="searchInput" class="filter-input search" placeholder="Buscar municipio..."
+                        oninput="applyFilters()">
                 </div>
             </div>
         </div>
@@ -494,16 +504,14 @@
                     {
                         var primaryColor = municipio?.Theme?.PrimaryColor?.Replace("0xFF", "#") ?? "#6366f1";
                         var secondaryColor = municipio?.Theme?.SecondaryColor?.Replace("0xFF", "#") ?? "#8b5cf6";
-                        
-                        <tr class="municipality-row" 
-                            data-name="@municipio?.Name?.ToLower()"
-                            data-department="@municipio?.Department?.Name"
-                            data-bank="@municipio?.Bank?.NameBank"
-                            data-status="@(municipio?.IsActive == true ? "active" : "inactive")"
-                            data-id="@municipio?.Id">
+
+                        <tr class="municipality-row" data-name="@municipio?.Name?.ToLower()"
+                            data-department="@municipio?.Department?.Name" data-bank="@municipio?.Bank?.NameBank"
+                            data-status="@(municipio?.IsActive == true ? "active" : "inactive")" data-id="@municipio?.Id">
                             <td>
                                 <div class="municipality-cell">
-                                    <img src="@municipio?.IdShield?.Url" alt="Escudo" class="municipality-avatar" onerror="this.src='https://via.placeholder.com/44?text=M'">
+                                    <img src="@municipio?.IdShield?.Url" alt="Escudo" class="municipality-avatar"
+                                        onerror="this.src='https://via.placeholder.com/44?text=M'">
                                     <div class="municipality-info">
                                         <span class="municipality-name">@municipio?.Name</span>
                                         <span class="municipality-dept">@municipio?.Department?.Name</span>
@@ -516,27 +524,29 @@
                             <td>
                                 <div class="theme-cell">
                                     <div class="theme-colors">
-                                        <span class="color-swatch" style="background-color: @primaryColor;" title="Color Primario"></span>
-                                        <span class="color-swatch" style="background-color: @secondaryColor; margin-left: -8px;" title="Color Secundario"></span>
+                                        <span class="color-swatch" style="background-color: @primaryColor;"
+                                            title="Color Primario"></span>
+                                        <span class="color-swatch" style="background-color: @secondaryColor; margin-left: -8px;"
+                                            title="Color Secundario"></span>
                                     </div>
                                     <span class="theme-name">@(municipio?.Theme?.NameTheme ?? "Sin tema")</span>
                                 </div>
                             </td>
                             <td>
-                                <form asp-controller="Municipality" asp-action="UpdateStatusMunicipality" method="post" style="display: inline;">
-                                    <input type="hidden" name="id" value="@municipio?.Id" />
-                                    <input type="hidden" name="isActive" value="@(municipio?.IsActive == true ? "false" : "true")" />
-                                    <button type="submit" class="status-badge @(municipio?.IsActive == true ? "active" : "inactive")">
-                                        @(municipio?.IsActive == true ? "Activo" : "Desactivado")
-                                    </button>
-                                </form>
+                                <span class="status-badge @(municipio?.IsActive == true ? "active" : "inactive")"
+                                    style="cursor: default;">
+                                    @(municipio?.IsActive == true ? "Activo" : "Desactivado")
+                                </span>
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <form asp-controller="Municipality" asp-action="FormMunicipalityUpdate" method="get" style="display: inline;">
+                                    <form asp-controller="Municipality" asp-action="FormMunicipalityUpdate" method="get"
+                                        style="display: inline;">
                                         <input type="hidden" name="id" value="@municipio?.Id" />
                                         <button type="submit" class="btn-action" title="Editar">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                             </svg>
@@ -576,7 +586,7 @@
     let filteredRows = [...allRows];
 
     // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         applyFilters();
     });
 
@@ -594,9 +604,9 @@
             const rowBank = row.dataset.bank || '';
             const rowStatus = row.dataset.status || '';
 
-            const matchesSearch = name.includes(searchTerm) || 
-                                  rowDept.toLowerCase().includes(searchTerm) ||
-                                  rowBank.toLowerCase().includes(searchTerm);
+            const matchesSearch = name.includes(searchTerm) ||
+                rowDept.toLowerCase().includes(searchTerm) ||
+                rowBank.toLowerCase().includes(searchTerm);
             const matchesDept = !department || rowDept === department;
             const matchesBank = !bank || rowBank === bank;
             const matchesStatus = !status || rowStatus === status;
@@ -611,7 +621,7 @@
             const nameA = a.dataset.name || '';
             const nameB = b.dataset.name || '';
 
-            switch(sortBy) {
+            switch (sortBy) {
                 case 'newest':
                     return idB - idA;
                 case 'oldest':
@@ -635,7 +645,7 @@
         const noResults = document.getElementById('noResults');
         const totalItems = filteredRows.length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
-        
+
         // Hide all rows first
         allRows.forEach(row => row.style.display = 'none');
 
@@ -645,11 +655,11 @@
         } else {
             noResults.style.display = 'none';
             document.querySelector('.municipality-table thead').style.display = '';
-            
+
             // Show only current page rows
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-            
+
             // Reorder rows in DOM and show current page
             filteredRows.forEach((row, index) => {
                 tbody.appendChild(row);
@@ -666,15 +676,15 @@
     function updatePagination(totalItems, totalPages) {
         const paginationInfo = document.getElementById('paginationInfo');
         const paginationButtons = document.getElementById('paginationButtons');
-        
+
         const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
         const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-        
+
         paginationInfo.textContent = `Mostrando ${startItem}-${endItem} de ${totalItems}`;
 
         // Generate pagination buttons
         let buttonsHtml = '';
-        
+
         // Previous button
         buttonsHtml += `<button class="btn-page" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -686,7 +696,7 @@
         const maxButtons = 5;
         let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
         let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-        
+
         if (endPage - startPage + 1 < maxButtons) {
             startPage = Math.max(1, endPage - maxButtons + 1);
         }

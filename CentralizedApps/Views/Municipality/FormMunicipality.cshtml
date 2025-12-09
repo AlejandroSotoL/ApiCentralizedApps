@@ -81,6 +81,86 @@
         background-color: #3b55c5 !important;
         border-color: #3b55c5 !important;
     }
+
+    /* Shield Dropzone Styles */
+    .shield-dropzone {
+        border: 2px dashed #e0e0e0;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        margin-bottom: 1rem;
+    }
+
+    .shield-dropzone:hover, .shield-dropzone.dragover {
+        border-color: #516FE9;
+        background: rgba(81, 111, 233, 0.05);
+    }
+
+    .shield-dropzone-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .shield-dropzone-text {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .shield-dropzone-text strong {
+        color: #516FE9;
+    }
+
+    .shield-preview-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: none;
+    }
+
+    .shield-preview-card.active {
+        display: block;
+    }
+
+    .shield-preview-img {
+        width: 100%;
+        max-height: 180px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+    }
+
+    .shield-preview-filename {
+        font-size: 0.875rem;
+        color: #6c757d;
+        text-align: center;
+        margin: 0;
+    }
+
+    [data-theme="dark"] .shield-dropzone {
+        border-color: #4B5563;
+    }
+
+    [data-theme="dark"] .shield-dropzone:hover,
+    [data-theme="dark"] .shield-dropzone.dragover {
+        border-color: #516FE9;
+        background: rgba(81, 111, 233, 0.1);
+    }
+
+    [data-theme="dark"] .shield-dropzone-text {
+        color: #9CA3AF;
+    }
+
+    [data-theme="dark"] .shield-preview-card {
+        background: #374151;
+    }
+
+    [data-theme="dark"] .shield-preview-filename {
+        color: #9CA3AF;
+    }
 </style>
 
 <form asp-action="SaveAlcadia" asp-controller="Municipality" method="post" class="w-full" data-ajax="true">
@@ -418,25 +498,41 @@
     </div>
 </dialog>
 
-<!-- Create Shield Modal -->
+<!-- Create Shield Modal (Drag & Drop) -->
 <dialog id="create_shield_modal" class="modal">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg mb-4">Subir Nuevo Escudo</h3>
+    <div class="modal-box w-11/12 max-w-lg">
+        <h3 class="font-bold text-lg mb-4">📤 Subir Nuevo Escudo</h3>
         <form id="createShieldForm" onsubmit="submitShield(event)">
+            <!-- Dropzone -->
+            <div class="shield-dropzone" id="shield-dropzone" onclick="document.getElementById('shield-file-input').click()">
+                <div class="shield-dropzone-icon">📁</div>
+                <p class="shield-dropzone-text">
+                    Arrastra una imagen aquí o <strong>haz clic para seleccionar</strong>
+                </p>
+            </div>
+            <input type="file" id="shield-file-input" name="archivo" accept="image/*" style="display: none;" required />
+
+            <!-- Image Preview Card -->
+            <div class="shield-preview-card" id="shield-preview-card">
+                <img src="" alt="Preview" class="shield-preview-img" id="shield-preview-img" />
+                <p class="shield-preview-filename" id="shield-preview-filename"></p>
+            </div>
+
+            <!-- Name Field -->
             <div class="form-control mb-4">
                 <label class="label font-semibold">Nombre del Municipio (para el escudo)</label>
-                <input type="text" class="input input-bordered w-full custom-input" name="municipio" required placeholder="Ej: Bogota" />
+                <input type="text" class="input input-bordered w-full custom-input" id="shield-name-input" name="municipio" required placeholder="Se llenará automáticamente..." />
             </div>
-            <div class="form-control mb-4">
-                <label class="label font-semibold">Imagen del Escudo</label>
-                <input type="file" class="file-input file-input-bordered w-full custom-input" name="archivo" accept="image/*" required />
-            </div>
+
             <div class="modal-action">
-                <button type="button" class="btn" onclick="document.getElementById('create_shield_modal').close()">Cancelar</button>
-                <button type="submit" class="btn custom-submit-btn">Subir</button>
+                <button type="button" class="btn" onclick="closeShieldModal()">Cancelar</button>
+                <button type="submit" class="btn custom-submit-btn" id="shield-submit-btn" disabled>Subir</button>
             </div>
         </form>
     </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -547,5 +643,88 @@
 
     function submitShield(e) {
         submitForm(e, '@Url.Action("createShield", "Municipality")', 'Escudo creado correctamente', 'ShieldSelect', 'NameOfMunicipality');
+    }
+
+    // ======================== SHIELD DRAG & DROP ========================
+    document.addEventListener('DOMContentLoaded', () => {
+        const shieldDropzone = document.getElementById('shield-dropzone');
+        const shieldFileInput = document.getElementById('shield-file-input');
+        const shieldPreviewCard = document.getElementById('shield-preview-card');
+        const shieldPreviewImg = document.getElementById('shield-preview-img');
+        const shieldPreviewFilename = document.getElementById('shield-preview-filename');
+        const shieldNameInput = document.getElementById('shield-name-input');
+        const shieldSubmitBtn = document.getElementById('shield-submit-btn');
+
+        const handleShieldFile = (file) => {
+            if (!file || !file.type.startsWith('image/')) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Por favor selecciona un archivo de imagen válido.' });
+                return;
+            }
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                shieldPreviewImg.src = e.target.result;
+                shieldPreviewCard.classList.add('active');
+            };
+            reader.readAsDataURL(file);
+
+            // Set filename display
+            shieldPreviewFilename.textContent = file.name;
+
+            // Auto-populate name from filename (remove extension)
+            const nameWithoutExt = file.name.replace(/\.[^/.]+$/, '');
+            shieldNameInput.value = nameWithoutExt;
+
+            // Enable submit button
+            shieldSubmitBtn.disabled = false;
+
+            // Hide dropzone
+            shieldDropzone.style.display = 'none';
+        };
+
+        // File input change
+        shieldFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleShieldFile(file);
+        });
+
+        // Drag and drop events
+        shieldDropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            shieldDropzone.classList.add('dragover');
+        });
+
+        shieldDropzone.addEventListener('dragleave', () => {
+            shieldDropzone.classList.remove('dragover');
+        });
+
+        shieldDropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            shieldDropzone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                // Set the file to input for form submission
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                shieldFileInput.files = dataTransfer.files;
+                handleShieldFile(file);
+            }
+        });
+    });
+
+    // Close and reset shield modal
+    function closeShieldModal() {
+        const modal = document.getElementById('create_shield_modal');
+        const form = document.getElementById('createShieldForm');
+        const dropzone = document.getElementById('shield-dropzone');
+        const previewCard = document.getElementById('shield-preview-card');
+        const submitBtn = document.getElementById('shield-submit-btn');
+        
+        modal.close();
+        form.reset();
+        dropzone.style.display = 'block';
+        previewCard.classList.remove('active');
+        submitBtn.disabled = true;
     }
 </script>
