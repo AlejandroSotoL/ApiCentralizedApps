@@ -9,3 +9,4 @@ obj/
 
 node_modules/
 CentralizedApps/bin/Debug/net8.0/CentralizedApps.dll
+CentralizedApps/web.config

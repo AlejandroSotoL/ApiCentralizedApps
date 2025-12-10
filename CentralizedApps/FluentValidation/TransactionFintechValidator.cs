@@ -27,17 +27,17 @@ namespace CentralizedApps.FluentValidation
                 .NotEmpty().WithMessage("El tipo de implementación no puede estar vacío")
                 .GreaterThan(0).WithMessage("El tipo de implementación debe ser mayor que 0");
 
-            RuleFor(t => t.Estado_Url)
-                .NotNull().WithMessage("El estado de la URL debe estar especificado");
+            // RuleFor(t => t.Estado_Url)
+            //     .NotNull().WithMessage("El estado de la URL debe estar especificado");
 
-            RuleFor(t => t.Url)
-                .NotEmpty().WithMessage("La URL no puede estar vacía")
-                .Must(url => Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                    .WithMessage("La URL no es válida")
-                .Must(url => url.StartsWith("https://"))
-                    .WithMessage("La URL debe ser segura (HTTPS)")
-                .MaximumLength(300)
-                    .WithMessage("La URL no puede exceder los 200 caracteres");
+            // RuleFor(t => t.Url)
+            //     .NotEmpty().WithMessage("La URL no puede estar vacía")
+            //     .Must(url => Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            //         .WithMessage("La URL no es válida")
+            //     .Must(url => url.StartsWith("https://"))
+            //         .WithMessage("La URL debe ser segura (HTTPS)")
+            //     .MaximumLength(300)
+            //         .WithMessage("La URL no puede exceder los 200 caracteres");
 
             RuleFor(t => t.ValorPagar)
                 .NotEmpty().WithMessage("El valor a pagar no puede estar vacío")

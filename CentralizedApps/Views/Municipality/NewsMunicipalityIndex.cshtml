@@ -7,7 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-    body, .nunito-font {
+    body,
+    .nunito-font {
         font-family: 'Nunito Sans', sans-serif !important;
         font-weight: 700;
     }
@@ -77,13 +78,13 @@
         <p class="mb-4 text-sm opacity-70">
             Busca y selecciona una alcaldía para gestionar sus noticias.
         </p>
-        
+
         <!-- Search Dropdown -->
         <div class="mb-8 max-w-2xl mx-auto">
             <div class="relative">
-                <select id="municipalitySearch" 
-                        class="search-bar-custom block rounded-full border-0 bg-base-200 text-base-content shadow-sm ring-1 ring-inset ring-base-300 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all cursor-pointer" 
-                        onchange="handleSearchSelection()">
+                <select id="municipalitySearch"
+                    class="search-bar-custom block rounded-full border-0 bg-base-200 text-base-content shadow-sm ring-1 ring-inset ring-base-300 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all cursor-pointer"
+                    onchange="handleSearchSelection()">
                     <option value="" selected>Seleccione una alcaldía...</option>
                     @if (Model?.municipalities != null)
                     {
@@ -95,16 +96,17 @@
                 </select>
             </div>
         </div>
-        
+
         <!-- Municipality Cards -->
-        <div id="municipalityCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center">
+        <div id="municipalityCardsContainer"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center">
             <!-- Cards injected via JS -->
         </div>
     </section>
 
     <!-- News Management Section (Hidden initially) -->
     <div id="newsManagementSection" class="hidden space-y-6">
-        
+
         <!-- Create News Form -->
         <section class="rounded-xl bg-base-100 p-6 shadow-lg">
             <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
@@ -116,7 +118,9 @@
                 <div class="grid grid-cols-1 gap-6 mb-6">
                     <div>
                         <label class="block text-sm font-semibold opacity-80 mb-2 ml-2">Enlace API / Post</label>
-                        <input type="text" name="GetUrlNew" class="custom-input block w-full rounded-full border-0 bg-base-200 py-3.5 px-5 text-base-content shadow-sm ring-1 ring-inset ring-base-300 placeholder:opacity-50 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all" placeholder="https://..." required />
+                        <input type="text" name="GetUrlNew"
+                            class="custom-input block w-full rounded-full border-0 bg-base-200 py-3.5 px-5 text-base-content shadow-sm ring-1 ring-inset ring-base-300 placeholder:opacity-50 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all"
+                            placeholder="https://..." required />
                     </div>
                 </div>
                 <div class="flex justify-end">
@@ -140,19 +144,20 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Serialize municipalities to JSON for client-side access
-    const allMunicipalities = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.municipalities.Select(m => new { 
-        m.Id, 
-        m.Name, 
-        DepartmentName = m.Department?.Name ?? "Sin Departamento", 
-        ShieldUrl = m.IdShieldNavigation?.Url 
-    })));
+    const allMunicipalities = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.municipalities.Select(m => new
+        {
+            m.Id,
+            m.Name,
+            DepartmentName = m.Department?.Name ?? "Sin Departamento",
+            ShieldUrl = m.IdShieldNavigation?.Url
+        })));
 
     let currentMunicipalityId = null;
 
     // Initial Render
     document.addEventListener('DOMContentLoaded', () => {
         renderLast3Municipalities();
-        
+
         // Check if ID is in URL (from redirect)
         const urlParams = new URLSearchParams(window.location.search);
         const idParam = urlParams.get('id');
@@ -182,17 +187,17 @@
 
     function renderLast3Municipalities() {
         const container = document.getElementById('municipalityCardsContainer');
-        const last3 = allMunicipalities.slice(-3); 
-        
+        const last3 = allMunicipalities.slice(-3);
+
         container.innerHTML = last3.map(m => `
             <div onclick="selectMunicipality(${m.Id}, '${m.Name.replace(/'/g, "\\\\'")}')" 
                  class="custom-card group cursor-pointer rounded-2xl p-4 hover:border-blue-400 hover:shadow-lg transition-all duration-300 flex flex-col items-center h-full">
-                
+
                 <div class="w-full h-24 rounded-2xl bg-base-200 border border-base-300 mb-3 flex items-center justify-center p-2 group-hover:bg-base-100 transition-colors">
-                    ${m.ShieldUrl 
-                        ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-16 w-auto object-contain drop-shadow-sm transform group-hover:scale-110 transition-transform duration-300" />` 
-                        : `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
-                    }
+                    ${m.ShieldUrl
+                ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-16 w-auto object-contain drop-shadow-sm transform group-hover:scale-110 transition-transform duration-300" />`
+                : `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
+            }
                 </div>
 
                 <div class="flex-grow flex flex-col justify-between w-full">
@@ -214,10 +219,10 @@
             <div class="col-span-full flex justify-center animate-fade-in">
                 <div class="custom-card w-full max-w-sm rounded-2xl p-6 shadow-lg flex flex-col items-center">
                     <div class="w-full h-24 rounded-2xl bg-base-200 mb-3 flex items-center justify-center p-2">
-                        ${m.ShieldUrl 
-                            ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-16 w-auto object-contain drop-shadow-sm" />` 
-                            : `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
-                        }
+                        ${m.ShieldUrl
+                ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-16 w-auto object-contain drop-shadow-sm" />`
+                : `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
+            }
                     </div>
 
                     <div class="flex-grow flex flex-col justify-between w-full">
@@ -229,7 +234,7 @@
                         </div>
                         <p class="text-[10px] font-bold opacity-60 text-center uppercase tracking-wider">${m.DepartmentName}</p>
                     </div>
-                    
+
                     <button onclick="document.getElementById('municipalitySearch').value = ''; handleSearchSelection();" class="custom-action-btn mt-4" style="width: 140px; height: 32px; font-size: 12px;">
                         Cambiar selección
                     </button>
@@ -284,10 +289,10 @@
                 <form onsubmit="updateNews(event, ${news.id})" class="flex flex-col gap-2 w-full">
                     <input type="hidden" name="Id" value="${news.id}" />
                     <input type="hidden" name="IdMunicipality" value="${news.idMunicipality}" />
-                    
+
                     <label class="text-xs font-bold opacity-60 uppercase">Editar URL</label>
                     <input type="text" name="GetUrlNew" value="${news.getUrlNew}" class="custom-input rounded-lg border border-base-300 px-3 py-2 text-sm w-full" required />
-                    
+
                     <div class="flex justify-end mt-2">
                         <button type="submit" class="custom-action-btn" style="width: 100px; height: 42px;">
                             Actualizar
@@ -302,10 +307,13 @@
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
-        
+
         try {
             const response = await fetch('@Url.Action("createNewsMunicipality", "Municipality")', {
                 method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
                 body: formData
             });
 
@@ -329,6 +337,9 @@
         try {
             const response = await fetch(`@Url.Action("updateNewsMunicipality", "Municipality")?id=${id}`, {
                 method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
                 body: formData
             });
 

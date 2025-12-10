@@ -881,6 +881,9 @@
             pageShields.forEach(shield => {
                 const row = document.createElement('tr');
                 row.className = 'animate-fade-in';
+                const safeName = (shield.name || 'Sin nombre').replace(/'/g, "\\'");
+                const safeUrl = (shield.url || '').replace(/'/g, "\\'");
+
                 row.innerHTML = `
                     <td>
                         <img src="${shield.url || ''}" alt="Escudo" class="shield-preview" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>'" />
@@ -889,7 +892,7 @@
                         <span class="shield-name">${shield.name || 'Sin nombre'}</span>
                     </td>
                     <td>
-                        <button class="action-btn view" onclick="openViewModal('${shield.name || ''}', '${shield.url || ''}')">
+                        <button class="action-btn view" onclick="openViewModal('${safeName}', '${safeUrl}')">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
@@ -994,8 +997,7 @@
             const url = document.getElementById('view-shield-url').textContent;
             const btn = document.getElementById('copy-url-btn');
 
-            try {
-                await navigator.clipboard.writeText(url);
+            const showSuccess = () => {
                 btn.classList.add('copied');
                 btn.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1014,10 +1016,50 @@
                         Copiar URL
                     `;
                 }, 2000);
-            } catch (err) {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo copiar la URL' });
+            };
+
+            // Intentar usar la API moderna primero
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                    await navigator.clipboard.writeText(url);
+                    showSuccess();
+                } catch (err) {
+                    // Si falla (puede ser por contexto no seguro), usar fallback
+                    fallbackCopyTextToClipboard(url, showSuccess);
+                }
+            } else {
+                // Fallback para navegadores antiguos
+                fallbackCopyTextToClipboard(url, showSuccess);
             }
         };
+
+        function fallbackCopyTextToClipboard(text, successCallback) {
+            try {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+
+                // Asegurar que el elemento es parte del DOM pero invisible visualmente
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                textArea.style.top = "0";
+                document.body.appendChild(textArea);
+
+                textArea.focus();
+                textArea.select();
+
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                if (successful) {
+                    successCallback();
+                } else {
+                    throw new Error('Fallback copy failed');
+                }
+            } catch (err) {
+                console.error('Error al copiar:', err);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo copiar la URL. Intenta copiarla manualmente.' });
+            }
+        }
 
         // Upload Modal
         window.openUploadModal = () => {

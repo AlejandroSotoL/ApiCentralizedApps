@@ -3,87 +3,290 @@
     ViewData["Title"] = "Tipos de Documento";
     Layout = "Layout";
 }
-@if (TempData["Message"] != null)   
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    * {
+        font-family: 'Nunito Sans', sans-serif;
+    }
+
+    .docs-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .card-section {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-icon.green {
+        background: rgba(34, 197, 94, 0.15);
+        color: #16a34a;
+    }
+
+    .card-icon.blue {
+        background: rgba(81, 111, 233, 0.15);
+        color: #516FE9;
+    }
+
+    .card-icon .material-icons-outlined {
+        font-size: 24px;
+    }
+
+    .card-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-input,
+    .form-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        background: #f9fafb;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: #516FE9;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(81, 111, 233, 0.1);
+    }
+
+    .btn-action {
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.875rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-create {
+        background: #22c55e;
+        color: white;
+    }
+
+    .btn-create:hover {
+        background: #16a34a;
+        transform: translateY(-1px);
+    }
+
+    .btn-edit {
+        background: #516FE9;
+        color: white;
+    }
+
+    .btn-edit:hover {
+        background: #3b55c5;
+        transform: translateY(-1px);
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+
+    /* Dark Mode */
+    [data-theme="dark"] .page-title {
+        color: #f3f4f6;
+    }
+
+    [data-theme="dark"] .card-section {
+        background: #1f2937;
+    }
+
+    [data-theme="dark"] .card-title {
+        color: #f3f4f6;
+    }
+
+    [data-theme="dark"] .form-label {
+        color: #d1d5db;
+    }
+
+    [data-theme="dark"] .form-input,
+    [data-theme="dark"] .form-select {
+        background: #374151;
+        border-color: #4b5563;
+        color: #f3f4f6;
+    }
+
+    [data-theme="dark"] .form-input:focus,
+    [data-theme="dark"] .form-select:focus {
+        background: #374151;
+    }
+
+    .alert-fade {
+        animation: fadeIn 0.3s ease;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+@if (TempData["Message"] != null)
 {
-    <div id="tempMessage" class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error")">
+    <div id="tempMessage"
+        class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error") alert-fade mb-4">
         @TempData["Message"]
     </div>
 }
-<div class="card bg-base-200 rounded-box p-0 md:p-6">
-<h1 class="font-bold text-3xl text-center mb-6">Tipo de Documento</h1>
-<Form asp-action="updateDocumentType" asp-controller="Municipality">
-    <div class="grid bg-base-300 grid-cols-1 md:grid-cols-2 p-8 gap-4 rounded-2xl">
-        <fieldset class="fieldset">
-            <legend class="fieldset-legend">Seleccionar tipo de documento existente</legend>
-            <select id="selectDocumentType" name="id" class="select w-full" required>
-                <option disabled selected value="">Tipo de documento</option>
-                @foreach (var documentType in Model)
-                {
-                    <option value="@documentType.Id">@documentType.NameDocument</option>
-                }
-            </select>
-        </fieldset>
 
-        <div class="flex flex-col">
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Nombre del tipo de documento</legend>
-                <input id="inputDocumentType" type="text" class="input w-full" name="NameDocument"
-                    placeholder="Ej: Cédula" required />
-            </fieldset>
+<div class="docs-container">
+    <div class="page-header">
+        <h1 class="page-title">📄 Tipos de Documento</h1>
+    </div>
 
-            <div class="flex justify-center md:justify-end gap-6 p-5">
-                <button type="button" class="btn btn-soft btn-success" onclick="my_modal_3.showModal()">Crear</button>
-                <button type="submit" class="btn btn-soft btn-warning">Editar</button>
+    <div class="cards-grid">
+        <!-- Create Document Type Card -->
+        <div class="card-section">
+            <div class="card-header">
+                <div class="card-icon green">
+                    <span class="material-icons-outlined">add</span>
+                </div>
+                <h2 class="card-title">Crear Tipo de Documento</h2>
             </div>
+
+            <form asp-action="createDocumentType" asp-controller="Municipality">
+                <div class="form-group">
+                    <label class="form-label">Nombre del Tipo de Documento</label>
+                    <input type="text" class="form-input" name="NameDocument" placeholder="Ej: Cédula de Ciudadanía"
+                        required />
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn-action btn-create">
+                        <span class="material-icons-outlined" style="font-size: 18px;">add_circle</span>
+                        Crear Tipo
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Edit Document Type Card -->
+        <div class="card-section">
+            <div class="card-header">
+                <div class="card-icon blue">
+                    <span class="material-icons-outlined">edit</span>
+                </div>
+                <h2 class="card-title">Editar Tipo de Documento</h2>
+            </div>
+
+            <form asp-action="updateDocumentType" asp-controller="Municipality">
+                <div class="form-group">
+                    <label class="form-label">Seleccionar Tipo de Documento</label>
+                    <select id="selectDocType" name="id" class="form-select" required onchange="updateDocTypeName()">
+                        <option disabled selected value="">Seleccione un tipo...</option>
+                        @foreach (var doc in Model.OrderBy(d => d.NameDocument))
+                        {
+                            <option value="@doc.Id">@doc.NameDocument</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nuevo Nombre</label>
+                    <input id="inputDocTypeName" type="text" class="form-input" name="NameDocument"
+                        placeholder="Nuevo nombre" required />
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn-action btn-edit">
+                        <span class="material-icons-outlined" style="font-size: 18px;">save</span>
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</Form>
 </div>
-<dialog id="my_modal_3" class="modal">
-    <div class="modal-box">
-        <form method="dialog" class="flex justify-end">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <form asp-action="createDocumentType" asp-controller="Municipality">
-            <div class="flex flex-col">
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Nombre tipo de documento</legend>
-                    <input id="inputDocumentType" type="text" class="input w-full" name="NameDocument"
-                        placeholder="Ej: cédula" required />
-                </fieldset>
-
-                <button class="btn btn-success">Crear</button>
-            </div>
-        </form>     
-    </div>
-</dialog>
-
-
-
 
 <script>
-    const selectDocumentType = document.getElementById("selectDocumentType");
-    const inputDocumentType = document.getElementById("inputDocumentType");
+    function updateDocTypeName() {
+        const select = document.getElementById("selectDocType");
+        const input = document.getElementById("inputDocTypeName");
+        input.value = select.options[select.selectedIndex].text;
+    }
 
-    selectDocumentType.addEventListener("change", function () {
-        const selectedText = this.options[this.selectedIndex].text;
-        inputDocumentType.value = selectedText;
-    });
-
+    // Fade out alert
     setTimeout(() => {
-            const msg = document.getElementById("tempMessage");
-            if (msg) {
-                msg.style.transition = "opacity 0.5s";
-                msg.style.opacity = "0";
-                setTimeout(() => msg.remove(), 500);
-            }
-        }, 2000);
-
-    new TomSelect("#selectDocumentType", {
-        create: false, 
-        sortField: { field: "text", direction: "asc" },
-        placeholder: "Tipo de Documento",
-        allowEmptyOption: true
-    });
-
+        const msg = document.getElementById("tempMessage");
+        if (msg) {
+            msg.style.transition = "opacity 0.5s, transform 0.5s";
+            msg.style.opacity = "0";
+            msg.style.transform = "translateY(-10px)";
+            setTimeout(() => msg.remove(), 500);
+        }
+    }, 3000);
 </script>
