@@ -1,37 +1,284 @@
-﻿@{
-    Layout = "Layout";
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
 }
 
-<div class="hero bg-base-200 min-h-screen">
-    <div class="hero-content w-full flex-col justify-center px-4 lg:flex-row-reverse lg:px-20">
-        <div class="card bg-base-100 w-full max-w-md shadow-2xl lg:max-w-lg">
-            <div class="card-body p-8">
-                <h2 class="mb-6 text-center text-3xl font-bold">Iniciar Sesión</h2>
-                <form asp-action="Login" asp-controller="Account" method="post">
-                    <fieldset class="space-y-4">
-                        <div>
-                            <label class="label font-semibold">Nombre de Usuario</label>
-                            <input name="username" class="input input-bordered w-full text-lg"
-                                placeholder="Nombre de Usuario" />
-                        </div>
-                        <div>
-                            <label class="label font-semibold">Contraseña</label>
-                            <input type="password" name="Password" class="input input-bordered w-full text-lg"
-                                placeholder="Contraseña" />
-                        </div>
-                        <button type="submit" class="btn btn-neutral mt-4 w-full py-3 text-lg">Inicia Sesión</button>
-                    </fieldset>
-                </form>
+<!DOCTYPE html>
+<html data-theme="light" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar Sesión - Dashboard Centralización</title>
+    <link rel="stylesheet" href="~/css/output.css" />
+    <link rel="shortcut icon" href="~/Logos/favicon_new.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Nunito Sans', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            padding: 1rem;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .login-left {
+            flex: 1;
+            background: linear-gradient(135deg, #516FE9 0%, #7b93f0 100%);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+        }
+
+        .login-left h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 0 1rem 0;
+        }
+
+        .login-left p {
+            opacity: 0.9;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .login-right {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-header {
+            margin-bottom: 2rem;
+        }
+
+        .login-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .login-header p {
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #516FE9;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(81, 111, 233, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: #516FE9;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-login:hover {
+            background: #3b55c5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(81, 111, 233, 0.3);
+        }
+
+        .error-container {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .error-container p {
+            color: #dc2626;
+            margin: 0;
+            font-size: 0.875rem;
+        }
+
+        /* Dark Mode */
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        }
+
+        [data-theme="dark"] .login-container {
+            background: #1f2937;
+        }
+
+        [data-theme="dark"] .login-right {
+            background: #1f2937;
+        }
+
+        [data-theme="dark"] .login-header h2 {
+            color: #f3f4f6;
+        }
+
+        [data-theme="dark"] .login-header p {
+            color: #9ca3af;
+        }
+
+        [data-theme="dark"] .form-label {
+            color: #d1d5db;
+        }
+
+        [data-theme="dark"] .form-input {
+            background: #374151;
+            border-color: #4b5563;
+            color: #f3f4f6;
+        }
+
+        [data-theme="dark"] .form-input:focus {
+            background: #374151;
+        }
+
+        [data-theme="dark"] .form-input::placeholder {
+            color: #6b7280;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .login-left {
+                padding: 2rem;
+            }
+
+            .login-logo {
+                width: 120px;
+                height: 100px;
+            }
+
+            .login-left h1 {
+                font-size: 1.5rem;
+            }
+
+            .login-right {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-left">
+            <img src="~/Logos/tramiapplogo_darkmode.png" alt="Logo" class="login-logo" />
+            <h1>Dashboard Centralización</h1>
+            <p>Gestiona municipios, temas gráficos, escudos y transacciones desde un solo lugar.</p>
+        </div>
+
+        <div class="login-right">
+            <div class="login-header">
+                <h2>👋 Bienvenido</h2>
+                <p>Ingresa tus credenciales para continuar</p>
             </div>
+
             @if (!ViewData.ModelState.IsValid)
             {
-                <div style="color:red">
+                <div class="error-container">
                     @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                     {
                         <p>@error.ErrorMessage</p>
                     }
                 </div>
             }
+
+            <form asp-action="Login" asp-controller="Account" method="post">
+                <div class="form-group">
+                    <label class="form-label">Nombre de Usuario</label>
+                    <input name="username" class="form-input" placeholder="Ingresa tu usuario" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" name="Password" class="form-input" placeholder="Ingresa tu contraseña"
+                        required />
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <span class="material-icons-outlined">login</span>
+                    Iniciar Sesión
+                </button>
+            </form>
         </div>
     </div>
-</div>
+
+    <script>
+        // Restore theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</body>
+
+</html>

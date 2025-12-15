@@ -32,17 +32,17 @@ namespace CentralizedApps.FluentValidation
                 .NotEmpty().WithMessage("El primer apellido es obligatorio")
                 .MaximumLength(50).WithMessage("El primer apellido no puede exceder los 50 caracteres");
 
-            RuleFor(p => p.Telefono)
-                .NotEmpty().WithMessage("El teléfono es obligatorio")
-                .Matches(@"^\d{7,15}$").WithMessage("El teléfono debe tener entre 7 y 15 dígitos");
+            //RuleFor(p => p.Telefono)
+            //    .NotEmpty().WithMessage("El teléfono es obligatorio")
+            //    .Matches(@"^\d{7,15}$").WithMessage("El teléfono debe tener entre 7 y 15 dígitos");
 
             RuleFor(p => p.Email)
                 .NotEmpty().WithMessage("El correo es obligatorio")
                 .EmailAddress().WithMessage("El correo no tiene un formato válido");
 
-            RuleFor(p => p.Direccion)
-                .NotEmpty().WithMessage("La dirección es obligatoria")
-                .MaximumLength(150).WithMessage("La dirección no puede exceder los 150 caracteres");
+            //RuleFor(p => p.Direccion)
+            //    .NotEmpty().WithMessage("La dirección es obligatoria")
+            //    .MaximumLength(150).WithMessage("La dirección no puede exceder los 150 caracteres");
         }
     }
 }

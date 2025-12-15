@@ -648,6 +648,20 @@ namespace CentralizedApps.Services
                     };
                 }
 
+                // Validate if procedure name already exists
+                var existingProcedure = await _unitOfWork.genericRepository<Procedure>()
+                    .FindAsync_Predicate(x => x.Name.ToLower() == createProcedureDto.Name.ToLower());
+
+                if (existingProcedure != null)
+                {
+                    return new ValidationResponseDto
+                    {
+                        BooleanStatus = false,
+                        CodeStatus = 400,
+                        SentencesError = $"El procedimiento '{createProcedureDto.Name}' ya existe."
+                    };
+                }
+
                 var procedure = new Procedure
                 {
                     Name = createProcedureDto.Name
@@ -771,7 +785,12 @@ namespace CentralizedApps.Services
                         SentencesError = "Municipio no encontrado."
                     };
                 }
-                _mapper.Map(newsByMunicipalityDto, existidNew);
+
+                // FIX: Set properties directly instead of using AutoMapper on detached entity
+                existidNew.GetUrlNew = newsByMunicipalityDto.GetUrlNew;
+                existidNew.IdMunicipality = newsByMunicipalityDto.IdMunicipality;
+
+                // FIX: FindAsync_Predicate uses AsNoTracking(), so we must explicitly mark for update
                 _unitOfWork.genericRepository<NewsByMunicipality>().Update(existidNew);
 
                 var rows = await _unitOfWork.SaveChangesAsync();

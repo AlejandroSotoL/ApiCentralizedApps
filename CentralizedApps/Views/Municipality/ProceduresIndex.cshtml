@@ -1,0 +1,333 @@
+@model CentralizedApps.Models.Dtos.ProceduresWebDto
+@{
+    ViewData["Title"] = "Cursos y Reservas";
+    Layout = "Layout";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    body,
+    .nunito-font {
+        font-family: 'Nunito Sans', sans-serif !important;
+        font-weight: 700;
+    }
+
+    .custom-action-btn {
+        background-color: #516FE9 !important;
+        width: 159px;
+        height: 40px;
+        color: white !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: transform 0.1s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+    .custom-action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(81, 111, 233, 0.4);
+    }
+
+    .custom-action-btn:active {
+        transform: scale(0.98);
+    }
+
+    .custom-card {
+        background-color: #F5F6FA !important;
+        border: 1px solid #E5E7EB;
+    }
+
+    /* Dark theme compatibility */
+    [data-theme="dark"] .custom-card {
+        background-color: #1f2937 !important;
+        border: 1px solid #374151;
+    }
+</style>
+
+<div class="card bg-base-200 rounded-box p-0 md:p-6">
+    <h1 class="font-bold text-3xl text-center mb-6">Gestión de Cursos y Reservas</h1>
+
+    <!-- Create Section -->
+    <div class="card bg-base-300 grid p-6 mb-6">
+        <h2 class="font-bold text-2xl text-center mb-6">Crear Curso o Reserva</h2>
+        <form id="createProcedureForm">
+            <div class="grid grid-cols-1 gap-4">
+                <fieldset class="fieldset w-full">
+                    <legend class="fieldset-legend">Municipio</legend>
+                    <select id="municipalitySelect" name="MunicipalityId" class="select w-full" required>
+                        <option disabled selected value="">Seleccione un Municipio</option>
+                        @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
+                        {
+                            <option value="@municipality.Id" selected="@(Model?.municipality?.Id == municipality.Id)">
+                                @municipality.Name</option>
+                        }
+                    </select>
+                </fieldset>
+
+                <fieldset class="fieldset w-full">
+                    <legend class="fieldset-legend">Tipo de Procedimiento</legend>
+                    <select id="procedureTypeSelect" name="ProcedureType" class="select w-full" required>
+                        <option value="Course" selected>Curso</option>
+                        <option value="SportsFacility">Escenario Deportivo</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="fieldset w-full">
+                    <legend class="fieldset-legend">Base URL</legend>
+                    <input type="text" id="baseUrlInput" class="input w-full" placeholder="https://api.example.com/v1"
+                        required />
+                    <div class="label">
+                        <span class="label-text-alt">Las URLs específicas se generarán automáticamente a partir de esta
+                            base.</span>
+                    </div>
+                </fieldset>
+
+                <!-- Hidden inputs for specific URLs -->
+                <input type="hidden" name="Name" id="nameInput" />
+                <input type="hidden" name="Get" id="getInput" />
+                <input type="hidden" name="Post" id="postInput" /> <!-- For Course -->
+                <input type="hidden" name="CalendaryPost" id="calendaryPostInput" /> <!-- For Sports -->
+                <input type="hidden" name="ReservationPost" id="reservationPostInput" /> <!-- For Sports -->
+
+                <div class="flex justify-center">
+                    <label class="flex items-center gap-6">
+                        <span>Estado</span>
+                        <input type="checkbox" name="IsActive" class="toggle toggle-success" value="true" checked />
+                        <input type="hidden" name="IsActive" value="false" />
+                    </label>
+                </div>
+                <div class="w-full flex justify-center">
+                    <button type="submit" class="custom-action-btn">Crear</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Select Municipality for Viewing Existing -->
+    <div class="card bg-base-300 grid p-6 mb-6">
+        <h2 class="font-bold text-2xl text-center mb-6">Ver Procedimientos Existentes</h2>
+        <form asp-action="ProceduresIndex" asp-controller="Municipality" method="get">
+            <fieldset class="fieldset w-full md:w-1/3 mx-auto">
+                <legend class="fieldset-legend">Seleccionar Municipio</legend>
+                <select name="id" class="select w-full" onchange="this.form.submit()" required>
+                    <option disabled selected value="">Municipios</option>
+                    @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
+                    {
+                        <option value="@municipality.Id" selected="@(Model?.municipality?.Id == municipality.Id)">
+                            @municipality.Name</option>
+                    }
+                </select>
+            </fieldset>
+        </form>
+    </div>
+
+    @if (Model?.municipality != null)
+    {
+        <div class="flex flex-col items-center justify-center my-10">
+            <div class="avatar">
+                <div class="mask mask-squircle h-24 w-24">
+                    <img src="@Model?.municipality?.IdShield?.Url" alt="escudo municipio" />
+                </div>
+            </div>
+            <div class="text-center">
+                <h1 class="font-bold text-2xl">@Model?.municipality?.Name</h1>
+                <p class="text-sm opacity-70">@Model?.municipality?.Department?.Name</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Courses List -->
+            <div class="card bg-base-300 p-6">
+                <h3 class="font-bold text-xl text-center mb-4">Cursos</h3>
+                @foreach (var course in Model?.courses ?? new List<Course>())
+                {
+                    <form class="update-form mb-6 pb-4" data-type="Course" action="@Url.Action("updateCourse", "Municipality")">
+                        <input type="hidden" name="Id" value="@course.Id">
+                        <input type="hidden" name="MunicipalityId" value="@course.MunicipalityId">
+
+                        <div class="grid gap-2">
+                            <fieldset class="fieldset">
+                                <legend class="fieldset-legend">Nombre</legend>
+                                <input type="text" name="Name" class="input w-full input-sm" value="@course.Name" required />
+                            </fieldset>
+                            <fieldset class="fieldset">
+                                <legend class="fieldset-legend">Get</legend>
+                                <input type="text" name="Get" class="input w-full input-sm" value="@course.Get" required />
+                            </fieldset>
+                            <fieldset class="fieldset">
+                                <legend class="fieldset-legend">Post</legend>
+                                <input type="text" name="Post" class="input w-full input-sm" value="@course.Post" required />
+                            </fieldset>
+                            <div class="flex justify-between items-center mt-2">
+                                <label class="flex items-center gap-2">
+                                    <span>Activo</span>
+                                    <input type="checkbox" name="IsActive" value="true" class="toggle toggle-success toggle-sm"
+                                    @(course.IsActive == true ? "checked" : "") />
+                                    <input type="hidden" name="IsActive" value="false" />
+                                </label>
+                                <button type="submit" class="custom-action-btn"
+                                    style="width: 100px; height: 30px; font-size: 12px;">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
+                }
+                @if (!Model?.courses?.Any() ?? true)
+                {
+                    <p class="text-center opacity-50">No hay cursos registrados.</p>
+                }
+            </div>
+
+            <!-- Sports Facilities List -->
+            <div class="card bg-base-300 p-6">
+                <h3 class="font-bold text-xl text-center mb-4">Escenarios Deportivos</h3>
+                @foreach (var facility in Model?.sportsFacilities ?? new List<SportsFacility>())
+                {
+                    <form class="update-form mb-6 pb-4" data-type="SportsFacility"
+                        action="@Url.Action("UpdateSportFacilities", "Municipality")">
+                        <input type="hidden" name="Id" value="@facility.Id">
+                        <input type="hidden" name="MunicipalityId" value="@facility.MunicipalityId">
+
+                        <div class="grid gap-2">
+                            <fieldset class="fieldset">
+                                <legend class="fieldset-legend">Nombre</legend>
+                                <input type="text" name="Name" class="input w-full input-sm" value="@facility.Name" required />
+                            </fieldset>
+                            <fieldset class="fieldset">
+                                <legend class="fieldset-legend">Get</legend>
+                                <input type="text" name="Get" class="input w-full input-sm" value="@facility.Get" required />
+                            </fieldset>
+                            <fieldset class="fieldset">
+                                <legend class="fieldset-legend">CalendaryPost</legend>
+                                <input type="text" name="CalendaryPost" class="input w-full input-sm"
+                                    value="@facility.CalendaryPost" required />
+                            </fieldset>
+                            <fieldset class="fieldset">
+                                <legend class="fieldset-legend">ReservationPost</legend>
+                                <input type="text" name="ReservationPost" class="input w-full input-sm"
+                                    value="@facility.ReservationPost" required />
+                            </fieldset>
+                            <div class="flex justify-between items-center mt-2">
+                                <label class="flex items-center gap-2">
+                                    <span>Activo</span>
+                                    <input type="checkbox" name="IsActive" value="true" class="toggle toggle-success toggle-sm"
+                                    @(facility.IsActive == true ? "checked" : "") />
+                                    <input type="hidden" name="IsActive" value="false" />
+                                </label>
+                                <button type="submit" class="custom-action-btn"
+                                    style="width: 100px; height: 30px; font-size: 12px;">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
+                }
+                @if (!Model?.sportsFacilities?.Any() ?? true)
+                {
+                    <p class="text-center opacity-50">No hay escenarios deportivos registrados.</p>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Handle Create Form
+    document.getElementById('createProcedureForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const municipalitySelect = document.getElementById('municipalitySelect');
+        const municipalityId = municipalitySelect.value;
+        const municipalityName = municipalitySelect.options[municipalitySelect.selectedIndex].text;
+        const baseUrl = document.getElementById('baseUrlInput').value;
+        const type = document.getElementById('procedureTypeSelect').value;
+
+        if (!municipalityId || !baseUrl) {
+            Swal.fire('Error', 'Por favor complete todos los campos requeridos', 'error');
+            return;
+        }
+
+        // Auto-generate values
+        const name = type === 'Course' ? `Curso ${municipalityId}` : `Escenario ${municipalityId}`;
+        document.getElementById('nameInput').value = name;
+        document.getElementById('getInput').value = baseUrl;
+
+        let url = '';
+
+        if (type === 'Course') {
+            document.getElementById('postInput').value = baseUrl;
+            url = '@Url.Action("createCourse", "Municipality")';
+        } else {
+            document.getElementById('calendaryPostInput').value = baseUrl;
+            document.getElementById('reservationPostInput').value = baseUrl;
+            url = '@Url.Action("createSportsFacilities", "Municipality")';
+        }
+
+        const formData = new FormData(this);
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Éxito', data.message, 'success').then(() => {
+                        // Reload the page with the selected municipality to show the new item
+                        window.location.href = '@Url.Action("ProceduresIndex", "Municipality")?id=' + municipalityId;
+                    });
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                Swal.fire('Error', 'Ocurrió un error inesperado', 'error');
+                console.error(error);
+            });
+    });
+
+    // Handle Update Forms
+    document.querySelectorAll('.update-form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const url = this.action;
+            const formData = new FormData(this);
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('Error', 'Ocurrió un error inesperado', 'error');
+                    console.error(error);
+                });
+        });
+    });
+</script>

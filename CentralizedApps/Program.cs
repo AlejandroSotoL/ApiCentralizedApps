@@ -11,8 +11,10 @@ using CentralizedApps.Services.ServicesWeb.Interface;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,8 @@ builder.Services.AddControllersWithViews(options =>
         .RequireAuthenticatedUser()
         .Build();
     options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter(policy));
+    // Add global CSRF validation for MVC
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
 });
 
 // ---------------- Swagger ----------------
@@ -54,16 +58,29 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddAutoMapper(typeof(MunicipalityProfile));
 
 // ---------------- Base de datos ----------------
+// Connection string from environment or config
+var connectionString = builder.Configuration.GetConnectionString("ConectionDefault");
+
+// Replace environment variable placeholders if present
+connectionString = connectionString?
+    .Replace("${DB_SERVER}", Environment.GetEnvironmentVariable("DB_SERVER") ?? "")
+    .Replace("${DB_NAME}", Environment.GetEnvironmentVariable("DB_NAME") ?? "")
+    .Replace("${DB_USER}", Environment.GetEnvironmentVariable("DB_USER") ?? "")
+    .Replace("${DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "");
+
 builder.Services.AddDbContext<CentralizedAppsDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("ConectionDefault"),
+        connectionString,
         sqlOptions => sqlOptions.CommandTimeout(180)
     ));
 
 // ---------------- HttpClient ----------------
+var fintechUrl = builder.Configuration["ExternalApis:FintechApi:BaseUrl"]?
+    .Replace("${FINTECH_API_URL}", Environment.GetEnvironmentVariable("FINTECH_API_URL") ?? "");
+
 builder.Services.AddHttpClient<FintechApiClient>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["ExternalApis:FintechApi:BaseUrl"]);
+    client.BaseAddress = new Uri(fintechUrl ?? "https://localhost");
 });
 
 // ---------------- Repositorios y servicios ----------------
@@ -83,12 +100,50 @@ builder.Services.AddScoped<IGeneralProcedures, GeneralProcedures>();
 builder.Services.AddScoped<IGeneralMunicipality, GeneralMunicipality>();
 builder.Services.AddScoped<IWeb, Web>();
 
+// ---------------- Rate Limiting ----------------
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Login rate limiting: max 5 attempts per minute per IP
+    options.AddPolicy("LoginPolicy", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+
+    // General API rate limiting
+    options.AddPolicy("ApiPolicy", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 2
+            }));
+});
+
+// ---------------- Health Checks ----------------
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<CentralizedAppsDbContext>("database");
+
 // ---------------- Autenticación / Autorización ----------------
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(45);
+        options.SlidingExpiration = true;
+        // Security: HttpOnly and Secure cookies
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // Allows HTTP in dev, HTTPS in prod
+        options.Cookie.SameSite = SameSiteMode.Lax; // Changed from Strict to allow redirect after login
     });
 
 builder.Services.AddAuthorization(options =>
@@ -97,22 +152,65 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim("Role", "Admin"));
 });
 
+// ---------------- Antiforgery ----------------
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // Allows HTTP in dev
+});
+
 var app = builder.Build();
+
+// ---------------- Security Headers ----------------
+app.Use(async (context, next) =>
+{
+    // Prevent clickjacking
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    // Prevent MIME type sniffing
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    // XSS Protection
+    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+    // Referrer Policy
+    context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    // Content Security Policy (adjust as needed)
+    context.Response.Headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:;";
+
+    await next();
+});
+
+// ---------------- HTTPS Redirection (Production) ----------------
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+    app.UseHttpsRedirection();
+}
+
+// ---------------- Rate Limiting ----------------
+app.UseRateLimiter();
 
 // ---------------- Middleware ----------------
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Uncomment for global exception handling in production
 // app.UseMiddleware<GlobalExceptionMiddleware>();
 
-// ---------------- Swagger ----------------
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+// ---------------- Health Check ----------------
+app.MapHealthChecks("/health");
+
+// ---------------- Swagger (Development Only) ----------------
+if (app.Environment.IsDevelopment())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "CentralizedApps API v1");
-    c.RoutePrefix = "swagger";
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "CentralizedApps API v1");
+        c.RoutePrefix = "swagger";
+    });
+}
 
 // ---------------- Rutas ----------------
 // API → libre (no necesita login)

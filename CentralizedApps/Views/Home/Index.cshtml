@@ -1,68 +1,390 @@
 ﻿@{
+    ViewData["Title"] = "Dashboard";
     Layout = "Layout";
 }
 
-<div class="from-primary/20 via-base-200 to-secondary/20 relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-r">
-
-    <div class="absolute inset-0 -z-10">
-        <div class="bg-primary/30 absolute top-0 left-0 h-96 w-96 animate-pulse rounded-full blur-3xl"></div>
-        <div class="bg-secondary/30 absolute right-0 bottom-0 h-96 w-96 animate-pulse rounded-full blur-3xl delay-700"></div>
-        <div class="bg-accent/20 animate-spin-slow absolute top-1/2 left-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"></div>
-    </div>
-
-    <div class="animate-fadeIn mx-4 max-w-2xl rounded-2xl border border-white/20 bg-white/10 p-12 text-center shadow-2xl backdrop-blur-xl">
-
-        <div class="mb-6 flex justify-center">
-            <img src="~/Logos/nuevotramiapp.png" alt="Logo"
-                 class="h-28 w-28 object-contain drop-shadow-xl transition-transform duration-500 hover:scale-110" />
-        </div>
-
-        <h1 class="text-4xl font-extrabold text-white drop-shadow-lg">
-            Bienvenido a <span class="text-primary">tu Dashboard</span>
-        </h1>
-
-        <p class="mt-4 text-lg leading-relaxed text-white/80">
-            Un espacio minimalista, potente y diseñado para que gestiones tu información con estilo.
-            Accede a tus métricas y controla todo desde un solo lugar.
-        </p>
-
-        <div class="mt-8">
-            <a href="/Home/Index"
-               class="btn btn-primary btn-lg px-10 shadow-lg transition-all duration-300 hover:shadow-primary/50 hover:scale-105">
-                🚀 Comenzar ahora
-            </a>
-        </div>
-    </div>
-</div>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-    @@keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    * {
+        font-family: 'Nunito Sans', sans-serif;
     }
 
-    .animate-fadeIn {
-        animation: fadeIn 1s ease-out forwards;
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
     }
 
-    @@keyframes spin-slow {
-        from {
-            transform: rotate(0deg);
-        }
-
-        to {
-            transform: rotate(360deg);
-        }
+    .dashboard-header {
+        margin-bottom: 2rem;
     }
 
-    .animate-spin-slow {
-        animation: spin-slow 30s linear infinite;
+    .dashboard-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #1f2937;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .dashboard-subtitle {
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    /* Statistics Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.blue {
+        background: rgba(81, 111, 233, 0.15);
+        color: #516FE9;
+    }
+
+    .stat-icon.purple {
+        background: rgba(139, 92, 246, 0.15);
+        color: #8b5cf6;
+    }
+
+    .stat-icon.green {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+    }
+
+    .stat-icon.orange {
+        background: rgba(249, 115, 22, 0.15);
+        color: #f97316;
+    }
+
+    .stat-icon.pink {
+        background: rgba(236, 72, 153, 0.15);
+        color: #ec4899;
+    }
+
+    .stat-icon .material-icons-outlined {
+        font-size: 28px;
+    }
+
+    .stat-info {
+        flex: 1;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #1f2937;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+    /* Quick Actions Section */
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+    }
+
+    .action-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .action-card:hover {
+        border-color: #516FE9;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(81, 111, 233, 0.15);
+    }
+
+    .action-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #516FE9 0%, #7b93f0 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .action-icon .material-icons-outlined {
+        font-size: 24px;
+    }
+
+    .action-content {
+        flex: 1;
+    }
+
+    .action-title {
+        font-weight: 700;
+        color: #1f2937;
+        font-size: 1rem;
+    }
+
+    .action-desc {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+    .action-arrow {
+        color: #516FE9;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.2s ease;
+    }
+
+    .action-card:hover .action-arrow {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Dark Mode */
+    [data-theme="dark"] .dashboard-title {
+        color: #f3f4f6;
+    }
+
+    [data-theme="dark"] .dashboard-subtitle {
+        color: #9ca3af;
+    }
+
+    [data-theme="dark"] .stat-card,
+    [data-theme="dark"] .action-card {
+        background: #1f2937;
+    }
+
+    [data-theme="dark"] .stat-value,
+    [data-theme="dark"] .action-title {
+        color: #f3f4f6;
+    }
+
+    [data-theme="dark"] .stat-label,
+    [data-theme="dark"] .action-desc {
+        color: #9ca3af;
+    }
+
+    [data-theme="dark"] .section-title {
+        color: #f3f4f6;
+    }
+
+    /* Welcome Banner */
+    .welcome-banner {
+        background: linear-gradient(135deg, #516FE9 0%, #7b93f0 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .welcome-content h1 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .welcome-content p {
+        opacity: 0.9;
+        margin: 0;
+    }
+
+    .welcome-image {
+        width: 250px;
+        height: 100px;
+        object-fit: contain;
     }
 </style>
+
+<div class="dashboard-container">
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+        <div class="welcome-content">
+            <h1>👋 Bienvenido al Dashboard de Centralización</h1>
+            <p>Gestiona municipios, temas gráficos, escudos y más desde un solo lugar.</p>
+        </div>
+        <img src="~/Logos/tramiapplogo_darkmode.png" alt="Logo" class="welcome-image" />
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <span class="material-icons-outlined">location_city</span>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">@ViewBag.MunicipalitiesCount</div>
+                <div class="stat-label">Alcaldías</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <span class="material-icons-outlined">check_circle</span>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">@ViewBag.ActiveMunicipalities</div>
+                <div class="stat-label">Activas</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <span class="material-icons-outlined">palette</span>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">@ViewBag.ThemesCount</div>
+                <div class="stat-label">Temas Gráficos</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <span class="material-icons-outlined">image</span>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">@ViewBag.ShieldsCount</div>
+                <div class="stat-label">Escudos</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon pink">
+                <span class="material-icons-outlined">apartment</span>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">@ViewBag.DepartmentsCount</div>
+                <div class="stat-label">Departamentos</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <h2 class="section-title">
+        <span class="material-icons-outlined">rocket_launch</span>
+        Acciones Rápidas
+    </h2>
+
+    <div class="actions-grid">
+        <a href="/Municipality/Index" class="action-card">
+            <div class="action-icon">
+                <span class="material-icons-outlined">location_city</span>
+            </div>
+            <div class="action-content">
+                <div class="action-title">Gestión de Municipios</div>
+                <div class="action-desc">Administra todas las alcaldías registradas</div>
+            </div>
+            <span class="material-icons-outlined action-arrow">arrow_forward</span>
+        </a>
+
+        <a href="/Municipality/GraphicThemes" class="action-card">
+            <div class="action-icon">
+                <span class="material-icons-outlined">palette</span>
+            </div>
+            <div class="action-content">
+                <div class="action-title">Temas Gráficos</div>
+                <div class="action-desc">Crea y edita temas de colores</div>
+            </div>
+            <span class="material-icons-outlined action-arrow">arrow_forward</span>
+        </a>
+
+        <a href="/Web/SubirImagen" class="action-card">
+            <div class="action-icon">
+                <span class="material-icons-outlined">image</span>
+            </div>
+            <div class="action-content">
+                <div class="action-title">Escudos Municipales</div>
+                <div class="action-desc">Sube y gestiona escudos</div>
+            </div>
+            <span class="material-icons-outlined action-arrow">arrow_forward</span>
+        </a>
+
+        <a href="/Transactions/Index" class="action-card">
+            <div class="action-icon">
+                <span class="material-icons-outlined">sync_alt</span>
+            </div>
+            <div class="action-content">
+                <div class="action-title">Transacciones</div>
+                <div class="action-desc">Revisa el historial de pagos</div>
+            </div>
+            <span class="material-icons-outlined action-arrow">arrow_forward</span>
+        </a>
+
+        <a href="/GeneralProcedures/Index" class="action-card">
+            <div class="action-icon">
+                <span class="material-icons-outlined">schema</span>
+            </div>
+            <div class="action-content">
+                <div class="action-title">Gestión de Trámites</div>
+                <div class="action-desc">Configura procedimientos por municipio</div>
+            </div>
+            <span class="material-icons-outlined action-arrow">arrow_forward</span>
+        </a>
+
+        <a href="/Municipality/NewsMunicipalityIndex" class="action-card">
+            <div class="action-icon">
+                <span class="material-icons-outlined">newspaper</span>
+            </div>
+            <div class="action-content">
+                <div class="action-title">Noticias</div>
+                <div class="action-desc">Gestiona noticias de los municipios</div>
+            </div>
+            <span class="material-icons-outlined action-arrow">arrow_forward</span>
+        </a>
+    </div>
+</div>

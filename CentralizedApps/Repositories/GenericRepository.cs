@@ -31,19 +31,19 @@ namespace CentralizedApps.Repositories
 
         public async Task<T?> FindAsync_Predicate(Expression<Func<T, bool>> predicate)
         {
-            return await _DBset.FirstOrDefaultAsync(predicate);
+            return await _DBset.AsNoTracking().FirstOrDefaultAsync(predicate);
         }
 
         public async Task<List<T>> GetAllAsync()
         {
 
-            return await _DBset.ToListAsync();
+            return await _DBset.AsNoTracking().ToListAsync();
         }
 
         //Predication
         public async Task<List<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
         {
-            IQueryable<T> query = _Context.Set<T>();
+            IQueryable<T> query = _Context.Set<T>().AsNoTracking();
 
             foreach (var include in includes)
             {
@@ -55,7 +55,7 @@ namespace CentralizedApps.Repositories
 
         public async Task<List<T>> GetAllWithNestedIncludesAsync(Func<IQueryable<T>, IQueryable<T>> includeFunc)
         {
-            IQueryable<T> query = _Context.Set<T>();
+            IQueryable<T> query = _Context.Set<T>().AsNoTracking();
             query = includeFunc(query);
             return await query.ToListAsync();
         }
@@ -64,7 +64,7 @@ namespace CentralizedApps.Repositories
             Func<IQueryable<T>, IQueryable<T>> includeFunc,
             Expression<Func<T, bool>> predicate)
         {
-            IQueryable<T> query = _Context.Set<T>();
+            IQueryable<T> query = _Context.Set<T>().AsNoTracking();
             query = includeFunc(query);
             return await query.FirstOrDefaultAsync(predicate);
         }
@@ -72,6 +72,7 @@ namespace CentralizedApps.Repositories
         public async Task<User?> GetByEmailUserByAuthenticate(string email)
         {
             return await _Context.Users
+                .AsNoTracking()
                 .Include(x => x.DocumentType)
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
@@ -98,7 +99,7 @@ namespace CentralizedApps.Repositories
 
         public async Task<List<T>> GetAllWithFilterAsync(Expression<Func<T, bool>> filter)
         {
-            return await _DBset.Where(filter).ToListAsync();
+            return await _DBset.AsNoTracking().Where(filter).ToListAsync();
         }
     }
 }

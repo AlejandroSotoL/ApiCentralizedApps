@@ -1,130 +1,356 @@
 @model CentralizedApps.Models.Dtos.NewsMunicipalityDto
 @{
-    ViewData["Title"] = "Formulario de cursos";
+    ViewData["Title"] = "Noticias de Municipios";
     Layout = "Layout";
 }
-@if (TempData["Message"] != null)
-{
-    <div id="tempMessage"
-        class="alert @(TempData["MessageType"]?.ToString() == "success" ? "alert-success" : "alert-error")">
-        @TempData["Message"]
-    </div>
-}
 
-<div class="card bg-base-200 rounded-box p-0 md:p-6">
-    <h1 class="font-bold text-3xl text-center mb-6">Noticias</h1>
-    <div class="card bg-base-200 rounded-box grid grid-cols-1 md:grid-rows-1 p-2 gap-y-6">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+<style>
+    body,
+    .nunito-font {
+        font-family: 'Nunito Sans', sans-serif !important;
+        font-weight: 700;
+    }
 
+    .custom-action-btn {
+        background-color: #516FE9 !important;
+        width: 159px;
+        height: 40px;
+        color: white !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: transform 0.1s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
 
-        <div class="card bg-base-300 grid p-6 ">
-            <h2 class="font-bold text-2xl text-center mb-6">Crear Noticia</h2>
-            <form asp-action="createNewsMunicipality" asp-controller="Municipality" method="post">
-                <div class=" grid md:grid-cols-2 gap-4 ">
-                    <fieldset class="fieldset w-full ">
-                        <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                        <select name="IdMunicipality" class="select w-full" required>
-                            <option disabled selected value="">Municipios</option>
-                            @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
-                            {
-                                <option value="@municipality.Id">@municipality.Name</option>
-                            }
-                        </select>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">GetUrlNew</legend>
-                        <input type="text" name="GetUrlNew" class="input w-full" placeholder="Enlace API / Post" required/>
-                    </fieldset>
+    .custom-action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(81, 111, 233, 0.4);
+    }
 
-                </div>
-                <div class="w-full flex justify-end my-6">
-                    <button type="submit"
-                        class="btn btn-soft btn-accent w-full md:w-1/6 justify-self-center ">Crear</button>
-                </div>
-            </form>
-        </div>
+    .custom-action-btn:active {
+        transform: scale(0.98);
+    }
 
+    .custom-card {
+        background-color: #F5F6FA !important;
+        border: 1px solid #E5E7EB;
+    }
 
+    [data-theme="dark"] .custom-card {
+        background-color: #1f2937 !important;
+        border: 1px solid #374151;
+    }
 
+    .search-bar-custom {
+        padding: 16px !important;
+        width: 100%;
+        min-height: 48px;
+    }
 
-        <div class="card bg-base-300 grid p-6 ">
+    .custom-input {
+        min-height: 48px;
+    }
+</style>
 
-            <h2 class="font-bold text-2xl text-center mb-6">Actualizar Noticia</h2>
-            <div class="card w-full  bg-base-300 grid  gap-4  ">
+<div class="w-full max-w-7xl mx-auto space-y-6">
+    <!-- Header -->
+    <header class="flex justify-center p-6">
+        <h2 class="text-3xl font-bold tracking-wide text-base-content">
+            Noticias de Municipios
+        </h2>
+    </header>
 
-                <div class="flex w-full flex-col items-center justify-center gap-3 p-6">
-                    <div class="avatar">
-                        <div class="mask mask-squircle h-24 w-24">
-                            <img src="@Model?.municipality?.IdShield?.Url" alt="escudo municipio" />
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <h1 class="text-2xl font-bold">@Model?.municipality?.Name</h1>
-                        <p class="text-sm opacity-70">@Model?.municipality?.Department?.Name</p>
-                    </div>
-                </div>
+    <!-- Alert Messages -->
+    <div id="alertContainer"></div>
 
-                <form asp-action="SelectNewsMunicipality" asp-controller="Municipality" method="post"
-                    class=" w-full  md:w-1/2">
-                    <fieldset class="fieldset  ">
-                        <legend class="fieldset-legend">Seleccionar Municipio existente</legend>
-                        <select name="id" class="select w-full" onchange="this.form.submit()" required>
-                            <option disabled selected value="">Municipios</option>
-                            @foreach (var municipality in Model?.municipalities ?? new List<Municipality>())
-                            {
-                                <option value="@municipality.Id">@municipality.Name</option>
-                            }
-                        </select>
-                    </fieldset>
-                </form>
+    <!-- Municipality Selection Section -->
+    <section class="rounded-xl bg-base-100 p-6 shadow-lg">
+        <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
+            Seleccionar Alcaldía
+        </h3>
+        <p class="mb-4 text-sm opacity-70">
+            Busca y selecciona una alcaldía para gestionar sus noticias.
+        </p>
 
-
-
-                @foreach (var newsByMunicipality in Model?.newsByMunicipalities ?? new List<NewsByMunicipality>())
-                {
-
-
-
-
-
-                    <form asp-action="updateNewsMunicipality" asp-controller="Municipality" method="post"
-                        class="flex flex-col md:flex-row w-full gap-6 md:gap-4">
-
-                        <div class="flex-1 md:basis-2/3">
-                            <input type="hidden" name="Id" value="@newsByMunicipality.Id">
-                            <input type="hidden" name="IdMunicipality" value="@newsByMunicipality.IdMunicipality">
-
-                            <fieldset class="fieldset w-full">
-                                <legend class="fieldset-legend">GetUrlNew</legend>
-                                <div>
-                                    <input type="text" name="GetUrlNew" class="input w-full" placeholder="Enlace API / Post"
-                                        value="@newsByMunicipality.GetUrlNew" required />
-                                </div>
-                            </fieldset>
-                        </div>
-
-                        <fieldset class="fieldset flex items-end md:basis-1/4 w-full">
-                            <button type="submit" class="btn btn-soft btn-accent w-full">Guardar cambios</button>
-                        </fieldset>
-
-                    </form>
-
-
-
-
-                }
+        <!-- Search Dropdown -->
+        <div class="mb-8 max-w-2xl mx-auto">
+            <div class="relative">
+                <select id="municipalitySearch"
+                    class="search-bar-custom block rounded-full border-0 bg-base-200 text-base-content shadow-sm ring-1 ring-inset ring-base-300 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all cursor-pointer"
+                    onchange="handleSearchSelection()">
+                    <option value="" selected>Seleccione una alcaldía...</option>
+                    @if (Model?.municipalities != null)
+                    {
+                        foreach (var m in Model.municipalities.OrderBy(x => x.Name))
+                        {
+                            <option value="@m.Id">@m.Name</option>
+                        }
+                    }
+                </select>
             </div>
         </div>
+
+        <!-- Municipality Cards -->
+        <div id="municipalityCardsContainer"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center">
+            <!-- Cards injected via JS -->
+        </div>
+    </section>
+
+    <!-- News Management Section (Hidden initially) -->
+    <div id="newsManagementSection" class="hidden space-y-6">
+
+        <!-- Create News Form -->
+        <section class="rounded-xl bg-base-100 p-6 shadow-lg">
+            <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
+                Crear Noticia
+            </h3>
+
+            <form id="createNewsForm" onsubmit="createNews(event)">
+                <input type="hidden" id="createMunicipalityId" name="IdMunicipality" />
+                <div class="grid grid-cols-1 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-semibold opacity-80 mb-2 ml-2">Enlace API / Post</label>
+                        <input type="text" name="GetUrlNew"
+                            class="custom-input block w-full rounded-full border-0 bg-base-200 py-3.5 px-5 text-base-content shadow-sm ring-1 ring-inset ring-base-300 placeholder:opacity-50 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all"
+                            placeholder="https://..." required />
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="custom-action-btn shadow-sm hover:shadow-md">
+                        Crear Noticia
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Existing News List -->
+        <section class="rounded-xl bg-base-100 p-6 shadow-lg">
+            <h3 class="text-xl font-bold text-base-content mb-6">Noticias Existentes</h3>
+            <div id="newsListContainer" class="grid grid-cols-1 gap-4">
+                <!-- News items injected via JS -->
+            </div>
+        </section>
     </div>
+</div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    setTimeout(() => {
-            const msg = document.getElementById("tempMessage");
-            if (msg) {
-                msg.style.transition = "opacity 0.5s";
-                msg.style.opacity = "0";
-                setTimeout(() => msg.remove(), 500);
+    // Serialize municipalities to JSON for client-side access
+    const allMunicipalities = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.municipalities.Select(m => new
+        {
+            m.Id,
+            m.Name,
+            DepartmentName = m.Department?.Name ?? "Sin Departamento",
+            ShieldUrl = m.IdShieldNavigation?.Url
+        })));
+
+    let currentMunicipalityId = null;
+
+    // Initial Render
+    document.addEventListener('DOMContentLoaded', () => {
+        renderLast3Municipalities();
+
+        // Check if ID is in URL (from redirect)
+        const urlParams = new URLSearchParams(window.location.search);
+        const idParam = urlParams.get('id');
+        if (idParam) {
+            const id = parseInt(idParam);
+            const select = document.getElementById('municipalitySearch');
+            select.value = id;
+            handleSearchSelection();
+        }
+    });
+
+    function handleSearchSelection() {
+        const select = document.getElementById('municipalitySearch');
+        const id = parseInt(select.value);
+        if (id) {
+            const municipality = allMunicipalities.find(m => m.Id === id);
+            if (municipality) {
+                renderSingleMunicipalityCard(municipality);
+                selectMunicipality(id, municipality.Name);
             }
-        }, 2000);
+        } else {
+            renderLast3Municipalities();
+            hideNewsSection();
+            currentMunicipalityId = null;
+        }
+    }
+
+    function renderLast3Municipalities() {
+        const container = document.getElementById('municipalityCardsContainer');
+        const last3 = allMunicipalities.slice(-3);
+
+        container.innerHTML = last3.map(m => `
+            <div onclick="selectMunicipality(${m.Id}, '${m.Name.replace(/'/g, "\\\\'")}')" 
+                 class="custom-card group cursor-pointer rounded-2xl p-4 hover:border-blue-400 hover:shadow-lg transition-all duration-300 flex flex-col items-center h-full">
+
+                <div class="w-full h-24 rounded-2xl bg-base-200 border border-base-300 mb-3 flex items-center justify-center p-2 group-hover:bg-base-100 transition-colors">
+                    ${m.ShieldUrl
+                ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-16 w-auto object-contain drop-shadow-sm transform group-hover:scale-110 transition-transform duration-300" />`
+                : `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
+            }
+                </div>
+
+                <div class="flex-grow flex flex-col justify-between w-full">
+                    <div>
+                        <h4 class="font-bold text-base-content text-center text-sm leading-tight mb-1 group-hover:text-blue-600 line-clamp-2">${m.Name}</h4>
+                        <div class="flex justify-center my-1">
+                            <div class="h-0.5 w-6 bg-base-300 rounded-full group-hover:bg-blue-200 transition-colors"></div>
+                        </div>
+                    </div>
+                    <p class="text-[10px] font-bold opacity-60 text-center uppercase tracking-wider">${m.DepartmentName}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderSingleMunicipalityCard(m) {
+        const container = document.getElementById('municipalityCardsContainer');
+        container.innerHTML = `
+            <div class="col-span-full flex justify-center animate-fade-in">
+                <div class="custom-card w-full max-w-sm rounded-2xl p-6 shadow-lg flex flex-col items-center">
+                    <div class="w-full h-24 rounded-2xl bg-base-200 mb-3 flex items-center justify-center p-2">
+                        ${m.ShieldUrl
+                ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-16 w-auto object-contain drop-shadow-sm" />`
+                : `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
+            }
+                    </div>
+
+                    <div class="flex-grow flex flex-col justify-between w-full">
+                        <div>
+                            <h4 class="font-bold text-base-content text-center text-sm leading-tight mb-1">${m.Name}</h4>
+                            <div class="flex justify-center my-1">
+                                <div class="h-0.5 w-6 bg-base-300 rounded-full"></div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] font-bold opacity-60 text-center uppercase tracking-wider">${m.DepartmentName}</p>
+                    </div>
+
+                    <button onclick="document.getElementById('municipalitySearch').value = ''; handleSearchSelection();" class="custom-action-btn mt-4" style="width: 140px; height: 32px; font-size: 12px;">
+                        Cambiar selección
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function selectMunicipality(id, name) {
+        currentMunicipalityId = id;
+        document.getElementById('createMunicipalityId').value = id;
+        document.getElementById('municipalitySearch').value = id; // Ensure select is updated
+        document.getElementById('newsManagementSection').classList.remove('hidden');
+        loadNews(id);
+    }
+
+    function hideNewsSection() {
+        document.getElementById('newsManagementSection').classList.add('hidden');
+    }
+
+    async function loadNews(id) {
+        const container = document.getElementById('newsListContainer');
+        container.innerHTML = '<div class="text-center py-4"><span class="loading loading-spinner text-blue-500"></span></div>';
+
+        try {
+            const response = await fetch(`/api/Municipality/GetInfoBy${id}`);
+            if (!response.ok) throw new Error('Error loading news');
+            const data = await response.json();
+            renderNewsList(data.newsByMunicipalities);
+
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = '<div class="text-red-500 text-center">Error al cargar noticias.</div>';
+        }
+    }
+
+    function renderNewsList(newsList) {
+        const container = document.getElementById('newsListContainer');
+        if (!newsList || newsList.length === 0) {
+            container.innerHTML = '<div class="text-center opacity-60 py-4">No hay noticias registradas.</div>';
+            return;
+        }
+
+        container.innerHTML = newsList.map(news => `
+            <div class="custom-card rounded-xl p-4 flex flex-col gap-4">
+                <div class="w-full">
+                    <label class="text-xs font-bold opacity-60 uppercase">URL de la Noticia</label>
+                    <div class="truncate font-mono text-sm bg-base-200 p-2 rounded mt-1 select-all">
+                        ${news.getUrlNew}
+                    </div>
+                </div>
+                <form onsubmit="updateNews(event, ${news.id})" class="flex flex-col gap-2 w-full">
+                    <input type="hidden" name="Id" value="${news.id}" />
+                    <input type="hidden" name="IdMunicipality" value="${news.idMunicipality}" />
+
+                    <label class="text-xs font-bold opacity-60 uppercase">Editar URL</label>
+                    <input type="text" name="GetUrlNew" value="${news.getUrlNew}" class="custom-input rounded-lg border border-base-300 px-3 py-2 text-sm w-full" required />
+
+                    <div class="flex justify-end mt-2">
+                        <button type="submit" class="custom-action-btn" style="width: 100px; height: 42px;">
+                            Actualizar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        `).join('');
+    }
+
+    async function createNews(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('@Url.Action("createNewsMunicipality", "Municipality")', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                Swal.fire({ icon: 'success', title: 'Éxito', text: 'Noticia creada', timer: 1500, showConfirmButton: false });
+                form.reset();
+                loadNews(currentMunicipalityId);
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo crear la noticia' });
+            }
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión' });
+        }
+    }
+
+    async function updateNews(event, id) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(`@Url.Action("updateNewsMunicipality", "Municipality")?id=${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                Swal.fire({ icon: 'success', title: 'Actualizado', text: 'Noticia actualizada', timer: 1500, showConfirmButton: false });
+                loadNews(currentMunicipalityId);
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar' });
+            }
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión' });
+        }
+    }
 </script>

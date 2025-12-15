@@ -1,155 +1,1652 @@
 ﻿@model CentralizedApps.Models.Dtos.CreateMunicipalityProcedures_Web
 
 @{
-    ViewData["Title"] = "Procesos de una Alcaldía";
-    Layout = "Layout";
+    ViewData["Title"] = "Gestión de Trámites";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Layout = "~/Views/Shared/Layout.cshtml";
 }
 
-<header class="flex justify-center rounded-lg bg-stone-400 p-10 shadow-md">
-    <h2 class="text-3xl font-bold tracking-wide text-white">
-        Procesos de las Alcaldías
-    </h2>
-</header>
-<div class="card bg-base-100 w-full rounded-2xl p-6 shadow-xl">
-    <div class="w-full">
-        @if (TempData["Success"] != null)
-        {
-            <div class="alert alert-success animate-fade-in mt-4 shadow-md">
-                <span>@TempData["Success"]</span>
-            </div>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-error animate-fade-in mt-4 shadow-md">
-                <span>@TempData["Error"]</span>
-            </div>
-        }
-    </div>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    body,
+    .nunito-font {
+        font-family: 'Nunito Sans', sans-serif !important;
+        font-weight: 700;
+    }
+
+    .custom-action-btn {
+        background-color: #516FE9 !important;
+        width: 159px;
+        height: 40px;
+        color: white !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: transform 0.1s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+    .custom-action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(81, 111, 233, 0.4);
+    }
+
+    .custom-action-btn:active {
+        transform: scale(0.98);
+    }
+
+    .custom-card {
+        background-color: #F5F6FA !important;
+        border: 1px solid #E5E7EB;
+    }
+
+    /* Dark theme compatibility */
+    [data-theme="dark"] .custom-card {
+        background-color: #1f2937 !important;
+        border: 1px solid #374151;
+    }
+
+    .search-bar-custom {
+        padding: 16px !important;
+        width: 100%;
+        min-height: 48px;
+    }
+
+    .custom-input {
+        min-height: 48px;
+    }
+
+    .edit-btn-icon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+    }
+</style>
+
+<!-- Main Content Wrapper -->
+<div class="w-full max-w-7xl mx-auto space-y-6">
+    <!-- Header -->
+    <header class="flex justify-center rounded-lg bg-base-100 p-10 shadow-md">
+        <h1 class="font-bold text-3xl text-center mb-6">
+            Gestión de Trámites
+        </h1>
+    </header>
+
+    <!-- Alert Messages -->
+    @if (TempData["Success"] != null)
 
 
-    <div class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
 
-        <section class="rounded-xl bg-white p-6 shadow-lg">
-            <h3 class="mb-2 text-lg font-semibold text-stone-700">
-                Procesos disponibles
-            </h3>
-            <p class="mb-4 text-sm text-stone-500">
-                Esta lista muestra los procesos generales que se pueden asignar a cualquier Alcaldía.
-            </p>
 
-            @if (Model?.Procedures?.Any() == true)
-            {
-                <select
-                    class="w-full rounded-lg border border-stone-300 p-2 text-sm focus:ring-2 focus:ring-stone-400 focus:outline-none">
-                    <option selected disabled>Selecciona un proceso</option>
-                    @foreach (var x in Model.Procedures)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {
+        <div class="alert alert-success animate-fade-in shadow-md">
+            <span>@TempData["Success"]</span>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {
+        <div class="alert alert-error animate-fade-in shadow-md">
+            <span>@TempData["Error"]</span>
+        </div>
+    }
+
+    <!-- Municipality Selection Section -->
+    <section class="rounded-xl bg-base-100 p-6 shadow-lg">
+        <h3 class="mb-2 text-lg font-semibold text-base-content">
+            Seleccionar Alcaldía
+        </h3>
+        <p class="mb-4 text-sm opacity-70">
+            Busca y selecciona una alcaldía para gestionar sus procesos.
+        </p>
+
+        <!-- Search Dropdown -->
+        <div class="mb-8">
+            <div class="relative w-full max-w-2xl mx-auto">
+                <select id="municipalitySearch"
+                    class="search-bar-custom block rounded-full border-0 bg-base-200 text-base-content shadow-sm ring-1 ring-inset ring-base-300 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all cursor-pointer"
+                    onchange="handleSearchSelection()">
+                    <option value="" selected>Buscar alcaldía...</option>
+                    @if (Model?.Municipalities != null)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     {
-                        <option value="@x.Id">@x.Name</option>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        foreach (var m in Model.Municipalities.OrderBy(x => x.Name))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        {
+                            <option value="@m.Id">@m.Name</option>
+                        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     }
                 </select>
-            }
-            else
-            {
-                <div class="rounded-lg bg-red-100 p-4 text-sm text-red-700 shadow-sm">
-                    No hay procesos disponibles actualmente.
-                </div>
-            }
-        </section>
+            </div>
+        </div>
 
-        <section class="rounded-xl bg-white p-6 shadow-lg">
-            <h3 class="text-lg font-semibold text-stone-700">
-                Alcaldías con procesos
-            </h3>
-            <p class="mb-4 text-sm text-stone-500">
-                Selecciona una Alcaldía para visualizar y administrar sus procesos.
-            </p>
-
-            @if (Model?.Municipalities?.Any() == true)
+        <!-- Municipality Cards -->
+        <div id="municipalityCardsContainer"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            @if (Model?.Municipalities != null)
             {
-                <form asp-controller="GeneralProcedures" asp-action="BringResultById" method="post" class="w-full">
-                    <select name="id"
-                        class="w-full rounded-lg border border-stone-300 p-2 text-sm focus:ring-2 focus:ring-stone-400 focus:outline-none"
-                        onchange="this.form.submit()">
-                        <option selected disabled>Selecciona una Alcaldía</option>
-                        @foreach (var x in Model.Municipalities)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                foreach (var m in Model.Municipalities.TakeLast(6))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {
+                    <div onclick="selectMunicipality(@m.Id, '@m.Name')"
+                        class="custom-card group cursor-pointer rounded-2xl p-4 hover:border-blue-400 hover:shadow-lg transition-all duration-300 flex flex-col items-center h-full">
+
+                        <div
+                            class="w-full h-24 rounded-2xl bg-base-200 border border-base-300 mb-3 flex items-center justify-center p-2 group-hover:bg-base-100 transition-colors">
+                            @if (!string.IsNullOrEmpty(m.IdShieldNavigation?.Url))
+                            {
+                                <img src="@m.IdShieldNavigation.Url" alt="Escudo @m.Name"
+                                    class="h-16 w-auto object-contain drop-shadow-sm transform group-hover:scale-110 transition-transform duration-300" />
+                            }
+                            else
+                            {
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                </svg>
+                            }
+                        </div>
+
+                        <div class="flex-grow flex flex-col justify-between w-full">
+                            <div>
+                                <h4
+                                    class="font-bold text-base-content text-center text-sm leading-tight mb-1 group-hover:text-blue-600 line-clamp-2">
+                                    @m.Name</h4>
+                                <div class="flex justify-center my-1">
+                                    <div class="h-0.5 w-6 bg-base-300 rounded-full group-hover:bg-blue-200 transition-colors">
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-[10px] font-bold opacity-60 text-center uppercase tracking-wider">
+                                @(m.Department?.Name ?? "Sin Dpto")</p>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </section>
+
+    <!-- Create New Procedure Type Section -->
+    <section class="rounded-xl bg-base-100 p-6 shadow-lg">
+        <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
+            <span class="bg-purple-100 text-purple-600 p-2 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+            </span>
+            Crear Nuevo Tipo de Proceso
+        </h3>
+
+        <div class="flex flex-col md:flex-row gap-4 items-end">
+            <div class="w-full">
+                <label class="block text-sm font-semibold opacity-80 mb-2 ml-2">Nombre del Nuevo Proceso</label>
+                <input type="text" id="newProcedureTypeName" placeholder="Ej. Pago de Impuestos"
+                    class="custom-input block w-full rounded-full border-0 bg-base-200 py-3.5 px-5 text-base-content shadow-sm ring-1 ring-inset ring-base-300 placeholder:opacity-50 focus:bg-base-100 focus:ring-2 focus:ring-purple-500 sm:text-sm transition-all">
+            </div>
+            <button onclick="createNewProcedureType()"
+                class="custom-action-btn shadow-sm hover:shadow-md bg-purple-600 hover:bg-purple-700 !bg-purple-600 mb-1">
+                Crear Tipo
+            </button>
+        </div>
+    </section>
+
+    <!-- Add Procedure Form -->
+    <section class="rounded-xl bg-base-100 p-6 shadow-lg">
+        <h3 class="text-xl font-bold text-base-content mb-6 flex items-center gap-2">
+            <span class="bg-blue-100 text-blue-600 p-2 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </span>
+            Asignar Proceso a Alcaldía
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label class="block text-sm font-semibold opacity-80 mb-2 ml-2">Proceso</label>
+                <div class="relative">
+                    <select id="newProcedureId"
+                        class="custom-input block w-full rounded-full border-0 bg-base-200 py-3.5 px-5 text-base-content shadow-sm ring-1 ring-inset ring-base-300 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all appearance-none">
+                        <option value="" selected disabled>Selecciona un proceso...</option>
+                        @if (Model?.Procedures != null)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         {
-                            <option value="@x.Id">@x.Name</option>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            foreach (var p in Model.Procedures)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            {
+                                <option value="@p.Id">@p.Name</option>
+                            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         }
                     </select>
-                    <button type="submit" hidden></button>
-                </form>
-            }
-            else
-            {
-                <div class="rounded-lg bg-red-100 p-4 text-sm text-red-700 shadow-sm">
-                    No hay alcaldías disponibles actualmente.
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                        <svg class="h-4 w-4 opacity-50" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
                 </div>
-            }
-        </section>
-    </div>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold opacity-80 mb-2 ml-2">Tipo de Integración</label>
+                <input type="text" id="newIntegrationType" placeholder="Ej. API, WebService"
+                    class="custom-input block w-full rounded-full border-0 bg-base-200 py-3.5 px-5 text-base-content shadow-sm ring-1 ring-inset ring-base-300 placeholder:opacity-50 focus:bg-base-100 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-all">
+            </div>
+        </div>
 
-@if (Model?.ProceduresWithRelations?.Any() == true)
-{
-        <section class="mt-10 w-full">
-            <h3 class="mb-4 text-xl font-semibold text-stone-700">
-                Procesos de la Alcaldía seleccionada
+        <div class="flex items-center justify-between pt-4 border-t border-base-300">
+            <div class="flex items-center gap-3 pl-2">
+                <span class="text-sm font-medium opacity-80">Estado Inicial:</span>
+                <input type="checkbox" id="newIsActive" class="toggle toggle-success toggle-md" checked />
+            </div>
+            <button onclick="addProcedure()" class="custom-action-btn shadow-sm hover:shadow-md">
+                Agregar Proceso
+            </button>
+        </div>
+    </section>
+
+    <!-- Procedures List -->
+    <div class="bg-base-100 rounded-xl p-6 shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-base-content flex items-center gap-2">
+                <span id="selectedMunicipalityName" class="text-blue-600">Selecciona una alcaldía</span>
+                <span class="opacity-60 text-sm font-normal" id="procedureCount"></span>
             </h3>
-            <p class="mb-6 text-sm text-stone-500">
-                Desde aquí puedes cambiar el proceso asignado, actualizar el tipo de integración o activar/desactivar cada
-                proceso.
-            </p>
+            <button onclick="loadProcedures(currentMunicipalityId)" id="refreshBtn"
+                class="btn btn-ghost btn-xs btn-circle hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            </button>
+        </div>
 
-            <div class="space-y-6">
-                @foreach (var item in Model.ProceduresWithRelations)
-                {
-  <form asp-controller="GeneralProcedures" asp-action="UpdateMunicipalityProcedure" method="post"
-      class="overflow-hidden rounded-xl border border-stone-300 bg-white p-5 shadow-md">
+        <div id="proceduresContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Cards will be injected here -->
+            <div
+                class="col-span-full text-center py-10 opacity-60 bg-base-200 rounded-xl border-2 border-dashed border-base-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 opacity-50" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                <p>Selecciona una alcaldía para ver sus procesos</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <input type="hidden" name="Id" value="@item.Id" />
-    <input type="hidden" name="MunicipalityId" value="@item.Municipality?.Id" />
+<!-- Edit Modal -->
+<dialog id="edit_modal" class="modal">
+    <div class="modal-box rounded-xl p-6 overflow-hidden custom-card">
+        <div class="px-16 py-4 flex justify-between items-center">
+            <h3 class="font-bold text-lg text-base-content">Editar Proceso</h3>
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost">✕</button>
+            </form>
+        </div>
+        <div class="px-16 py-6 space-y-5">
 
-    <div class="mb-4">
-        <label class="mb-1 block text-xs text-stone-600">Cambiar Proceso:</label>
-        <select name="Procedures.Id" class="w-full rounded-lg border border-stone-300 p-2 text-sm">
-            <option value="@item.Procedures?.Id" selected>@item.Procedures?.Name (actual)</option>
-            @foreach (var x in Model.Procedures.Where(p => p.Id != item.Procedures?.Id))
-            {
-                <option value="@x.Id">@x.Name</option>
+            <form id="editForm">
+                <input type="hidden" id="editId" name="Id">
+                <input type="hidden" id="editMunicipalityId" name="MunicipalityId">
+
+                <div>
+                    <label class="block text-sm font-medium opacity-70 mb-2">Proceso</label>
+                    <input type="hidden" id="editProcedureId" name="Procedures.Id">
+                    <input type="text" id="editProcedureName" readonly
+                        class="w-full rounded-lg border border-base-300 bg-base-200 p-4 opacity-60 cursor-not-allowed">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium opacity-70 mb-2">Tipo de Integración</label>
+                    <input type="text" id="editIntegrationType" name="IntegrationType"
+                        class="w-full rounded-lg border border-base-300 p-4 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                </div>
+
+                <div class="flex items-center gap-3 p-4 bg-base-200 rounded-lg border border-base-300">
+                    <span class="text-sm font-medium">Estado:</span>
+                    <input type="checkbox" id="editIsActive" name="IsActive" value="true"
+                        class="toggle toggle-success toggle-sm" />
+                    <span id="editStatusText" class="text-xs opacity-60"></span>
+                </div>
+            </form>
+
+        </div>
+        <div class="px-16 py-4 flex justify-end gap-3">
+            <form method="dialog">
+                <button class="btn btn-sm bg-white border border-base-300 hover:bg-base-100"
+                    style="min-width: 100px; height: 32px;">Cancelar</button>
+            </form>
+            <button onclick="saveEdit()" class="custom-action-btn"
+                style="width: 140px; height: 32px; font-size: 12px;">Guardar Cambios</button>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Serialize municipalities to JSON for client-side access
+    const allMunicipalities = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Municipalities.Select(m => new
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            m.Id,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            m.Name,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            DepartmentName = m.Department?.Name ?? "Sin Departamento",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            ShieldUrl = m.IdShieldNavigation?.Url
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        })));
+
+    let currentMunicipalityId = null;
+
+    function handleSearchSelection() {
+        const select = document.getElementById('municipalitySearch');
+        const id = parseInt(select.value);
+        if (id) {
+            const municipality = allMunicipalities.find(m => m.Id === id);
+            if (municipality) {
+                renderSingleMunicipalityCard(municipality);
+                selectMunicipality(id, municipality.Name);
             }
-        </select>
-    </div>
+        } else {
+            renderLast6Municipalities();
+            document.getElementById('selectedMunicipalityName').innerText = "Selecciona una alcaldía";
+            document.getElementById('proceduresContainer').innerHTML = `
+                <div class="col-span-full text-center py-10 opacity-60 bg-base-200 rounded-xl border-2 border-dashed border-base-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    <p>Selecciona una alcaldía para ver sus procesos</p>
+                </div>`;
+            document.getElementById('procedureCount').innerText = "";
+            currentMunicipalityId = null;
+        }
+    }
 
-    <div class="mb-4">
-        <label class="mb-1 block text-xs text-stone-600">Tipo de Integración:</label>
-        <input type="text" name="IntegrationType" class="w-full rounded-lg border border-stone-300 p-2 text-sm"
-               value="@item.IntegrationType" />
-    </div>
+    function renderLast6Municipalities() {
+        const container = document.getElementById('municipalityCardsContainer');
+        const last6 = allMunicipalities.slice(-6);
 
-    <div class="mb-4">
-        <label class="mb-1 block text-xs text-stone-600">Estado del Proceso:</label>
-        <input type="checkbox" name="IsActive" value="true" class="toggle toggle-success"
-               @(item.IsActive == true ? "checked" : "") />
-    </div>
+        container.innerHTML = last6.map(m => `
+            <div onclick="selectMunicipality(${m.Id}, '${m.Name.replace(/'/g, "\\\\'")}')" 
+                 class="custom-card group cursor-pointer rounded-2xl p-4 hover:border-blue-400 hover:shadow-lg transition-all duration-300 flex flex-col items-center h-full">
 
-    <div class="flex justify-end">
-        <button type="submit"
-                class="rounded-lg bg-yellow-500 px-5 py-2 text-sm font-medium text-white shadow hover:bg-yellow-600">
-            Guardar cambios
-        </button>
-    </div>
-</form>
+                <div class="w-full h-24 rounded-2xl bg-base-200 border border-base-300 mb-3 flex items-center justify-center p-2 group-hover:bg-base-100 transition-colors">
+                    ${m.ShieldUrl
+                ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-16 w-auto object-contain drop-shadow-sm transform group-hover:scale-110 transition-transform duration-300" />`
+                : `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
+            }
+                </div>
 
-
-                }
+                <div class="flex-grow flex flex-col justify-between w-full">
+                    <div>
+                        <h4 class="font-bold text-base-content text-center text-sm leading-tight mb-1 group-hover:text-blue-600 line-clamp-2">${m.Name}</h4>
+                        <div class="flex justify-center my-1">
+                            <div class="h-0.5 w-6 bg-base-300 rounded-full group-hover:bg-blue-200 transition-colors"></div>
+                        </div>
+                    </div>
+                    <p class="text-[10px] font-bold opacity-60 text-center uppercase tracking-wider">${m.DepartmentName}</p>
+                </div>
             </div>
-        </section>
-}
-else
-{
-        <section class="mt-10">
-            <div class="rounded-lg bg-yellow-100 p-4 text-sm text-yellow-700 shadow-sm">
-                No hay procesos relacionados con la Alcaldía seleccionada.
-            </div>
-        </section>
-}
+        `).join('');
+    }
 
+    function renderSingleMunicipalityCard(m) {
+        const container = document.getElementById('municipalityCardsContainer');
+        container.innerHTML = `
+            <div class="col-span-full flex justify-center animate-fade-in">
+                <div class="custom-card w-full max-w-sm rounded-2xl p-6 shadow-lg flex flex-col items-center">
+                    <div class="w-full h-24 rounded-2xl bg-base-200 mb-3 flex items-center justify-center p-2">
+                        ${m.ShieldUrl
+                ? `<img src="${m.ShieldUrl}" alt="Escudo ${m.Name}" class="h-16 w-auto object-contain drop-shadow-sm" />`
+                : `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 01-2-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`
+            }
+                    </div>
+
+                    <div class="flex-grow flex flex-col justify-between w-full">
+                        <div>
+                            <h4 class="font-bold text-base-content text-center text-sm leading-tight mb-1">${m.Name}</h4>
+                            <div class="flex justify-center my-1">
+                                <div class="h-0.5 w-6 bg-base-300 rounded-full"></div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] font-bold opacity-60 text-center uppercase tracking-wider">${m.DepartmentName}</p>
+                    </div>
+
+                    <button onclick="document.getElementById('municipalitySearch').value = ''; handleSearchSelection();" class="custom-action-btn mt-4" style="width: 140px; height: 32px; font-size: 12px;">
+                        Cambiar selección
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function selectMunicipality(id, name) {
+        currentMunicipalityId = id;
+        document.getElementById('selectedMunicipalityName').innerText = name;
+        document.getElementById('refreshBtn').classList.remove('hidden');
+
+        const select = document.getElementById('municipalitySearch');
+        if (select.value != id) {
+            select.value = id;
+            const municipality = allMunicipalities.find(m => m.Id === id);
+            if (municipality) {
+                renderSingleMunicipalityCard(municipality);
+            }
+        }
+
+        loadProcedures(id);
+    }
+
+    async function loadProcedures(id) {
+        if (!id) return;
+
+        const container = document.getElementById('proceduresContainer');
+        container.innerHTML = '<div class="col-span-full flex justify-center p-10"><span class="loading loading-spinner loading-lg text-blue-500"></span></div>';
+
+        try {
+            const response = await fetch(`@Url.Action("GetProceduresByMunicipality", "GeneralProcedures")?id=${id}`);
+            if (!response.ok) throw new Error('Error al cargar');
+            const data = await response.json();
+            renderProcedures(data);
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = `<div class="col-span-full text-center text-red-500 p-4">Error al cargar los procesos.</div>`;
+        }
+    }
+
+    function renderProcedures(procedures) {
+        const container = document.getElementById('proceduresContainer');
+        const countSpan = document.getElementById('procedureCount');
+
+        if (!procedures || procedures.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-10 opacity-60 bg-base-200 rounded-xl border-2 border-dashed border-base-300">
+                    <p>No hay procesos asignados a esta alcaldía.</p>
+                </div>`;
+            countSpan.innerText = '(0 procesos)';
+            return;
+        }
+
+        countSpan.innerText = `(${procedures.length} procesos)`;
+        container.innerHTML = procedures.map(p => `
+            <div class="custom-card shadow-md hover:shadow-lg transition-shadow rounded-xl">
+                <div class="card-body p-5">
+                    <div class="flex justify-between items-start">
+                        <h4 class="card-title text-sm font-bold text-base-content line-clamp-2" title="${p.procedures?.name || 'Sin nombre'}">
+                            ${p.procedures?.name || 'Sin nombre'}
+                        </h4>
+                        <div class="badge ${p.isActive ? 'badge-success text-white' : 'badge-ghost opacity-60'} badge-xs p-2">
+                            ${p.isActive ? 'Activo' : 'Inactivo'}
+                        </div>
+                    </div>
+
+                    <div class="mt-3 text-xs opacity-70">
+                        <p class="font-semibold mb-1">Integración:</p>
+                        <div class="bg-base-200 p-2 rounded border border-base-300 truncate">
+                            ${p.integrationType || '<span class="italic opacity-60">No definida</span>'}
+                        </div>
+                    </div>
+
+                    <div class="card-actions justify-end mt-4">
+                        <button onclick='openEditModal(${JSON.stringify(p).replace(/'/g, "&#39;")})' 
+                                class="custom-action-btn shadow-sm hover:shadow-md"
+                                style="width: 100px; height: 30px; font-size: 12px; padding: 0 8px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="edit-btn-icon mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                            <span>Editar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function addProcedure() {
+        if (!currentMunicipalityId) {
+            Swal.fire({ icon: 'warning', title: 'Atención', text: 'Debes seleccionar una alcaldía primero.' });
+            return;
+        }
+
+        const procedureId = document.getElementById('newProcedureId').value;
+        if (!procedureId) {
+            Swal.fire({ icon: 'warning', title: 'Atención', text: 'Selecciona un proceso para agregar.' });
+            return;
+        }
+
+        const dto = {
+            MunicipalityId: currentMunicipalityId,
+            ProceduresId: parseInt(procedureId),
+            IntegrationType: document.getElementById('newIntegrationType').value,
+            IsActive: document.getElementById('newIsActive').checked
+        };
+
+        try {
+            const response = await fetch('@Url.Action("AddMunicipalityProcedure", "GeneralProcedures")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(dto)
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                Swal.fire({ icon: 'success', title: 'Éxito', text: result.message, timer: 1500, showConfirmButton: false });
+                loadProcedures(currentMunicipalityId);
+                document.getElementById('newProcedureId').value = "";
+                document.getElementById('newIntegrationType').value = "";
+                document.getElementById('newIsActive').checked = true;
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: result.message || 'No se pudo agregar el proceso.' });
+            }
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error inesperado.' });
+        }
+    }
+
+    function openEditModal(procedure) {
+        document.getElementById('editId').value = procedure.id;
+        document.getElementById('editMunicipalityId').value = procedure.municipality?.id || currentMunicipalityId;
+        document.getElementById('editProcedureId').value = procedure.procedures?.id;
+        document.getElementById('editProcedureName').value = procedure.procedures?.name || '';
+        document.getElementById('editIntegrationType').value = procedure.integrationType || '';
+        document.getElementById('editIsActive').checked = procedure.isActive;
+
+        document.getElementById('edit_modal').showModal();
+    }
+
+    async function saveEdit() {
+        // 1. Construir el objeto JSON manualmente
+        // Esto asegura que la estructura coincida con el DTO de C#
+        const payload = {
+            Id: parseInt(document.getElementById('editId').value),
+            MunicipalityId: parseInt(document.getElementById('editMunicipalityId').value),
+            Procedures: {
+                Id: parseInt(document.getElementById('editProcedureId').value)
+            },
+            IntegrationType: document.getElementById('editIntegrationType').value,
+            IsActive: document.getElementById('editIsActive').checked
+        };
+
+        console.log('[saveEdit] Payload being sent:', JSON.stringify(payload, null, 2));
+
+        try {
+            const response = await fetch('/GeneralProcedures/UpdateProcedureJson', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // ¡Crucial para que [FromBody] funcione!
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(payload)
+            });
+
+            // Ahora si response.ok es falso, es un error real del servidor (400 o 500)
+            const result = await response.json();
+            console.log('[saveEdit] Response received:', JSON.stringify(result, null, 2));
+
+            if (response.ok && result.success) {
+                document.getElementById('edit_modal').close();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Actualizado',
+                    text: result.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                loadProcedures(currentMunicipalityId);
+            } else {
+                // Aquí capturamos los errores reales (Validación o Excepciones)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message || 'No se pudo actualizar.'
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión con el servidor.' });
+        }
+    }
+
+    async function createNewProcedureType() {
+        const nameInput = document.getElementById('newProcedureTypeName');
+        const name = nameInput.value.trim();
+
+        if (!name) {
+            Swal.fire({ icon: 'warning', title: 'Atención', text: 'Ingresa un nombre para el nuevo proceso.' });
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/Process/Create/NewTypeProcedure', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ Name: name })
+            });
+
+            const result = await response.json();
+
+            if (result.booleanStatus) { // Note: DTO uses lowercase camelCase in JSON usually, check DTO definition if needed. Assuming standard serialization.
+                Swal.fire({ icon: 'success', title: 'Creado', text: result.sentencesError, timer: 1500, showConfirmButton: false })
+                    .then(() => location.reload()); // Reload to update dropdown list
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: result.sentencesError });
+            }
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión.' });
+        }
+    }
+</script>

@@ -276,8 +276,12 @@ namespace CentralizedApps.Services
             try
             {
                 var response = _unitOfWork.genericRepository<Municipality>();
+
+                filter = filter?.ToLower();
+
                 var entities = await response.GetAllWithNestedIncludesAsync(query =>
-                    query
+                {
+                    IQueryable<Municipality> q = query
                         .Include(r => r.Courses)
                         .Include(r => r.IdShieldNavigation)
                         .Include(r => r.IdBankNavigation)
@@ -289,23 +293,22 @@ namespace CentralizedApps.Services
                             .ThenInclude(r => r.Procedures)
                         .Include(r => r.MunicipalitySocialMedia)
                             .ThenInclude(r => r.SocialMediaType)
-                        .Include(r => r.Theme)
-                );
+                        .Include(r => r.Theme);
+
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        q = q.Where(m =>
+                            (m.Name != null && m.Name.Contains(filter)) ||
+                            (m.Department != null && m.Department.Name != null && m.Department.Name.Contains(filter)) ||
+                            (m.IdBankNavigation != null && m.IdBankNavigation.NameBank != null && m.IdBankNavigation.NameBank.Contains(filter))
+                        );
+                    }
+                    return q;
+                });
 
                 if (entities == null || !entities.Any())
                 {
                     return new List<GetMunicipalitysDto>();
-                }
-
-                filter = filter?.ToLower();
-
-                if (!string.IsNullOrEmpty(filter))
-                {
-                    entities = entities.Where(m =>
-                        (m.Name != null && m.Name.ToLower().Contains(filter)) ||
-                        (m.Department != null && m.Department.Name.ToLower().Contains(filter)) ||
-                        (m.IdBankNavigation != null && m.IdBankNavigation.NameBank.ToLower().Contains(filter))
-                    ).ToList();
                 }
 
                 return _mapper.Map<List<GetMunicipalitysDto>>(entities);
@@ -398,28 +401,21 @@ namespace CentralizedApps.Services
         {
             try
             {
-                var municipios = await _unitOfWork.genericRepository<Municipality>().GetAllAsync();
+                var municipios = await _unitOfWork.genericRepository<Municipality>()
+                    .GetAllWithFilterAsync(m => m.DepartmentId == DepartamentId);
+
                 if (municipios == null || !municipios.Any())
                 {
                     return new List<JustMunicipalitysDto>();
                 }
 
-                var filtrados = municipios
-                    .Where(m => m.DepartmentId == DepartamentId)
-                    .Select(m => new JustMunicipalitysDto
-                    {
-                        Id = m.Id,
-                        Name = m.Name,
-                        Domain = m.Domain,
-                        IsActive = m.IsActive
-                    })
-                    .ToList();
-
-                if (!filtrados.Any())
+                return municipios.Select(m => new JustMunicipalitysDto
                 {
-                    return new List<JustMunicipalitysDto>();
-                }
-                return filtrados;
+                    Id = m.Id,
+                    Name = m.Name,
+                    Domain = m.Domain,
+                    IsActive = m.IsActive
+                }).ToList();
             }
             catch (Exception ex)
             {
