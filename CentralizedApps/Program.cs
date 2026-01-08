@@ -202,7 +202,7 @@ app.UseAuthorization();
 app.MapHealthChecks("/health");
 
 // ---------------- Swagger (Development Only) ----------------
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>

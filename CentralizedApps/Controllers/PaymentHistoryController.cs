@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace CentralizedApps.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
     [Route("api/[controller]")]
+    [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     public class PaymentHistoryController : ControllerBase
     {
 

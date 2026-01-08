@@ -12,8 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 namespace CentralizedApps.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
     [Route("api/[controller]")]
+    [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     
     public class EmailController : ControllerBase
     {
@@ -22,8 +23,6 @@ namespace CentralizedApps.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
-
 
         [HttpGet("SendEmail/ValidationCode")]
         public async Task<ValidationResponseExtraDto> SendEmailValidationCode([FromQuery] string To)
@@ -83,7 +82,7 @@ namespace CentralizedApps.Controllers
             {
                 if (emailDto == null)
                 {
-                    return new ValidationResponseDto { BooleanStatus = false, SentencesError = "Datos inválidos" };
+                    return new ValidationResponseDto { BooleanStatus = false, SentencesError = "Datos invï¿½lidos" };
                 }
 
                 return await _unitOfWork.configurationEmail.SendEmailPanic(emailDto);
@@ -105,7 +104,7 @@ namespace CentralizedApps.Controllers
             {
                 if (emailDto == null)
                 {
-                    return new ValidationResponseDto { BooleanStatus = false, SentencesError = "Datos inválidos" };
+                    return new ValidationResponseDto { BooleanStatus = false, SentencesError = "Datos invï¿½lidos" };
                 }
 
                 return await _unitOfWork.configurationEmail.SendEmailReservation(emailDto);

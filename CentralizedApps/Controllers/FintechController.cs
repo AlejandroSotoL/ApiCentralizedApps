@@ -15,6 +15,7 @@ namespace CentralizedApps.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
 
     public class FintechController : ControllerBase
     {

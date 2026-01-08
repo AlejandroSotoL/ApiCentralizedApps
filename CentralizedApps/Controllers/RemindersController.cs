@@ -14,6 +14,7 @@ namespace CentralizedApps.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     
     public class RemindersController : ControllerBase
     {
@@ -32,8 +33,8 @@ namespace CentralizedApps.Controllers
                 var response = await _RemidersService.createReminders(createReminderDto);
 
                 return CreatedAtAction(
-                            nameof(GetReminders), // Nombre del método GET para este recurso
-                            new { id = createReminderDto.ReminderName }, // Parámetros de ruta para ese método
+                            nameof(GetReminders), // Nombre del mï¿½todo GET para este recurso
+                            new { id = createReminderDto.ReminderName }, // Parï¿½metros de ruta para ese mï¿½todo
                             response // El objeto creado (ResponseReminderDto)
                         );
             }

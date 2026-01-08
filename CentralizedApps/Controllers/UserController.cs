@@ -14,6 +14,7 @@ namespace CentralizedApps.Contollers
     [ApiController]
     [Route("api/[controller]")]
     [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     
     public class UserController : ControllerBase
     {
@@ -90,7 +91,6 @@ namespace CentralizedApps.Contollers
                     SentencesError = $"Error: {ex.Message}"
                 };
             }
-
         }
 
         [HttpPut("{id}")]

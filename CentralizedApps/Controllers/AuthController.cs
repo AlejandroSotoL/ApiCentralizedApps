@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace CentralizedApps.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
     [Route("api/[controller]")]
+    [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     public class AuthController : ControllerBase
     {
         private readonly IUnitOfWork _Unit;
